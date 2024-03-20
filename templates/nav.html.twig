@@ -1,0 +1,38 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: #9f1c00;">
+    <div class="container">
+        <a class="navbar-brand text-white" href="/">EduSmart</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li class="nav-item">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" style="color: white;" data-bs-toggle="dropdown">
+                                <b><span>{{ app.user.nom }}</span></b>
+                            </a>
+                            <ul class="dropdown-menu" style="margin-left: 1280px;">
+                                <li>
+                                    {% if is_granted('ROLE_TEACHER') or is_granted('ROLE_STUDENT') or is_granted('ROLE_ENTREPRISE') or is_granted('ROLE_CLUB') %}
+                                    <a class="dropdown-item" href="#"><span><i class="fa-regular fa-user" style="color: #9f1c00;"></i></span><span>&nbsp;Profil</span></a>
+                                    {% endif %}
+                                </li>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                <li><a class="dropdown-item" href="#" sec:authorize="hasAuthority('ADMIN')"><span><i class="fa-solid fa-list-check" style="color: #9f1c00;"></i></span><span>&nbsp;Gérer</span></a></li>
+                                {% endif %}
+                                <form action="{{ path('logout') }}" method="post">
+                                <li><button type="submit" class="dropdown-item"><span><i class="fa-solid fa-right-from-bracket" style="color: #9f1c00;"></i></span><span>&nbsp;Déconnecter</span></button></li>
+                                </form>
+                            
+                            </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link btn-main text-white" href="{{ path('login') }}" style="padding-top : 3px; padding-bottom : 3px; margin-left : 18px; margin-top : 4px;"><b>Connexion</b></a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
