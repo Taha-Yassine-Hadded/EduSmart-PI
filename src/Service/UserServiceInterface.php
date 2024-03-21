@@ -36,5 +36,4 @@ interface UserServiceInterface {
     public function toStudent(int $id) : void;
 
     //updates
-    
 }

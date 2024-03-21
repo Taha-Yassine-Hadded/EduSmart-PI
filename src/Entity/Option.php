@@ -16,7 +16,7 @@ class Option
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'options')]
-    private ?question $question = null;
+    private ?Question $question = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $valeur = null;
@@ -29,12 +29,12 @@ class Option
         return $this->id;
     }
 
-    public function getQuestion(): ?question
+    public function getQuestion(): ?Question
     {
         return $this->question;
     }
 
-    public function setQuestion(?question $question): static
+    public function setQuestion(?Question $question): static
     {
         $this->question = $question;
 

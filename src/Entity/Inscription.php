@@ -18,10 +18,10 @@ class Inscription
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
-    private ?user $etudiant = null;
+    private ?User $etudiant = null;
 
     #[ORM\ManyToOne(inversedBy: 'inscriptions')]
-    private ?activite $activite = null;
+    private ?Activite $activite = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
@@ -52,24 +52,24 @@ class Inscription
         return $this;
     }
 
-    public function getEtudiant(): ?user
+    public function getEtudiant(): ?User
     {
         return $this->etudiant;
     }
 
-    public function setEtudiant(?user $etudiant): static
+    public function setEtudiant(?User $etudiant): static
     {
         $this->etudiant = $etudiant;
 
         return $this;
     }
 
-    public function getActivite(): ?activite
+    public function getActivite(): ?Activite
     {
         return $this->activite;
     }
 
-    public function setActivite(?activite $activite): static
+    public function setActivite(?Activite $activite): static
     {
         $this->activite = $activite;
 

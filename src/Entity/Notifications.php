@@ -15,10 +15,10 @@ class Notifications
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'notifications')]
-    private ?user $user = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'notifications')]
-    private ?events $event = null;
+    private ?Events $event = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $notification_text = null;
@@ -31,24 +31,24 @@ class Notifications
         return $this->id;
     }
 
-    public function getUser(): ?user
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?user $user): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getEvent(): ?events
+    public function getEvent(): ?Events
     {
         return $this->event;
     }
 
-    public function setEvent(?events $event): static
+    public function setEvent(?Events $event): static
     {
         $this->event = $event;
 

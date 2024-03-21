@@ -119,5 +119,4 @@ class UserService implements UserServiceInterface {
         $this->userRepository->changeRoleFromClubToStudent($id);
     }
 
-
 }

@@ -16,11 +16,11 @@ class EventComments
 
     #[ORM\ManyToOne(inversedBy: 'eventComments')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private ?user $user = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'eventComments')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private ?events $event = null;
+    private ?Events $event = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $comment_text = null;
@@ -33,24 +33,24 @@ class EventComments
         return $this->id;
     }
 
-    public function getUser(): ?user
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?user $user): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 
         return $this;
     }
 
-    public function getEvent(): ?events
+    public function getEvent(): ?Events
     {
         return $this->event;
     }
 
-    public function setEvent(?events $event): static
+    public function setEvent(?Events $event): static
     {
         $this->event = $event;
 

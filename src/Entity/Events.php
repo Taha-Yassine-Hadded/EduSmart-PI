@@ -18,7 +18,7 @@ class Events
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private ?user $admin = null;
+    private ?User $admin = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $event_name = null;
@@ -41,7 +41,7 @@ class Events
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Notifications::class)]
     private Collection $notifications;
 
-    #[ORM\ManyToMany(targetEntity: user::class, inversedBy: 'event_participant')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'event_participant')]
     private Collection $participants;
 
     #[ORM\Column(length: 255)]
@@ -60,12 +60,12 @@ class Events
         return $this->id;
     }
 
-    public function getAdmin(): ?user
+    public function getAdmin(): ?User
     {
         return $this->admin;
     }
 
-    public function setAdmin(?user $admin): static
+    public function setAdmin(?User $admin): static
     {
         $this->admin = $admin;
 

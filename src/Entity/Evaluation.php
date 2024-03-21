@@ -16,7 +16,7 @@ class Evaluation
     private ?int $id = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?cours $cours = null;
+    private ?Cours $cours = null;
 
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
@@ -34,12 +34,12 @@ class Evaluation
         return $this->id;
     }
 
-    public function getCours(): ?cours
+    public function getCours(): ?Cours
     {
         return $this->cours;
     }
 
-    public function setCours(?cours $cours): static
+    public function setCours(?Cours $cours): static
     {
         $this->cours = $cours;
 

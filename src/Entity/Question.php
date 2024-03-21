@@ -17,7 +17,7 @@ class Question
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
-    private ?evaluation $evaluation = null;
+    private ?Evaluation $evaluation = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $valeur = null;
@@ -35,12 +35,12 @@ class Question
         return $this->id;
     }
 
-    public function getEvaluation(): ?evaluation
+    public function getEvaluation(): ?Evaluation
     {
         return $this->evaluation;
     }
 
-    public function setEvaluation(?evaluation $evaluation): static
+    public function setEvaluation(?Evaluation $evaluation): static
     {
         $this->evaluation = $evaluation;
 

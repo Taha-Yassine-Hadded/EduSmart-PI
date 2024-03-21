@@ -15,10 +15,10 @@ class File
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'files')]
-    private ?project $project = null;
+    private ?Project $project = null;
 
     #[ORM\ManyToOne(inversedBy: 'files')]
-    private ?user $uploaded_by = null;
+    private ?User $uploaded_by = null;
 
     #[ORM\Column(length: 255)]
     private ?string $file_name = null;
@@ -34,24 +34,24 @@ class File
         return $this->id;
     }
 
-    public function getProject(): ?project
+    public function getProject(): ?Project
     {
         return $this->project;
     }
 
-    public function setProject(?project $project): static
+    public function setProject(?Project $project): static
     {
         $this->project = $project;
 
         return $this;
     }
 
-    public function getUploadedBy(): ?user
+    public function getUploadedBy(): ?User
     {
         return $this->uploaded_by;
     }
 
-    public function setUploadedBy(?user $uploaded_by): static
+    public function setUploadedBy(?User $uploaded_by): static
     {
         $this->uploaded_by = $uploaded_by;
 

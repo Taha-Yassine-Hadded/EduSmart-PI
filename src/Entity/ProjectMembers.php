@@ -17,9 +17,9 @@ class ProjectMembers
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'projectMembers')]
-    private ?project $project = null;
+    private ?Project $project = null;
 
-    #[ORM\ManyToMany(targetEntity: user::class, inversedBy: 'projectMembers')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'projectMembers')]
     private Collection $student;
 
     #[ORM\Column]
@@ -38,12 +38,12 @@ class ProjectMembers
         return $this->id;
     }
 
-    public function getProject(): ?project
+    public function getProject(): ?Project
     {
         return $this->project;
     }
 
-    public function setProject(?project $project): static
+    public function setProject(?Project $project): static
     {
         $this->project = $project;
 
@@ -51,14 +51,14 @@ class ProjectMembers
     }
 
     /**
-     * @return Collection<int, user>
+     * @return Collection<int, User>
      */
     public function getStudent(): Collection
     {
         return $this->student;
     }
 
-    public function addStudent(user $student): static
+    public function addStudent(User $student): static
     {
         if (!$this->student->contains($student)) {
             $this->student->add($student);
@@ -67,7 +67,7 @@ class ProjectMembers
         return $this;
     }
 
-    public function removeStudent(user $student): static
+    public function removeStudent(User $student): static
     {
         $this->student->removeElement($student);
 

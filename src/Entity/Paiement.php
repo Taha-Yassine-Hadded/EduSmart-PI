@@ -21,7 +21,7 @@ class Paiement
     private ?\DateTimeInterface $date = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?inscription $inscription = null;
+    private ?Inscription $inscription = null;
 
     public function getId(): ?int
     {
@@ -52,12 +52,12 @@ class Paiement
         return $this;
     }
 
-    public function getInscription(): ?inscription
+    public function getInscription(): ?Inscription
     {
         return $this->inscription;
     }
 
-    public function setInscription(?inscription $inscription): static
+    public function setInscription(?Inscription $inscription): static
     {
         $this->inscription = $inscription;
 

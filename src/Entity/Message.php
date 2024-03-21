@@ -15,10 +15,10 @@ class Message
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
-    private ?project $project = null;
+    private ?Project $project = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
-    private ?user $sender = null;
+    private ?User $sender = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -31,24 +31,24 @@ class Message
         return $this->id;
     }
 
-    public function getProject(): ?project
+    public function getProject(): ?Project
     {
         return $this->project;
     }
 
-    public function setProject(?project $project): static
+    public function setProject(?Project $project): static
     {
         $this->project = $project;
 
         return $this;
     }
 
-    public function getSender(): ?user
+    public function getSender(): ?User
     {
         return $this->sender;
     }
 
-    public function setSender(?user $sender): static
+    public function setSender(?User $sender): static
     {
         $this->sender = $sender;
 

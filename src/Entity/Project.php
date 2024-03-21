@@ -35,7 +35,7 @@ class Project
     private ?\DateTimeInterface $updated_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'projects')]
-    private ?user $teacher = null;
+    private ?User $teacher = null;
 
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: ProjectMembers::class)]
     private Collection $projectMembers;
@@ -130,12 +130,12 @@ class Project
         return $this;
     }
 
-    public function getTeacher(): ?user
+    public function getTeacher(): ?User
     {
         return $this->teacher;
     }
 
-    public function setTeacher(?user $teacher): static
+    public function setTeacher(?User $teacher): static
     {
         $this->teacher = $teacher;
 
