@@ -25,6 +25,7 @@ class UserService implements UserServiceInterface {
         try {
             $admin->setPassword($this->passwordHasher->hashPassword($admin, $admin->getPassword()));
             $admin->setRole(RoleEnum::ADMIN);
+            $admin->setIsEnabled(true);
             $this->entityManager->persist($admin);
             $this->entityManager->flush();
     
@@ -38,6 +39,7 @@ class UserService implements UserServiceInterface {
         try {
             $teacher->setPassword($this->passwordHasher->hashPassword($teacher, $teacher->getPassword()));
             $teacher->setRole(RoleEnum::TEACHER);
+            $teacher->setIsEnabled(true);
             $this->entityManager->persist($teacher);
             $this->entityManager->flush();
     
@@ -51,6 +53,7 @@ class UserService implements UserServiceInterface {
         try {
             $student->setPassword($this->passwordHasher->hashPassword($student, $student->getPassword()));
             $student->setRole(RoleEnum::STUDENT);
+            $student->setIsEnabled(true);
             $this->entityManager->persist($student);
             $this->entityManager->flush();
     
@@ -64,6 +67,7 @@ class UserService implements UserServiceInterface {
         try {
             $entreprise->setPassword($this->passwordHasher->hashPassword($entreprise, $entreprise->getPassword()));
             $entreprise->setRole(RoleEnum::ENTREPRISE);
+            $entreprise->setIsEnabled(true);
             $this->entityManager->persist($entreprise);
             $this->entityManager->flush();
     
