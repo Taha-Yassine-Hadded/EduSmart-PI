@@ -62,9 +62,6 @@ class User implements UserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $is_enabled = null;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?RememberMeToken $rememberMeToken = null;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: PasswordResetRequest::class)]
     private Collection $passwordResetRequests;
 
@@ -314,28 +311,6 @@ class User implements UserInterface
         return $this;
     }
 
-
-    public function getRememberMeToken(): ?RememberMeToken
-    {
-        return $this->rememberMeToken;
-    }
-
-    public function setRememberMeToken(?RememberMeToken $rememberMeToken): static
-    {
-        
-        if ($rememberMeToken === null && $this->rememberMeToken !== null) {
-            $this->rememberMeToken->setUser(null);
-        }
-
-        
-        if ($rememberMeToken !== null && $rememberMeToken->getUser() !== $this) {
-            $rememberMeToken->setUser($this);
-        }
-
-        $this->rememberMeToken = $rememberMeToken;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, PasswordResetRequest>

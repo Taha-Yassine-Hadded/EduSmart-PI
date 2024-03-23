@@ -42,9 +42,15 @@
                         <label for="inputPassword" class="form-label">Mot de passe :</label>
                         <input type="password" class="form-control" id="inputPassword" name="_password" required>
                     </div>
-                    <div class="mb-3" style="margin-left : 220px;">
+                    <div class="mb-3 d-flex justify-content-between align-items-center">
+                        <div class="checkbox" id="rememberMeContainer">
+                            <label>
+                                <input type="checkbox" name="_remember_me" id="_remember_me" style="accent-color: red;">
+                                Se souvenir de moi
+                            </label>
+                        </div>
                         <div class="forgot">
-                            <small><a class="text-danger" href="#">Mot de passe oublié?</a></small>
+                            <a class="text-danger" href="#">Mot de passe oublié?</a>
                         </div>
                     </div>
                 <div class="input-group mb-3">
@@ -60,6 +66,20 @@
 </div>
 
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  let input = document.cookie.split("=");
+  // Check if the 'cookieConsent' cookie is set to 'ACCEPTED'
+  if (input[0] == "ACCEPTED") {
+    // Show the "Remember me" checkbox
+    document.getElementById('rememberMeContainer').style.display = 'flex';
+  } else {
+    // Hide the "Remember me" checkbox
+    document.getElementById('rememberMeContainer').style.display = 'none';
+  }
+});
+</script>
 
 </body>
 </html>

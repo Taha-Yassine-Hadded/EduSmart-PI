@@ -79,4 +79,30 @@ class UserRepository extends ServiceEntityRepository
        ->execute();
     }
 
+    public function getCountByRole(): array {
+        $roleCounts = [];
+        foreach (RoleEnum::cases() as $roleCase) {
+            $roleCounts[$roleCase->value] = 0;
+        }
+
+        $qb = $this->createQueryBuilder('u')
+            ->select('u.role AS role, COUNT(u.id) AS count')
+            ->groupBy('u.role');
+
+        $results = $qb->getQuery()->getResult();
+
+        foreach ($results as $result) {
+            $roleStr = $result['role'];
+            $count = (int) $result['count'];
+
+            $roleEnum = RoleEnum::tryFrom($roleStr->value);
+            if ($roleEnum !== null) {
+                $roleCounts[$roleEnum->value] = $count;
+            }
+        }
+
+        return $roleCounts;
+    }
+    
+
 }

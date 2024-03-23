@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\UserService;
 
 
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;

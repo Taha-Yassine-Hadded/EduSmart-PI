@@ -15,5 +15,22 @@
         {% endif %}
     </div>
 </div>
+
+{% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+<div id="cookiePopup" class="hide" style="z-index: 2;">
+      <img src="/images/cookie.png" />
+      <p>
+        Notre site Web utilise des cookies pour fournir votre expérience de navigation et des informations pertinentes.
+        Avant de continuer à utiliser notre site Web, vous acceptez notre <a href="#" class="fw-bold">politique en matière de cookies & de confidentialité.</a>
+      </p>
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+        <button id="acceptCookie" class="myButton">Accepter</button>
+        <button id="declineCookie" class="myButton">Non, Merci</button>
+      </div>
+</div>
+{% endif %}
+<!-- Script -->
+<script src="/js/scriptCookies.js"></script>
+
 {% endblock %}
 

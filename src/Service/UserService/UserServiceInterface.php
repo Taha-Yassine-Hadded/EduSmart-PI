@@ -1,10 +1,6 @@
 <?php
-namespace App\Service;
-use App\Entity\Admin;
-use App\Entity\Entreprise;
+namespace App\Service\UserService;
 use App\Entity\RoleEnum;
-use App\Entity\Student;
-use App\Entity\Teacher;
 use App\Entity\User;
 
 interface UserServiceInterface {
@@ -34,6 +30,10 @@ interface UserServiceInterface {
     public function toClubRH(int $id) : void;
 
     public function toStudent(int $id) : void;
+
+    public function changePassword(string $password, User $user) : void;
+
+    public function getUserCountByRole(): array;
 
     //updates
 }

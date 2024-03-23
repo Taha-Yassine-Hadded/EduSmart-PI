@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\PasswordResetRequest;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,15 @@ class PasswordResetRequestRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PasswordResetRequest::class);
+    }
+
+    public function findByUser(User $user): array
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

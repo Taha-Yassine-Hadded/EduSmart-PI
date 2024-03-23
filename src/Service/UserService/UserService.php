@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\UserService;
 use App\Entity\RoleEnum;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -98,7 +98,7 @@ class UserService implements UserServiceInterface {
         return $this->userRepository->findAll();
     }
 
-    public function getUsersByRole(RoleEnum $role)
+    public function getUsersByRole(RoleEnum $role) : array
     {
         return $this->userRepository->getByRole($role);
     }
@@ -121,6 +121,18 @@ class UserService implements UserServiceInterface {
     public function toStudent(int $id) : void 
     {
         $this->userRepository->changeRoleFromClubToStudent($id);
+    }
+
+    public function changePassword(string $password, User $user) : void
+    {
+        $user->setPassword($this->passwordHasher->hashPassword($user, $password));
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+
+    public function getUserCountByRole(): array 
+    {
+        return $this->userRepository->getCountByRole();
     }
 
 }
