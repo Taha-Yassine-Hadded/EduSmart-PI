@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240322214239 extends AbstractMigration
+final class Version20240323223546 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -28,19 +28,22 @@ final class Version20240322214239 extends AbstractMigration
         $this->addSql('CREATE TABLE event_reactions (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, event_id INT DEFAULT NULL, reaction_type VARCHAR(255) DEFAULT NULL, created_at DATE NOT NULL, INDEX IDX_BEE6418EA76ED395 (user_id), INDEX IDX_BEE6418E71F7E88B (event_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE events (id INT AUTO_INCREMENT NOT NULL, admin_id INT DEFAULT NULL, event_name VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, event_date DATE DEFAULT NULL, created_at DATE DEFAULT NULL, event_photo VARCHAR(255) NOT NULL, INDEX IDX_5387574A642B8210 (admin_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE events_user (events_id INT NOT NULL, user_id INT NOT NULL, INDEX IDX_E1C3D2339D6A1065 (events_id), INDEX IDX_E1C3D233A76ED395 (user_id), PRIMARY KEY(events_id, user_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE fichier (id INT AUTO_INCREMENT NOT NULL, date_ajout DATE DEFAULT NULL, nom VARCHAR(255) DEFAULT NULL, path VARCHAR(255) DEFAULT NULL, idMember VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE file (id INT AUTO_INCREMENT NOT NULL, project_id INT DEFAULT NULL, uploaded_by_id INT DEFAULT NULL, file_name VARCHAR(255) NOT NULL, file_path VARCHAR(255) NOT NULL, uploaded_at DATE NOT NULL, INDEX IDX_8C9F3610166D1F9C (project_id), INDEX IDX_8C9F3610A2B28FE8 (uploaded_by_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE inscription (id INT AUTO_INCREMENT NOT NULL, etudiant_id INT DEFAULT NULL, activite_id INT DEFAULT NULL, date DATE DEFAULT NULL, nom VARCHAR(255) NOT NULL, prenom VARCHAR(255) NOT NULL, num_tel VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, INDEX IDX_5E90F6D6DDEAB1A3 (etudiant_id), INDEX IDX_5E90F6D69B0F88B1 (activite_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE matiere (id INT AUTO_INCREMENT NOT NULL, niveau INT DEFAULT NULL, matiere VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE message (id INT AUTO_INCREMENT NOT NULL, project_id INT DEFAULT NULL, sender_id INT DEFAULT NULL, content LONGTEXT NOT NULL, created_at DATE DEFAULT NULL, INDEX IDX_B6BD307F166D1F9C (project_id), INDEX IDX_B6BD307FF624B39D (sender_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE notifications (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, event_id INT DEFAULT NULL, notification_text LONGTEXT NOT NULL, notification_time DATE NOT NULL, INDEX IDX_6000B0D3A76ED395 (user_id), INDEX IDX_6000B0D371F7E88B (event_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE offre (id INT AUTO_INCREMENT NOT NULL, entreprise_id INT NOT NULL, titre VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, competences VARCHAR(255) NOT NULL, nbr VARCHAR(255) NOT NULL, date DATE NOT NULL, INDEX IDX_AF86866FA4AEAFEA (entreprise_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `option` (id INT AUTO_INCREMENT NOT NULL, question_id INT DEFAULT NULL, valeur LONGTEXT NOT NULL, is_correct TINYINT(1) DEFAULT NULL, INDEX IDX_5A8600B01E27F6BF (question_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE paiement (id INT AUTO_INCREMENT NOT NULL, inscription_id INT DEFAULT NULL, montant DOUBLE PRECISION DEFAULT NULL, date DATE DEFAULT NULL, UNIQUE INDEX UNIQ_B1DC7A1E5DAC5993 (inscription_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE password_reset_request (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, reset_code INT DEFAULT NULL, expires_at DATETIME DEFAULT NULL, INDEX IDX_C5D0A95AA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE project (id INT AUTO_INCREMENT NOT NULL, teacher_id INT DEFAULT NULL, nom VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, start_date DATE NOT NULL, end_date DATE NOT NULL, created_at DATE NOT NULL, updated_at DATE NOT NULL, INDEX IDX_2FB3D0EE41807E1D (teacher_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE project (id INT AUTO_INCREMENT NOT NULL, teacher_id INT DEFAULT NULL, nom VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, created_at DATE NOT NULL, updated_at DATE NOT NULL, INDEX IDX_2FB3D0EE41807E1D (teacher_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE project_members (id INT AUTO_INCREMENT NOT NULL, project_id INT DEFAULT NULL, is_owner TINYINT(1) NOT NULL, joined_at DATE NOT NULL, INDEX IDX_D3BEDE9A166D1F9C (project_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE project_members_user (project_members_id INT NOT NULL, user_id INT NOT NULL, INDEX IDX_E85E128FA5A78EDF (project_members_id), INDEX IDX_E85E128FA76ED395 (user_id), PRIMARY KEY(project_members_id, user_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE publication (id INT AUTO_INCREMENT NOT NULL, club_rh_id INT DEFAULT NULL, date DATE DEFAULT NULL, contenu LONGTEXT DEFAULT NULL, INDEX IDX_AF3C677982CCADCE (club_rh_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE question (id INT AUTO_INCREMENT NOT NULL, evaluation_id INT DEFAULT NULL, valeur LONGTEXT DEFAULT NULL, INDEX IDX_B6F7494E456C5646 (evaluation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tache (id INT AUTO_INCREMENT NOT NULL, idMember VARCHAR(255) NOT NULL, etat VARCHAR(255) DEFAULT NULL, description VARCHAR(255) DEFAULT NULL, date_ajout DATE DEFAULT NULL, dedline DATE DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) DEFAULT NULL, email VARCHAR(255) DEFAULT NULL, password VARCHAR(255) DEFAULT NULL, role VARCHAR(255) DEFAULT NULL, website VARCHAR(255) DEFAULT NULL, classe VARCHAR(255) DEFAULT NULL, pays VARCHAR(255) DEFAULT NULL, localisation VARCHAR(255) DEFAULT NULL, cin VARCHAR(255) DEFAULT NULL, niveau INT DEFAULT NULL, genre VARCHAR(255) DEFAULT NULL, date_naissance DATETIME DEFAULT NULL, profil_picture VARCHAR(255) DEFAULT NULL, prenom VARCHAR(255) DEFAULT NULL, is_enabled TINYINT(1) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE messenger_messages (id BIGINT AUTO_INCREMENT NOT NULL, body LONGTEXT NOT NULL, headers LONGTEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at DATETIME NOT NULL, available_at DATETIME NOT NULL, delivered_at DATETIME DEFAULT NULL, INDEX IDX_75EA56E0FB7336F0 (queue_name), INDEX IDX_75EA56E0E3BD61CE (available_at), INDEX IDX_75EA56E016BA31DB (delivered_at), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE candidature ADD CONSTRAINT FK_E33BD3B84CC8505A FOREIGN KEY (offre_id) REFERENCES offre (id)');
@@ -114,8 +117,10 @@ final class Version20240322214239 extends AbstractMigration
         $this->addSql('DROP TABLE event_reactions');
         $this->addSql('DROP TABLE events');
         $this->addSql('DROP TABLE events_user');
+        $this->addSql('DROP TABLE fichier');
         $this->addSql('DROP TABLE file');
         $this->addSql('DROP TABLE inscription');
+        $this->addSql('DROP TABLE matiere');
         $this->addSql('DROP TABLE message');
         $this->addSql('DROP TABLE notifications');
         $this->addSql('DROP TABLE offre');
@@ -127,6 +132,7 @@ final class Version20240322214239 extends AbstractMigration
         $this->addSql('DROP TABLE project_members_user');
         $this->addSql('DROP TABLE publication');
         $this->addSql('DROP TABLE question');
+        $this->addSql('DROP TABLE tache');
         $this->addSql('DROP TABLE user');
         $this->addSql('DROP TABLE messenger_messages');
     }

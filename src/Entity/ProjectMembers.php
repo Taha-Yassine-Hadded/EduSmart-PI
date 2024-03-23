@@ -28,9 +28,17 @@ class ProjectMembers
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $joined_at = null;
 
+    #[ORM\OneToMany(mappedBy: 'member', targetEntity: Fichier::class)]
+    private Collection $fichiers;
+
+    #[ORM\OneToMany(mappedBy: 'member', targetEntity: Tache::class)]
+    private Collection $taches;
+
     public function __construct()
     {
         $this->student = new ArrayCollection();
+        $this->fichiers = new ArrayCollection();
+        $this->taches = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,6 +102,66 @@ class ProjectMembers
     public function setJoinedAt(\DateTimeInterface $joined_at): static
     {
         $this->joined_at = $joined_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Fichier>
+     */
+    public function getFichiers(): Collection
+    {
+        return $this->fichiers;
+    }
+
+    public function addFichier(Fichier $fichier): static
+    {
+        if (!$this->fichiers->contains($fichier)) {
+            $this->fichiers->add($fichier);
+            $fichier->setMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFichier(Fichier $fichier): static
+    {
+        if ($this->fichiers->removeElement($fichier)) {
+            // set the owning side to null (unless already changed)
+            if ($fichier->getMember() === $this) {
+                $fichier->setMember(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tache>
+     */
+    public function getTaches(): Collection
+    {
+        return $this->taches;
+    }
+
+    public function addTach(Tache $tach): static
+    {
+        if (!$this->taches->contains($tach)) {
+            $this->taches->add($tach);
+            $tach->setMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTach(Tache $tach): static
+    {
+        if ($this->taches->removeElement($tach)) {
+            // set the owning side to null (unless already changed)
+            if ($tach->getMember() === $this) {
+                $tach->setMember(null);
+            }
+        }
 
         return $this;
     }
