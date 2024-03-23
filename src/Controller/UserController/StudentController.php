@@ -58,7 +58,7 @@ class StudentController extends AbstractController
             throw new \Exception("There was an error adding the student: " . $e->getMessage());
     }
 
-        }
+    }
 
         return $this->renderForm('AddStudent.html.twig' , ['f'=>$form] );
     }

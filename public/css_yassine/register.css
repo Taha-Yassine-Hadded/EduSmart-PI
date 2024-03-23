@@ -198,25 +198,22 @@ section.sign-up-form{
     height: 100%;
     width: 100%;
     place-items: center;
-    background: -webkit-linear-gradient(left, #a445b2, #fa4299);
   }
   ::selection{
-    background: #fa4299;
+    background: #9f1c00;
     color: #fff;
   }
   .wrapper{
     overflow: hidden;
-    max-width: 390px;
+    max-width: 650px;
+    max-height: 650px;
     background: #fff;
     padding: 30px;
     border-radius: 5px;
-    box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
-  }
-  .wrapper .title-text{
-    display: flex;
-    width: 200%;
+    box-shadow: 5px 5px 8px 10px rgba(0,0,0,0.08);
   }
   .wrapper .title{
+    margin-left: 140px;
     width: 50%;
     font-size: 35px;
     font-weight: 600;
@@ -256,7 +253,7 @@ section.sign-up-form{
     left: 0;
     z-index: 0;
     border-radius: 5px;
-    background: -webkit-linear-gradient(left, #a445b2, #fa4299);
+    background: -webkit-linear-gradient(left, #9f1c00, #e42a00);
     transition: all 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
   }
   input[type="radio"]{
@@ -309,7 +306,7 @@ section.sign-up-form{
     transition: all 0.3s ease;
   }
   .form-inner form .field input:focus{
-    border-color: #fc83bb;
+    border-color: #9f1c00;
     /* box-shadow: inset 0 0 3px #fb6aae; */
   }
   .form-inner form .field input::placeholder{
@@ -328,7 +325,8 @@ section.sign-up-form{
   }
   .form-inner form .pass-link a,
   .form-inner form .signup-link a{
-    color: #fa4299;
+    font-weight: bold;
+    color: #9f1c00;
     text-decoration: none;
   }
   .form-inner form .pass-link a:hover,
@@ -347,7 +345,7 @@ section.sign-up-form{
     width: 300%;
     position: absolute;
     left: -100%;
-    background: -webkit-linear-gradient(right, #a445b2, #fa4299, #a445b2, #fa4299);
+    background: -webkit-linear-gradient(right, #9f1c00, #e42a00, #9f1c00, #e42a00);
     border-radius: 5px;
     transition: all 0.4s ease;;
   }
