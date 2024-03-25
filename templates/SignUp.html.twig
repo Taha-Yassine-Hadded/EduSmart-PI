@@ -17,7 +17,7 @@
     <div class="forms-container">
         <div class="signin-signup">
                 <section class="sign-in-form">
-                    <div class="bod" style="margin-top : 25px;">
+                    <div class="bod" style="margin-top : 20px;">
                         <div class="wrapper">
                                 <div class="title login">
                                     Créer Compte
@@ -32,17 +32,33 @@
                                     </div>
                                 </div>
                                 <div class="form-inner">
-                                    <form action="#" class="login">
-                                        <div class="field">
-                                            <input type="text" placeholder="Email Address" required>
-                                        </div>
-                                        <div class="field">
-                                            <input type="password" placeholder="Password" required>
-                                        </div>
-                                        <div class="field btn">
-                                            <div class="btn-layer">
+                                    <form action="{{ path('addTeacher') }}" method="post" enctype="multipart/form-data" class="login">
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="text" placeholder="Nom" name="nom" required>
                                             </div>
-                                            <input type="submit" value="Créer">
+                                            <div class="field">
+                                                <input type="text" placeholder="Prenom" name="prenom" required>
+                                            </div>
+                                        </div>
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <select class="form-select sel" aria-label="Genre" name="genre">
+                                                    <option value="male" selected >Male</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="other">Autre</option>
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                    <input type="date" class="myDate" class="form-control" name="dateNaissance" required>
+                                            </div>
+                                        </div>
+                                        <input type="file" id="profilePhoto" name="profil_picture" style="display: none;" accept="image/*">
+                                        <button class="btn" type="button" style="color: white; margin-top: 20px; margin-left: 15px" onclick="document.getElementById('profilePhoto').click();">Ajouter Photo</button>
+                                        <div class="btn-container">
+                                            <div class="field btn">
+                                                <input type="submit" value="Créer">
+                                            </div>
                                         </div>
                                         <div class="signup-link">
                                             Vous avez deja un compte ? <a href="{{ path('login') }}">Connecter</a>
@@ -59,7 +75,6 @@
                                             <input type="password" placeholder="Confirm password" required>
                                         </div>
                                         <div class="field btn">
-                                            <div class="btn-layer"></div>
                                             <input type="submit" value="Créer">
                                         </div>
                                         <div class="signup-link">
@@ -97,8 +112,6 @@
                             <label>Mot de passe :</label>
                             <input type="password" id="pass" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-outline-danger mt-2">Créer</button>
-                    
                 </section>
         </div>
     </div>
@@ -128,18 +141,13 @@
          const loginForm = document.querySelector("form.login");
          const loginBtn = document.querySelector("label.login");
          const signupBtn = document.querySelector("label.signup");
-         const signupLink = document.querySelector("form .signup-link a");
-         signupBtn.onclick = (()=>{
+        signupBtn.onclick = (()=>{
            loginForm.style.marginLeft = "-50%";
            loginText.style.marginLeft = "-50%";
          });
          loginBtn.onclick = (()=>{
            loginForm.style.marginLeft = "0%";
            loginText.style.marginLeft = "0%";
-         });
-         signupLink.onclick = (()=>{
-           signupBtn.click();
-           return false;
          });
 </script>
 
