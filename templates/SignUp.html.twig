@@ -32,7 +32,7 @@
                                     </div>
                                 </div>
                                 <div class="form-inner">
-                                    <form action="{{ path('addTeacher') }}" method="post" enctype="multipart/form-data" class="login">
+                                    <form action="{{ path('addTeacher') }}" method="post" enctype="multipart/form-data" id="registrationFormTeacher" class="login">
                                         <div class="field-group">
                                             <div class="field">
                                                 <input type="text" placeholder="Nom" name="nom" required>
@@ -50,7 +50,8 @@
                                                 </select>
                                             </div>
                                             <div class="field">
-                                                    <input type="date" class="myDate" class="form-control" name="dateNaissance" required>
+                                                    <input type="date" class="myDate" class="form-control" name="dateNaissance" id="dateTeacher" required>
+                                                    <span id="errorDateTeacher" class="info-message d-none" style="color: red;margin-top: 7px;margin-left: 10px;"><small>Minimum 2006</small></span>
                                             </div>
                                         </div>
                                         <input type="file" id="profilePhoto" name="profil_picture" style="display: none;" accept="image/*">
@@ -64,7 +65,7 @@
                                             Vous avez déja un compte ? <a href="{{ path('login') }}">Connecter</a>
                                         </div>
                                     </form>
-                                    <form action="{{ path('addStudent') }}" method="post" enctype="multipart/form-data" class="signup">
+                                    <form action="{{ path('addStudent') }}" method="post" enctype="multipart/form-data" id="registrationFormStudent" class="signup">
                                         <div class="field-group">
                                             <div class="field">
                                                 <input type="text" placeholder="Nom" name="nomStudent" required>
@@ -90,7 +91,8 @@
                                                 </select>
                                             </div>
                                             <div class="field">
-                                                    <input type="date" class="myDate" class="form-control" name="dateNaissanceStudent" required>
+                                                    <input type="date" class="myDate" class="form-control" name="dateNaissanceStudent" id="dateStudent" required>
+                                                    <span id="errorDateStudent" class="info-message d-none" style="color: red;margin-left: 10px;"><small>Minimum 2006</small></span>
                                             </div>
                                         </div>
                                         <div class="field-group">
@@ -99,7 +101,7 @@
                                             </div>
                                             <div class="field">
                                                 <input type="file" id="profilePhotoStudent" name="profil_pictureStudent" style="display: none;" accept="image/*">
-                                                <button class="btn" type="button" style="color: white; margin-left: 15px" onclick="document.getElementById('profilePhotoStudent').click();">Ajouter Photo</button>
+                                                <button class="btn" type="button" style="color: white; margin-left: 15px; margin-top: 8px" onclick="document.getElementById('profilePhotoStudent').click();">Ajouter Photo</button>
                                             </div>
                                         </div>
                                         <div class="btn-container">
