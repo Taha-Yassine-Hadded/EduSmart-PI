@@ -2,40 +2,35 @@
 
 namespace App\Service\UserService;
 
-use App\Entity\PasswordResetRequest;
-use App\Entity\User;
-use App\Repository\PasswordResetRequestRepository;
+use App\Entity\ValidationCode;
+use App\Repository\ValidationCodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 
-class PasswordResetRequestService {
+class ValidationCodeService {
     
     private $repo;
     private $entityManager;
 
-    public function __construct(PasswordResetRequestRepository $repo, EntityManagerInterface $entityManager)
+    public function __construct(ValidationCodeRepository $repo, EntityManagerInterface $entityManager)
     {
         $this->repo = $repo;
         $this->entityManager = $entityManager;
     }
     
-    public function add(PasswordResetRequest $passwordResetRequest) : PasswordResetRequest {
+    public function add(ValidationCode $validationCode) : ValidationCode {
         try {
-            $this->entityManager->persist($passwordResetRequest);
+            $this->entityManager->persist($validationCode);
             $this->entityManager->flush();
     
-            return $passwordResetRequest;
+            return $validationCode;
         } catch (\Exception $e) {
             throw new \Exception("There was an error adding the password reset request: " . $e->getMessage());
         }
     }
 
-    public function getById(int $id) : PasswordResetRequest {
+    public function getById(int $id) : ValidationCode {
         return $this->repo->find($id);
-    }
-    
-    public function getByUser(User $user) : array {
-        return $this->repo->findByUser($user);
     }
 
     public function delete(int $id): void {
