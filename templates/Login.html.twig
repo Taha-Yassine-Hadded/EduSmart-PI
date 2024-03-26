@@ -70,12 +70,9 @@
 document.addEventListener("DOMContentLoaded", function() {
 
   let input = document.cookie.split("=");
-  // Check if the 'cookieConsent' cookie is set to 'ACCEPTED'
   if (input[0] == "ACCEPTED") {
-    // Show the "Remember me" checkbox
     document.getElementById('rememberMeContainer').style.display = 'flex';
   } else {
-    // Hide the "Remember me" checkbox
     document.getElementById('rememberMeContainer').style.display = 'none';
   }
 });

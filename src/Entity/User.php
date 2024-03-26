@@ -50,8 +50,8 @@ class User implements UserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $genre = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_naissance = null;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $date_naissance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profil_picture = null;
@@ -263,12 +263,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDateNaissance(): ?\DateTimeInterface
+    public function getDateNaissance(): ?\DateTimeImmutable
     {
         return $this->date_naissance;
     }
 
-    public function setDateNaissance(?\DateTimeInterface $date_naissance): static
+    public function setDateNaissance(?\DateTimeImmutable $date_naissance): static
     {
         $this->date_naissance = $date_naissance;
 

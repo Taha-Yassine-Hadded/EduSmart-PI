@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240323225227 extends AbstractMigration
+final class Version20240326005353 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -44,7 +44,7 @@ final class Version20240323225227 extends AbstractMigration
         $this->addSql('CREATE TABLE publication (id INT AUTO_INCREMENT NOT NULL, club_rh_id INT DEFAULT NULL, date DATE DEFAULT NULL, contenu LONGTEXT DEFAULT NULL, INDEX IDX_AF3C677982CCADCE (club_rh_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE question (id INT AUTO_INCREMENT NOT NULL, evaluation_id INT DEFAULT NULL, valeur LONGTEXT DEFAULT NULL, INDEX IDX_B6F7494E456C5646 (evaluation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE tache (id INT AUTO_INCREMENT NOT NULL, idMember VARCHAR(255) NOT NULL, etat VARCHAR(255) DEFAULT NULL, description VARCHAR(255) DEFAULT NULL, date_ajout DATE DEFAULT NULL, dedline DATE DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) DEFAULT NULL, email VARCHAR(255) DEFAULT NULL, password VARCHAR(255) DEFAULT NULL, role VARCHAR(255) DEFAULT NULL, website VARCHAR(255) DEFAULT NULL, classe VARCHAR(255) DEFAULT NULL, pays VARCHAR(255) DEFAULT NULL, localisation VARCHAR(255) DEFAULT NULL, cin VARCHAR(255) DEFAULT NULL, niveau INT DEFAULT NULL, genre VARCHAR(255) DEFAULT NULL, date_naissance DATETIME DEFAULT NULL, profil_picture VARCHAR(255) DEFAULT NULL, prenom VARCHAR(255) DEFAULT NULL, is_enabled TINYINT(1) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) DEFAULT NULL, email VARCHAR(255) DEFAULT NULL, password VARCHAR(255) DEFAULT NULL, role VARCHAR(255) DEFAULT NULL, website VARCHAR(255) DEFAULT NULL, classe VARCHAR(255) DEFAULT NULL, pays VARCHAR(255) DEFAULT NULL, localisation VARCHAR(255) DEFAULT NULL, cin VARCHAR(255) DEFAULT NULL, niveau INT DEFAULT NULL, genre VARCHAR(255) DEFAULT NULL, date_naissance DATE DEFAULT NULL COMMENT \'(DC2Type:date_immutable)\', profil_picture VARCHAR(255) DEFAULT NULL, prenom VARCHAR(255) DEFAULT NULL, is_enabled TINYINT(1) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE messenger_messages (id BIGINT AUTO_INCREMENT NOT NULL, body LONGTEXT NOT NULL, headers LONGTEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at DATETIME NOT NULL, available_at DATETIME NOT NULL, delivered_at DATETIME DEFAULT NULL, INDEX IDX_75EA56E0FB7336F0 (queue_name), INDEX IDX_75EA56E0E3BD61CE (available_at), INDEX IDX_75EA56E016BA31DB (delivered_at), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE candidature ADD CONSTRAINT FK_E33BD3B84CC8505A FOREIGN KEY (offre_id) REFERENCES offre (id)');
         $this->addSql('ALTER TABLE candidature ADD CONSTRAINT FK_E33BD3B8A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
