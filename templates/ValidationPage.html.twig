@@ -56,11 +56,14 @@
             <div class="form-outer">
                 <form action="{{ path('saveTeacher') }}" method="post">
                     <div class="page slide-page">
-                        <div class="field">
+                        <div class="field" style="margin-bottom : 15px;">
                             <div class="label">
                                 Adresse E-mail
                             </div>
                             <input type="email" id="emailInput" name="email" placeholder="xyz@esprit.tn"> 
+                        </div>
+                        <div class="alert alert-danger p-1 d-none" role="alert" id="emailAlert" style="margin-right : 20px;">
+                            <span class="info-message" style="color: black;"><small>Un compte existe déjà avec cette email !</small></span>
                         </div>
                         <div class="field">
                             <button class="firstNext next">Envoyer Code</button>
@@ -68,13 +71,13 @@
                     </div>
                     <div class="page">
                         <div class="alert alert-warning p-1" role="alert" style="margin-top: 20px;margin-right : 20px;">
-                            <span class="error-message" style="color: black;"><small>Code envoyé et expire dans 15 minutes</small></span>
+                            <span class="info-message" style="color: black;"><small>Code envoyé et expire dans <span class="timer">15:00</span></small></span>
                         </div>
                         <div class="field" style="margin-bottom : 10px;">
                             <div class="label">
                                 Code
                             </div>
-                            <input type="number" placeholder="XXXXX" >
+                            <input type="number" name="code" class="code" placeholder="XXXXX" >
                         </div>
                         <div class="field btns">
                             <button class="prev-1 prev">Pr&eacute;c&eacute;dent</button>
@@ -82,20 +85,25 @@
                         </div>
                     </div>
                     <div class="page">
-                        <div class="field">
+                        <div class="field" style="margin-bottom : 8px;">
                             <div class="label">
                                 Mot de passe
                             </div>
-                            <input type="password" name="password">
+                            <input type="password" name="password" id="password">
                         </div>
-                        <div class="field">
+                        <div class="alert alert-danger p-1 d-none" role="alert" id="passwordAlert" style="margin-right : 20px;">
+                            <span class="info-message" style="color: black;"><small>Longeur minimale 8 caractéres</small></span>
+                        </div>
+                        <div class="field" style="margin-bottom : 8px;">
                             <div class="label">
                                 Confirmer mot de passe
                             </div>
-                            <input type="password">
+                            <input type="password" name="confirm" id="confirm">
+                        </div>
+                        <div class="alert alert-danger p-1 d-none" role="alert" id="confirmAlert" style="margin-right : 20px;">
+                            <span class="info-message" style="color: black;"><small>Confirmer avec la meme mot de passe</small></span>
                         </div>
                         <div class="field btns">
-                            <button class="prev-2 prev">Pr&eacute;c&eacute;dent</button>
                             <button class="submit" type="submit">Enregistrer</button>
                         </div>
                     </div>
@@ -108,22 +116,6 @@
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <script src="/js/validationScript.js"></script>
-   </body>
+<script src="/js/validationScript.js"></script>
+</body>
 </html>

@@ -13,9 +13,9 @@ interface UserServiceInterface {
 
     public function addEntreprise(User $entreprise) : User;
 
-    public function getUserById(int $id) : User;
+    public function getUserById(int $id) : ?User;
 
-    public function getUserByEmail(string $email) : User;
+    public function getUserByEmail(string $email) : ?User;
 
     public function delete(int $id): void;
 

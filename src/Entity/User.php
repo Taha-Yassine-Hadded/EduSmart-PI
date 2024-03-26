@@ -62,9 +62,6 @@ class User implements UserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $is_enabled = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: PasswordResetRequest::class)]
-    private Collection $passwordResetRequests;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Candidature::class)]
     private Collection $candidatures;
 
@@ -107,6 +104,9 @@ class User implements UserInterface
     #[ORM\ManyToMany(targetEntity: Events::class, mappedBy: 'participants')]
     private Collection $event_participant;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPasswordToken::class)]
+    private Collection $resetPasswordTokens;
+
     public function __construct()
     {
         $this->candidatures = new ArrayCollection();
@@ -123,7 +123,7 @@ class User implements UserInterface
         $this->eventComments = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->event_participant = new ArrayCollection();
-        $this->passwordResetRequests = new ArrayCollection();
+        $this->resetPasswordTokens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -312,49 +312,17 @@ class User implements UserInterface
     }
 
 
-    /**
-     * @return Collection<int, PasswordResetRequest>
-     */
-    public function getPasswordResetRequests(): Collection
-    {
-        return $this->passwordResetRequests;
-    }
-
-    public function addPasswordResetRequest(PasswordResetRequest $passwordResetRequest): static
-    {
-        if (!$this->passwordResetRequests->contains($passwordResetRequest)) {
-            $this->passwordResetRequests->add($passwordResetRequest);
-            $passwordResetRequest->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removePasswordResetRequest(PasswordResetRequest $passwordResetRequest): static
-    {
-        if ($this->passwordResetRequests->removeElement($passwordResetRequest)) {
-            if ($passwordResetRequest->getUser() === $this) {
-                $passwordResetRequest->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-
     public function getRoles(): array
     {
-    return [$this->role->value];
+        return [$this->role->value];
     }
-public function getSalt(): ?string
-{
-    return null;
-}
+    public function getSalt(): ?string
+    {
+        return null;
+    }
 
 public function eraseCredentials(): void
-{
-
-}
+{}
 
 public function getUsername(): string
 {
@@ -781,6 +749,36 @@ public function getUserIdentifier(): string
     {
         if ($this->event_participant->removeElement($eventParticipant)) {
             $eventParticipant->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ResetPasswordToken>
+     */
+    public function getResetPasswordTokens(): Collection
+    {
+        return $this->resetPasswordTokens;
+    }
+
+    public function addResetPasswordToken(ResetPasswordToken $resetPasswordToken): static
+    {
+        if (!$this->resetPasswordTokens->contains($resetPasswordToken)) {
+            $this->resetPasswordTokens->add($resetPasswordToken);
+            $resetPasswordToken->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResetPasswordToken(ResetPasswordToken $resetPasswordToken): static
+    {
+        if ($this->resetPasswordTokens->removeElement($resetPasswordToken)) {
+            // set the owning side to null (unless already changed)
+            if ($resetPasswordToken->getUser() === $this) {
+                $resetPasswordToken->setUser(null);
+            }
         }
 
         return $this;

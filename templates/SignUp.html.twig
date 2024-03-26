@@ -20,7 +20,7 @@
                     <div class="bod" style="margin-top : 20px;">
                         <div class="wrapper">
                                 <div class="title login">
-                                    Créer Compte
+                                    Informations du compte
                                 </div>
                             <div class="form-container">
                                 <div class="slide-controls">
@@ -57,28 +57,58 @@
                                         <button class="btn" type="button" style="color: white; margin-top: 20px; margin-left: 15px" onclick="document.getElementById('profilePhoto').click();">Ajouter Photo</button>
                                         <div class="btn-container">
                                             <div class="field btn">
-                                                <input type="submit" value="Créer">
+                                                <input type="submit" value="Continuer">
                                             </div>
                                         </div>
                                         <div class="signup-link">
-                                            Vous avez deja un compte ? <a href="{{ path('login') }}">Connecter</a>
+                                            Vous avez déja un compte ? <a href="{{ path('login') }}">Connecter</a>
                                         </div>
                                     </form>
-                                    <form action="#" class="signup">
-                                        <div class="field">
-                                            <input type="text" placeholder="Email Address" required>
+                                    <form action="{{ path('addStudent') }}" method="post" enctype="multipart/form-data" class="signup">
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="text" placeholder="Nom" name="nomStudent" required>
+                                            </div>
+                                            <div class="field">
+                                                <input type="text" placeholder="Prenom" name="prenomStudent" required>
+                                            </div>
                                         </div>
-                                        <div class="field">
-                                            <input type="password" placeholder="Password" required>
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="number" placeholder="Niveau" name="niveau" required>
+                                            </div>
+                                            <div class="field">
+                                                <input type="text" placeholder="Classe" name="classe" required>
+                                            </div>
                                         </div>
-                                        <div class="field">
-                                            <input type="password" placeholder="Confirm password" required>
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <select class="form-select sel" aria-label="Genre" name="genreStudent">
+                                                    <option value="male" selected >Male</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="other">Autre</option>
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                    <input type="date" class="myDate" class="form-control" name="dateNaissanceStudent" required>
+                                            </div>
                                         </div>
-                                        <div class="field btn">
-                                            <input type="submit" value="Créer">
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="text" placeholder="CIN" name="cin" required>
+                                            </div>
+                                            <div class="field">
+                                                <input type="file" id="profilePhotoStudent" name="profil_pictureStudent" style="display: none;" accept="image/*">
+                                                <button class="btn" type="button" style="color: white; margin-left: 15px" onclick="document.getElementById('profilePhotoStudent').click();">Ajouter Photo</button>
+                                            </div>
+                                        </div>
+                                        <div class="btn-container">
+                                            <div class="field btn">
+                                                <input type="submit" value="Continuer">
+                                            </div>
                                         </div>
                                         <div class="signup-link">
-                                            Vous avez deja un compte ? <a href="{{ path('login') }}">Connecter</a>
+                                            Vous avez déja un compte ? <a href="{{ path('login') }}">Connecter</a>
                                         </div>
                                     </form>
                                 </div>
@@ -88,30 +118,33 @@
                 </section>
                 <section class="sign-up-form">
                         <h2 class="title" style="margin-top : 100px;">Compte entreprise</h2>
-                        <div class="form-group">
-                            <label>Nom d'entreprise :</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Pays :</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Localisation :</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Site Web :</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email :</label>
-                            <input type="email" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Mot de passe :</label>
-                            <input type="password" id="pass" class="form-control" required>
-                        </div>
+                        <form action="addEntreprise" method="post">
+                            <div class="form-group">
+                                <label>Nom d'entreprise :</label>
+                                <input type="text" class="form-control" name="nomEntreprise" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Pays :</label>
+                                <input type="text" class="form-control" name="pays" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Localisation :</label>
+                                <input type="text" class="form-control" name="local" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Site Web :</label>
+                                <input type="text" class="form-control" name="website" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email :</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Mot de passe :</label>
+                                <input type="password" id="pass" class="form-control" name="password" required>
+                            </div>
+                            <button type="submit" class="btn" style="color : white; margin-top : 20px;">Créer</button>
+                        </form>
                 </section>
         </div>
     </div>

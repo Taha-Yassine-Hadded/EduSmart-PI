@@ -77,11 +77,11 @@ class UserService implements UserServiceInterface {
         }
     }
 
-    public function getUserById(int $id) : User {
+    public function getUserById(int $id) : ?User {
         return $this->userRepository->find($id);
     }
     
-    public function getUserByEmail(string $email) : User {
+    public function getUserByEmail(string $email) : ?User {
         return $this->userRepository->getByEmail($email);
     }
 
