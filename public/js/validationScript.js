@@ -115,7 +115,9 @@ submitBtn.addEventListener("click", function(){
   var password = document.querySelector('#password').value;
   var confirm = document.querySelector('#confirm').value;
 
-  if (password.length >= 8) {
+  var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+  if (regex.test(password)) {
     document.getElementById('passwordAlert').classList.add('d-none');
     if (password === confirm) {
       document.getElementById('confirmAlert').classList.add('d-none');
