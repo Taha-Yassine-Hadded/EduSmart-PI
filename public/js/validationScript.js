@@ -58,9 +58,8 @@ submitBtn.addEventListener("click", function(){
   progressText[current - 1].classList.add("active");
   current += 1;
   setTimeout(function(){
-    alert("Your Form Successfully Signed up");
-    location.reload();
-  },800);
+    alert("Compte créer avec succés");
+  },500);
 });
 
 prevBtnSec.addEventListener("click", function(event){
@@ -93,9 +92,8 @@ document.addEventListener("DOMContentLoaded", function() {
     
     nextBtnFirst.disabled = !isValidEmail;
     nextBtnFirst.style.backgroundColor = isValidEmail ? "#9f1c00" : "black";
-    emailInput.style.border = isValidEmail ? "green solid 3px" : "#9f1c00 solid 3px"; // Change to #9f1c00 when valid, black when not
-    
-    // Hide or show the error message based on the validity of the email
+    emailInput.style.border = isValidEmail ? "green solid 3px" : "#9f1c00 solid 3px";
+  
     errorMessage.style.display = isValidEmail ? 'none' : 'block';
   });
 });

@@ -38,30 +38,36 @@ class SignUpController extends AbstractController
 
     #[Route('/addTeacher', name: 'addTeacher', methods: ["POST"])]
     public function addTeacher(Request $request, SessionInterface $session) {
-            
+
+        $teacherData = $session->get('teacherData');
+        if ($teacherData) {
+            $session->remove('teacherData');
+        }
             $teacherData = [
                 'nom' => $request->request->get('nom'),
                 'prenom' => $request->request->get('prenom'),
                 'genre' => $request->request->get('genre'),
+                'dateNaissance' => $request->request->get('dateNaissance')
             ];
 
+            $fileName = "";
             $file = $request->files->get('profil_picture');
             if ($file) {
                 $uuid = Uuid::v4();
                 $fileName = $uuid . '.' . $file->guessExtension();
 
-            try {
-                $file->move(
-                    'C:\xampp\htdocs\img',
-                    $fileName
-                );
-            } catch (FileException $e) {
-                throw new \Exception("There was an error adding the student: " . $e->getMessage());
-            }
+                try {
+                    $file->move(
+                        'C:\xampp\htdocs\img',
+                        $fileName
+                    );
+                } catch (FileException $e) {
+                    throw new \Exception("There was an error adding the student: " . $e->getMessage());
+                }
 
+            
+            }
             $teacherData['profilPicture'] = $fileName;
-            }
-
             $session->set('teacherData', $teacherData);
 
             return $this->render('ValidationPage.html.twig');
@@ -90,6 +96,32 @@ class SignUpController extends AbstractController
         } catch (\Exception $e) {
             return $this->json(['status' => 'error', 'message' => 'Failed to send email: ' . $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    #[Route('/saveTeacher', name: 'saveTeacher', methods: ["POST"])]
+    public function saveTeacher(Request $request, SessionInterface $session) {
+
+        $teacherData = $session->get('teacherData');
+        if (!$teacherData) {
+            return $this->redirectToRoute('Home');
+        }
+
+        $teacher = new User();
+        $teacher->setNom($teacherData['nom']);
+        $teacher->setPrenom($teacherData['prenom']);
+        $teacher->setGenre($teacherData['genre']);
+        $teacher->setDateNaissance(new \DateTimeImmutable($teacherData['dateNaissance']));
+        if ($teacherData['profilPicture'] !== "") {
+            $teacher->setProfilPicture($teacherData['profilPicture']);
+        }
+        $teacher->setEmail($request->request->get('email'));
+        $teacher->setPassword($request->request->get('password'));
+    
+        $this->userService->addTeacher($teacher);
+
+        $session->remove('teacherData');
+
+        return $this->redirectToRoute('login');
     }
 
 }

@@ -54,51 +54,51 @@
                 </div>
             </div>
             <div class="form-outer">
-                <form action="#">
-                <div class="page slide-page">
-                    <div class="field">
-                        <div class="label">
-                            Adresse E-mail
+                <form action="{{ path('saveTeacher') }}" method="post">
+                    <div class="page slide-page">
+                        <div class="field">
+                            <div class="label">
+                                Adresse E-mail
+                            </div>
+                            <input type="email" id="emailInput" name="email" placeholder="xyz@esprit.tn"> 
                         </div>
-                        <input type="email" id="emailInput" placeholder="xyz@esprit.tn"> 
-                    </div>
-                    <div class="field">
-                        <button class="firstNext next">Envoyer Code</button>
-                    </div>
-                </div>
-                <div class="page">
-                    <div class="alert alert-warning p-1" role="alert" style="margin-top: 20px;margin-right : 20px;">
-                        <span class="error-message" style="color: black;"><small>Vérifiez votre boite mail</small></span>
-                    </div>
-                    <div class="field" style="margin-bottom : 10px;">
-                        <div class="label">
-                            Code
+                        <div class="field">
+                            <button class="firstNext next">Envoyer Code</button>
                         </div>
-                        <input type="number" placeholder="XXXXX" >
                     </div>
-                    <div class="field btns">
-                        <button class="prev-1 prev">Pr&eacute;c&eacute;dent</button>
-                        <button class="next-1 next">V&eacute;rifier</button>
-                    </div>
-                </div>
-                <div class="page">
-                    <div class="field">
-                        <div class="label">
-                            Mot de passe
+                    <div class="page">
+                        <div class="alert alert-warning p-1" role="alert" style="margin-top: 20px;margin-right : 20px;">
+                            <span class="error-message" style="color: black;"><small>Code envoyé et expire dans 15 minutes</small></span>
                         </div>
-                        <input type="password">
-                    </div>
-                    <div class="field">
-                        <div class="label">
-                            Confirmer mot de passe
+                        <div class="field" style="margin-bottom : 10px;">
+                            <div class="label">
+                                Code
+                            </div>
+                            <input type="number" placeholder="XXXXX" >
                         </div>
-                        <input type="password">
+                        <div class="field btns">
+                            <button class="prev-1 prev">Pr&eacute;c&eacute;dent</button>
+                            <button class="next-1 next">V&eacute;rifier</button>
+                        </div>
                     </div>
-                    <div class="field btns">
-                        <button class="prev-2 prev">Pr&eacute;c&eacute;dent</button>
-                        <button class="submit">Enregistrer</button>
+                    <div class="page">
+                        <div class="field">
+                            <div class="label">
+                                Mot de passe
+                            </div>
+                            <input type="password" name="password">
+                        </div>
+                        <div class="field">
+                            <div class="label">
+                                Confirmer mot de passe
+                            </div>
+                            <input type="password">
+                        </div>
+                        <div class="field btns">
+                            <button class="prev-2 prev">Pr&eacute;c&eacute;dent</button>
+                            <button class="submit" type="submit">Enregistrer</button>
+                        </div>
                     </div>
-                </div>
                 </form>
             </div>
         </div>
