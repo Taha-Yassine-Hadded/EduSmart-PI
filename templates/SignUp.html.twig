@@ -35,10 +35,12 @@
                                     <form action="{{ path('addTeacher') }}" method="post" enctype="multipart/form-data" id="registrationFormTeacher" class="login">
                                         <div class="field-group">
                                             <div class="field">
-                                                <input type="text" placeholder="Nom" name="nom" required>
+                                                <input type="text" placeholder="Nom" name="nom" id="nomTeacher" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorNomTeacher"></small></span>
                                             </div>
                                             <div class="field">
-                                                <input type="text" placeholder="Prenom" name="prenom" required>
+                                                <input type="text" placeholder="Prenom" name="prenom" id="prenomTeacher" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorPrenomTeacher"></small></span>
                                             </div>
                                         </div>
                                         <div class="field-group">
@@ -51,11 +53,19 @@
                                             </div>
                                             <div class="field">
                                                     <input type="date" class="myDate" class="form-control" name="dateNaissance" id="dateTeacher" required>
-                                                    <span id="errorDateTeacher" class="info-message d-none" style="color: red;margin-top: 7px;margin-left: 10px;"><small>Minimum 2006</small></span>
+                                                    <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorDateTeacher"></small></span>
                                             </div>
                                         </div>
-                                        <input type="file" id="profilePhoto" name="profil_picture" style="display: none;" accept="image/*">
-                                        <button class="btn" type="button" style="color: white; margin-top: 20px; margin-left: 15px" onclick="document.getElementById('profilePhoto').click();">Ajouter Photo</button>
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="text" placeholder="CIN" name="cinTeacher" id="cinTeacher" style="margin-left : 12px;" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 15px;"><small id="errorCinTeacher"></small></span>
+                                            </div>
+                                            <div class="field">
+                                                <input type="file" id="profilePhoto" name="profil_picture" style="display: none;" accept="image/*">
+                                                <button class="btn" type="button" style="color: white; margin-left: 10px" onclick="document.getElementById('profilePhoto').click();">Ajouter Photo</button>
+                                            </div>
+                                        </div>
                                         <div class="btn-container">
                                             <div class="field btn">
                                                 <input type="submit" value="Continuer">
@@ -68,18 +78,22 @@
                                     <form action="{{ path('addStudent') }}" method="post" enctype="multipart/form-data" id="registrationFormStudent" class="signup">
                                         <div class="field-group">
                                             <div class="field">
-                                                <input type="text" placeholder="Nom" name="nomStudent" required>
+                                                <input type="text" placeholder="Nom" name="nomStudent" id="nomStudent" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorNomStudent"></small></span>
                                             </div>
                                             <div class="field">
-                                                <input type="text" placeholder="Prenom" name="prenomStudent" required>
+                                                <input type="text" placeholder="Prenom" name="prenomStudent" id="prenomStudent" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorPrenomStudent"></small></span>
                                             </div>
                                         </div>
                                         <div class="field-group">
                                             <div class="field">
-                                                <input type="number" placeholder="Niveau" name="niveau" required>
+                                                <input type="number" placeholder="Niveau" name="niveau" id="niveau" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorNiveau"></small></span>
                                             </div>
                                             <div class="field">
-                                                <input type="text" placeholder="Classe" name="classe" required>
+                                                <input type="text" placeholder="Classe" name="classe" id="classe" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorClasse"></small></span>
                                             </div>
                                         </div>
                                         <div class="field-group">
@@ -92,16 +106,17 @@
                                             </div>
                                             <div class="field">
                                                     <input type="date" class="myDate" class="form-control" name="dateNaissanceStudent" id="dateStudent" required>
-                                                    <span id="errorDateStudent" class="info-message d-none" style="color: red;margin-left: 10px;"><small>Minimum 2006</small></span>
+                                                    <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorDateStudent"></small></span>
                                             </div>
                                         </div>
                                         <div class="field-group">
                                             <div class="field">
-                                                <input type="text" placeholder="CIN" name="cin" required>
+                                                <input type="text" placeholder="CIN" name="cin" id="cin" style="margin-left : 12px;" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 15px;"><small id="errorCin"></small></span>
                                             </div>
                                             <div class="field">
                                                 <input type="file" id="profilePhotoStudent" name="profil_pictureStudent" style="display: none;" accept="image/*">
-                                                <button class="btn" type="button" style="color: white; margin-left: 15px; margin-top: 8px" onclick="document.getElementById('profilePhotoStudent').click();">Ajouter Photo</button>
+                                                <button class="btn" type="button" style="color: white; margin-left: 10px;" onclick="document.getElementById('profilePhotoStudent').click();">Ajouter Photo</button>
                                             </div>
                                         </div>
                                         <div class="btn-container">
@@ -120,32 +135,32 @@
                 </section>
                 <section class="sign-up-form">
                         <h2 class="title" style="margin-top : 100px;">Compte entreprise</h2>
-                        <form action="addEntreprise" method="post">
+                        <form action="{{ path('addEntreprise') }}" method="post">
                             <div class="form-group">
                                 <label>Nom d'entreprise :</label>
-                                <input type="text" class="form-control" name="nomEntreprise" required>
+                                <input type="text" class="form-control hm" name="nomEntreprise" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Pays :</label>
-                                <input type="text" class="form-control" name="pays" required>
+                                <input type="text" class="form-control hm" name="pays" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Localisation :</label>
-                                <input type="text" class="form-control" name="local" required>
+                                <input type="text" class="form-control hm" name="local" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Site Web :</label>
-                                <input type="text" class="form-control" name="website" required>
+                                <input type="text" class="form-control hm" name="website" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email :</label>
-                                <input type="email" class="form-control" name="email" required>
+                                <input type="email" class="form-control hm" name="email" required>
                             </div>
                             <div class="form-group">
                                 <label>Mot de passe :</label>
-                                <input type="password" id="pass" class="form-control" name="password" required>
+                                <input type="password" id="pass" class="form-control hm" name="password" required>
                             </div>
-                            <button type="submit" class="btn" style="color : white; margin-top : 20px;">Créer</button>
+                            <button type="submit" class="btn" style="color : white; margin-top : 20px;">Créer Compte</button>
                         </form>
                 </section>
         </div>
