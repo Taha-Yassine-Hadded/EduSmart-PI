@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\ResetPasswordToken;
 use App\Entity\RoleEnum;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -102,6 +103,16 @@ class UserRepository extends ServiceEntityRepository
         }
 
         return $roleCounts;
+    }
+
+    public function findByResetPasswordToken(string $tokenValue)
+    {
+        return $this->createQueryBuilder('u')
+            ->innerJoin(ResetPasswordToken::class, 'rpt', 'WITH', 'u.id = rpt.user')
+            ->where('rpt.token = :token')
+            ->setParameter('token', $tokenValue)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
     
 

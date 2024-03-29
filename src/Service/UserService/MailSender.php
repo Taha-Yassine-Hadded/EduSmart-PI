@@ -23,7 +23,7 @@ class MailSender
             ->from("espritedusmart@gmail.com")
             ->to($recipient)
             ->subject($subject)
-            ->text($content);
+            ->html($content);
 
         try {
             $this->mailer->send($email);
