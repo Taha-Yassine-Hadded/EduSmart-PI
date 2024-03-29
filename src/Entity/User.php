@@ -299,7 +299,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function isIsEnabled(): ?bool
+    public function getIsEnabled(): ?bool
     {
         return $this->is_enabled;
     }

@@ -21,6 +21,17 @@ class ResetPasswordTokenRepository extends ServiceEntityRepository
         parent::__construct($registry, ResetPasswordToken::class);
     }
 
+    /**
+     * Find a resetToken by their token value.
+     *
+     * @param string $token The token's value.
+     * @return ResetPasswordToken|null The resetToken if found, null otherwise.
+     */
+    public function findByToken(string $token): ?ResetPasswordToken
+    {
+        return $this->findOneBy(['token' => $token]);
+    }
+
 //    /**
 //     * @return ResetPasswordToken[] Returns an array of ResetPasswordToken objects
 //     */

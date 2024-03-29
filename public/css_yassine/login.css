@@ -30,6 +30,12 @@ body{
     border-radius: 30px;
 }
 
+.hm:focus {
+    outline: none;
+    border-color: rgb(251, 251, 251);
+    box-shadow: 0 0 0 0.15rem rgba(167, 1, 1, 0.3);
+  }
+  
 
 /*------------ For small screens------------*/
 

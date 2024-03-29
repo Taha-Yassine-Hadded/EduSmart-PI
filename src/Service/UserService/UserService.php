@@ -135,4 +135,9 @@ class UserService implements UserServiceInterface {
         return $this->userRepository->getCountByRole();
     }
 
+    public function getUserByResetPassworToken(string $tokenValue): ?User
+    {
+        return $this->userRepository->findByResetPasswordToken($tokenValue);
+    }
+
 }
