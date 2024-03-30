@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class=" container d-flex justify-content-center align-items-center pt-5">
+    <div id="{{event.getEventName()}}" class="facebook-post mb-4" >
+        <div class="post-header">
+            <div class="user-profile-image"></div>
+            <div class="user-info">
+                <span>John Smith</span>
+                <span>19hr</span>
+            </div>
+            <img class="icon" src="{{ asset('assets/ellipsis.svg') }}" alt="">
+        </div>
+        <div style="height: 200px;max-height:300px;">title+desc</div>
+        <div class="d-flex justify-content-end pe-2">
+            <a href="{{ path('event_add_participant', {'eventId': event.getId(), 'userId': user.getId() }) }}"><button class="ui-btn">
+            <span> 
+              join
+            </span>
+          </button>
+        </a>
+        </div>
+        <div class="post">
+            <img src="{{ asset('uploads/' ~ event.getEventPhoto()) }}" alt="{{ event.getEventPhoto() }}" style="object-fit: cover; width:100%; height:100%;">
+        </div>
+        <div class="post-interactions">
+            <button>
+                {% set hasLiked = false %}
+                 {% for reaction in event.getEventReactions() %}
+                    {% if reaction.getUser == user%}
+                        {% set hasLiked = true %}
+                        <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': reaction.getReactionType() }) }}" style="color: 
+                        {% if reaction.getReactionType() == 'like' %}
+                            #77A7FF
+                        {% elseif reaction.getReactionType() == 'heart' %}
+                            #F35369
+                        {% else %}
+                            #F5C33B
+                        {% endif %};
+                        text-align: center;
+                        font-size: 18px;">
+                        <img src="{{ asset('assets/reactions/' ~ reaction.getReactionType() ~ '.png') }}" alt="{{ reaction.getReactionType() }}" width="25px">
+                        {{ reaction.getReactionType() }} ({{ event.getEventReactions()|length }})
+                    </a>
+                    {% endif %}
+                {% endfor %}
+                {% if not hasLiked %}
+                    <a style="color: #3A3B3C" href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'like'}) }}">
+                        Like ({{ event.getEventReactions()|length }})
+                    </a>
+                {% endif %}
+                <span>
+                    <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'like'}) }}"><img src="{{ asset('assets/reactions/like.png') }}"></a>
+                    <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'heart'}) }}"><img src="{{ asset('assets/reactions/heart.png') }}"></a>
+                    <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'wow'}) }}"><img src="{{ asset('assets/reactions/wow.png') }}"></a>
+                    <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'laugh'}) }}"><img src="{{ asset('assets/reactions/laugh.png') }}"></a>
+                    <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'sad'}) }}"><img src="{{ asset('assets/reactions/sad.png') }}"></a>
+                    <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'angry'}) }}"><img src="{{ asset('assets/reactions/angry.png') }}"></a>
+                </span>
+            </button>
+            <button class="toggle-comment-form">comment</button>
+            <button><a class="facebook-btn" href="{{ path('event_show_route', {'id': event.getId()}) }}">Share</a></button>
+
+        </div>
+        <div class="container p-0 comment-form" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease;">
+            <form action="{{ path('add_comment', {'id': event.getId()}) }}" method="post" class="d-flex mb-4">
+               
+                <div class="input-group mt-3">
+                    <input type="text" class="form-control rounded-1 " id="comment_text" name="comment_text" placeholder="Add Comment">
+                    <div class="input-group-append ">
+                      <button class="btn btn-secondary rounded-1" type="submit">Button</button>
+                    </div>
+                    </div>
+            </form>
+            {% for comment in event.getEventComments() %}
+            <div class="comment mt-3">
+                <div class="row">
+                    <div class="col-9">
+                        <p>{{ comment.getCommentText() }}</p>
+                    </div>
+                    <div class="col-3 d-flex align-items-center justify-content-end ">
+                        <div class="btn-group " role="group">
+                            <a href="{{ path('edit_comment', {'id': event.getId(), 'commentId': comment.getId()}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <form action="{{ path('delete_comment', {'id': event.getId(), 'commentId': comment.getId()}) }}" method="post" class="d-inline">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-sm btn-outline-danger ms-1">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="event-data" 
+            data-event-id="{{ event.getId() }}" 
+            data-event-image="{{ event.getEventPhoto() }}"></div>
+            <hr class="mt-1"> 
+          
+           {% endfor %}
+        </div>
+    </div>
+</div>
+    <script src="{{asset('js/share.js')}}"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v11.0" nonce="C8UzOqqF"></script>
+       <script>
+        // Add event listeners to toggle comment form visibility
+        document.querySelectorAll('.toggle-comment-form').forEach(button => {
+            button.addEventListener('click', function() {
+                const commentForm = this.parentElement.nextElementSibling;
+                if (commentForm.style.maxHeight === '0px') {
+                    commentForm.style.maxHeight = '1000px'; // Adjust the value based on the expected maximum height
+                } else {
+                    commentForm.style.maxHeight = '0px';
+                }
+            });
+        });
+    </script>
+
+
+{% endblock %}
