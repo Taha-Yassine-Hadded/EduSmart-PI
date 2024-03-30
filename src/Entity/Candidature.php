@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\CandidatureRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use StatusEnum;
 
 #[ORM\Entity(repositoryClass: CandidatureRepository::class)]
 class Candidature
@@ -19,7 +18,7 @@ class Candidature
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255)]
-    private ?StatusEnum $status = null;
+    private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'candidatures')]
     private ?Offre $offre = null;
@@ -73,12 +72,12 @@ class Candidature
     {
         return $this->competences;
     }
-    public function getStatus(): ?StatusEnum
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(StatusEnum $status): static
+    public function setStatus(string $status): static
     {
         $this->status = $status;
 

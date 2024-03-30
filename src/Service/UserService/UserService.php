@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\UserService;
 use App\Entity\RoleEnum;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -25,6 +25,7 @@ class UserService implements UserServiceInterface {
         try {
             $admin->setPassword($this->passwordHasher->hashPassword($admin, $admin->getPassword()));
             $admin->setRole(RoleEnum::ADMIN);
+            $admin->setIsEnabled(true);
             $this->entityManager->persist($admin);
             $this->entityManager->flush();
     
@@ -38,6 +39,7 @@ class UserService implements UserServiceInterface {
         try {
             $teacher->setPassword($this->passwordHasher->hashPassword($teacher, $teacher->getPassword()));
             $teacher->setRole(RoleEnum::TEACHER);
+            $teacher->setIsEnabled(true);
             $this->entityManager->persist($teacher);
             $this->entityManager->flush();
     
@@ -51,6 +53,7 @@ class UserService implements UserServiceInterface {
         try {
             $student->setPassword($this->passwordHasher->hashPassword($student, $student->getPassword()));
             $student->setRole(RoleEnum::STUDENT);
+            $student->setIsEnabled(true);
             $this->entityManager->persist($student);
             $this->entityManager->flush();
     
@@ -64,6 +67,7 @@ class UserService implements UserServiceInterface {
         try {
             $entreprise->setPassword($this->passwordHasher->hashPassword($entreprise, $entreprise->getPassword()));
             $entreprise->setRole(RoleEnum::ENTREPRISE);
+            $entreprise->setIsEnabled(true);
             $this->entityManager->persist($entreprise);
             $this->entityManager->flush();
     
@@ -73,11 +77,11 @@ class UserService implements UserServiceInterface {
         }
     }
 
-    public function getUserById(int $id) : User {
+    public function getUserById(int $id) : ?User {
         return $this->userRepository->find($id);
     }
     
-    public function getUserByEmail(string $email) : User {
+    public function getUserByEmail(string $email) : ?User {
         return $this->userRepository->getByEmail($email);
     }
 
@@ -94,7 +98,7 @@ class UserService implements UserServiceInterface {
         return $this->userRepository->findAll();
     }
 
-    public function getUsersByRole(RoleEnum $role)
+    public function getUsersByRole(RoleEnum $role) : array
     {
         return $this->userRepository->getByRole($role);
     }
@@ -119,5 +123,21 @@ class UserService implements UserServiceInterface {
         $this->userRepository->changeRoleFromClubToStudent($id);
     }
 
+    public function changePassword(string $password, User $user) : void
+    {
+        $user->setPassword($this->passwordHasher->hashPassword($user, $password));
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+
+    public function getUserCountByRole(): array 
+    {
+        return $this->userRepository->getCountByRole();
+    }
+
+    public function getUserByResetPassworToken(string $tokenValue): ?User
+    {
+        return $this->userRepository->findByResetPasswordToken($tokenValue);
+    }
 
 }

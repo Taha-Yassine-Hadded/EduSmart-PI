@@ -2,40 +2,37 @@
 
 namespace App\Entity;
 
-use App\Repository\RememberMeTokenRepository;
+use App\Repository\ValidationCodeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: RememberMeTokenRepository::class)]
-class RememberMeToken
+#[ORM\Entity(repositoryClass: ValidationCodeRepository::class)]
+class ValidationCode
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $token = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $reset_code = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $expires_at = null;
-
-    #[ORM\OneToOne(inversedBy: 'rememberMeToken', cascade: ['persist', 'remove'])]
-    private ?User $user = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getToken(): ?string
+    public function getResetCode(): ?int
     {
-        return $this->token;
+        return $this->reset_code;
     }
 
-    public function setToken(?string $token): static
+    public function setResetCode(?int $reset_code): static
     {
-        $this->token = $token;
+        $this->reset_code = $reset_code;
 
         return $this;
     }
@@ -52,15 +49,4 @@ class RememberMeToken
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
 }

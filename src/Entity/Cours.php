@@ -23,7 +23,7 @@ class Cours
     private ?int $niveau = null;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
-    private ?user $teacher = null;
+    private ?User $teacher = null;
 
     public function getId(): ?int
     {
@@ -66,12 +66,12 @@ class Cours
         return $this;
     }
 
-    public function getTeacher(): ?user
+    public function getTeacher(): ?User
     {
         return $this->teacher;
     }
 
-    public function setTeacher(?user $teacher): static
+    public function setTeacher(?User $teacher): static
     {
         $this->teacher = $teacher;
 

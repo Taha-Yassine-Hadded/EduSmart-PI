@@ -18,7 +18,7 @@ class Publication
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'publications')]
-    private ?user $CLUB_RH = null;
+    private ?User $CLUB_RH = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $contenu = null;
@@ -40,12 +40,12 @@ class Publication
         return $this;
     }
 
-    public function getCLUBRH(): ?user
+    public function getCLUBRH(): ?User
     {
         return $this->CLUB_RH;
     }
 
-    public function setCLUBRH(?user $CLUB_RH): static
+    public function setCLUBRH(?User $CLUB_RH): static
     {
         $this->CLUB_RH = $CLUB_RH;
 

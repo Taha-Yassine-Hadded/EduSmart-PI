@@ -50,8 +50,8 @@ class User implements UserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $genre = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_naissance = null;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $date_naissance = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profil_picture = null;
@@ -62,15 +62,68 @@ class User implements UserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $is_enabled = null;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?RememberMeToken $rememberMeToken = null;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Candidature::class)]
+    private Collection $candidatures;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: PasswordResetRequest::class)]
-    private Collection $passwordResetRequests;
+    #[ORM\OneToMany(mappedBy: 'entreprise_id', targetEntity: Offre::class, orphanRemoval: true)]
+    private Collection $offres;
+
+    #[ORM\OneToMany(mappedBy: 'CLUB_RH', targetEntity: Publication::class)]
+    private Collection $publications;
+
+    #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: Inscription::class)]
+    private Collection $inscriptions;
+
+    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Cours::class)]
+    private Collection $cours;
+
+    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Project::class)]
+    private Collection $projects;
+
+    #[ORM\ManyToMany(targetEntity: ProjectMembers::class, mappedBy: 'student')]
+    private Collection $projectMembers;
+
+    #[ORM\OneToMany(mappedBy: 'sender', targetEntity: Message::class)]
+    private Collection $messages;
+
+    #[ORM\OneToMany(mappedBy: 'uploaded_by', targetEntity: File::class)]
+    private Collection $files;
+
+    #[ORM\OneToMany(mappedBy: 'admin', targetEntity: Events::class)]
+    private Collection $events;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventReactions::class)]
+    private Collection $eventReactions;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventComments::class)]
+    private Collection $eventComments;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notifications::class)]
+    private Collection $notifications;
+
+    #[ORM\ManyToMany(targetEntity: Events::class, mappedBy: 'participants')]
+    private Collection $event_participant;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPasswordToken::class)]
+    private Collection $resetPasswordTokens;
 
     public function __construct()
     {
-        $this->passwordResetRequests = new ArrayCollection();
+        $this->candidatures = new ArrayCollection();
+        $this->offres = new ArrayCollection();
+        $this->publications = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
+        $this->cours = new ArrayCollection();
+        $this->projects = new ArrayCollection();
+        $this->projectMembers = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->files = new ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->eventReactions = new ArrayCollection();
+        $this->eventComments = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->event_participant = new ArrayCollection();
+        $this->resetPasswordTokens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -210,12 +263,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDateNaissance(): ?\DateTimeInterface
+    public function getDateNaissance(): ?\DateTimeImmutable
     {
         return $this->date_naissance;
     }
 
-    public function setDateNaissance(?\DateTimeInterface $date_naissance): static
+    public function setDateNaissance(?\DateTimeImmutable $date_naissance): static
     {
         $this->date_naissance = $date_naissance;
 
@@ -246,7 +299,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function isIsEnabled(): ?bool
+    public function getIsEnabled(): ?bool
     {
         return $this->is_enabled;
     }
@@ -259,71 +312,17 @@ class User implements UserInterface
     }
 
 
-    public function getRememberMeToken(): ?RememberMeToken
-    {
-        return $this->rememberMeToken;
-    }
-
-    public function setRememberMeToken(?RememberMeToken $rememberMeToken): static
-    {
-        
-        if ($rememberMeToken === null && $this->rememberMeToken !== null) {
-            $this->rememberMeToken->setUser(null);
-        }
-
-        
-        if ($rememberMeToken !== null && $rememberMeToken->getUser() !== $this) {
-            $rememberMeToken->setUser($this);
-        }
-
-        $this->rememberMeToken = $rememberMeToken;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, PasswordResetRequest>
-     */
-    public function getPasswordResetRequests(): Collection
-    {
-        return $this->passwordResetRequests;
-    }
-
-    public function addPasswordResetRequest(PasswordResetRequest $passwordResetRequest): static
-    {
-        if (!$this->passwordResetRequests->contains($passwordResetRequest)) {
-            $this->passwordResetRequests->add($passwordResetRequest);
-            $passwordResetRequest->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removePasswordResetRequest(PasswordResetRequest $passwordResetRequest): static
-    {
-        if ($this->passwordResetRequests->removeElement($passwordResetRequest)) {
-            if ($passwordResetRequest->getUser() === $this) {
-                $passwordResetRequest->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-
     public function getRoles(): array
     {
-    return [$this->role->value];
+        return [$this->role->value];
     }
-public function getSalt(): ?string
-{
-    return null;
-}
+    public function getSalt(): ?string
+    {
+        return null;
+    }
 
 public function eraseCredentials(): void
-{
-
-}
+{}
 
 public function getUsername(): string
 {
@@ -334,6 +333,461 @@ public function getUserIdentifier(): string
 {
     return $this->email;
 }
+
+
+
+
+
+
+
+    /**
+     * @return Collection<int, candidature>
+     */
+    public function getCandidatures(): Collection
+    {
+        return $this->candidatures;
+    }
+
+    public function addCandidature(Candidature $candidature): static
+    {
+        if (!$this->candidatures->contains($candidature)) {
+            $this->candidatures->add($candidature);
+            $candidature->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCandidature(Candidature $candidature): static
+    {
+        if ($this->candidatures->removeElement($candidature)) {
+            // set the owning side to null (unless already changed)
+            if ($candidature->getUser() === $this) {
+                $candidature->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Offre>
+     */
+    public function getOffres(): Collection
+    {
+        return $this->offres;
+    }
+
+    public function addOffre(Offre $offre): static
+    {
+        if (!$this->offres->contains($offre)) {
+            $this->offres->add($offre);
+            $offre->setEntreprise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffre(Offre $offre): static
+    {
+        if ($this->offres->removeElement($offre)) {
+            // set the owning side to null (unless already changed)
+            if ($offre->getEntreprise() === $this) {
+                $offre->setEntreprise(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Publication>
+     */
+    public function getPublications(): Collection
+    {
+        return $this->publications;
+    }
+
+    public function addPublication(Publication $publication): static
+    {
+        if (!$this->publications->contains($publication)) {
+            $this->publications->add($publication);
+            $publication->setCLUBRH($this);
+        }
+
+        return $this;
+    }
+
+    public function removePublication(Publication $publication): static
+    {
+        if ($this->publications->removeElement($publication)) {
+            // set the owning side to null (unless already changed)
+            if ($publication->getCLUBRH() === $this) {
+                $publication->setCLUBRH(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Inscription>
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+
+    public function addInscription(Inscription $inscription): static
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions->add($inscription);
+            $inscription->setEtudiant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscription $inscription): static
+    {
+        if ($this->inscriptions->removeElement($inscription)) {
+            // set the owning side to null (unless already changed)
+            if ($inscription->getEtudiant() === $this) {
+                $inscription->setEtudiant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cours>
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cours $cour): static
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours->add($cour);
+            $cour->setTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cours $cour): static
+    {
+        if ($this->cours->removeElement($cour)) {
+            // set the owning side to null (unless already changed)
+            if ($cour->getTeacher() === $this) {
+                $cour->setTeacher(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): static
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+            $project->setTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): static
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getTeacher() === $this) {
+                $project->setTeacher(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectMembers>
+     */
+    public function getProjectMembers(): Collection
+    {
+        return $this->projectMembers;
+    }
+
+    public function addProjectMember(ProjectMembers $projectMember): static
+    {
+        if (!$this->projectMembers->contains($projectMember)) {
+            $this->projectMembers->add($projectMember);
+            $projectMember->addStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectMember(ProjectMembers $projectMember): static
+    {
+        if ($this->projectMembers->removeElement($projectMember)) {
+            $projectMember->removeStudent($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getSender() === $this) {
+                $message->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, File>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(File $file): static
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+            $file->setUploadedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(File $file): static
+    {
+        if ($this->files->removeElement($file)) {
+            // set the owning side to null (unless already changed)
+            if ($file->getUploadedBy() === $this) {
+                $file->setUploadedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Events>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Events $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->setAdmin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Events $event): static
+    {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getAdmin() === $this) {
+                $event->setAdmin(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventReactions>
+     */
+    public function getEventReactions(): Collection
+    {
+        return $this->eventReactions;
+    }
+
+    public function addEventReaction(EventReactions $eventReaction): static
+    {
+        if (!$this->eventReactions->contains($eventReaction)) {
+            $this->eventReactions->add($eventReaction);
+            $eventReaction->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventReaction(EventReactions $eventReaction): static
+    {
+        if ($this->eventReactions->removeElement($eventReaction)) {
+            // set the owning side to null (unless already changed)
+            if ($eventReaction->getUser() === $this) {
+                $eventReaction->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventComments>
+     */
+    public function getEventComments(): Collection
+    {
+        return $this->eventComments;
+    }
+
+    public function addEventComment(EventComments $eventComment): static
+    {
+        if (!$this->eventComments->contains($eventComment)) {
+            $this->eventComments->add($eventComment);
+            $eventComment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventComment(EventComments $eventComment): static
+    {
+        if ($this->eventComments->removeElement($eventComment)) {
+            // set the owning side to null (unless already changed)
+            if ($eventComment->getUser() === $this) {
+                $eventComment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notifications>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notifications $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notifications $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Events>
+     */
+    public function getEventParticipant(): Collection
+    {
+        return $this->event_participant;
+    }
+
+    public function addEventParticipant(Events $eventParticipant): static
+    {
+        if (!$this->event_participant->contains($eventParticipant)) {
+            $this->event_participant->add($eventParticipant);
+            $eventParticipant->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventParticipant(Events $eventParticipant): static
+    {
+        if ($this->event_participant->removeElement($eventParticipant)) {
+            $eventParticipant->removeParticipant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ResetPasswordToken>
+     */
+    public function getResetPasswordTokens(): Collection
+    {
+        return $this->resetPasswordTokens;
+    }
+
+    public function addResetPasswordToken(ResetPasswordToken $resetPasswordToken): static
+    {
+        if (!$this->resetPasswordTokens->contains($resetPasswordToken)) {
+            $this->resetPasswordTokens->add($resetPasswordToken);
+            $resetPasswordToken->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResetPasswordToken(ResetPasswordToken $resetPasswordToken): static
+    {
+        if ($this->resetPasswordTokens->removeElement($resetPasswordToken)) {
+            // set the owning side to null (unless already changed)
+            if ($resetPasswordToken->getUser() === $this) {
+                $resetPasswordToken->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+
+
 
 
 }

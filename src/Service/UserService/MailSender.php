@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\UserService;
 
 
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -23,7 +23,7 @@ class MailSender
             ->from("espritedusmart@gmail.com")
             ->to($recipient)
             ->subject($subject)
-            ->text($content);
+            ->html($content);
 
         try {
             $this->mailer->send($email);

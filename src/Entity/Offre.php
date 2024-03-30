@@ -36,7 +36,7 @@ class Offre
 
     #[ORM\ManyToOne(inversedBy: 'offres')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $entreprise = null;
+    private ?User $entreprise = null;
 
     public function __construct()
     {
@@ -140,12 +140,12 @@ class Offre
         return $this;
     }
 
-    public function getEntreprise(): ?user
+    public function getEntreprise(): ?User
     {
         return $this->entreprise;
     }
 
-    public function setEntreprise(?user $entreprise): static
+    public function setEntreprise(?User $entreprise): static
     {
         $this->entreprise = $entreprise;
 

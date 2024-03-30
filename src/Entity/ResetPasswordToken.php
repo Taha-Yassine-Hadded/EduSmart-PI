@@ -2,25 +2,25 @@
 
 namespace App\Entity;
 
-use App\Repository\PasswordResetRequestRepository;
+use App\Repository\ResetPasswordTokenRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PasswordResetRequestRepository::class)]
-class PasswordResetRequest
+#[ORM\Entity(repositoryClass: ResetPasswordTokenRepository::class)]
+class ResetPasswordToken
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $reset_code = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $expires_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'passwordResetRequests')]
+    #[ORM\ManyToOne(inversedBy: 'resetPasswordTokens')]
     private ?User $user = null;
 
     public function getId(): ?int
@@ -28,14 +28,14 @@ class PasswordResetRequest
         return $this->id;
     }
 
-    public function getResetCode(): ?int
+    public function getToken(): ?string
     {
-        return $this->reset_code;
+        return $this->token;
     }
 
-    public function setResetCode(?int $reset_code): static
+    public function setToken(?string $token): static
     {
-        $this->reset_code = $reset_code;
+        $this->token = $token;
 
         return $this;
     }
