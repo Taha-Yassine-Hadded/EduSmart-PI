@@ -62,49 +62,49 @@ class User implements UserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $is_enabled = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Candidature::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Candidature::class, cascade: ['persist', 'remove'])]
     private Collection $candidatures;
 
-    #[ORM\OneToMany(mappedBy: 'entreprise_id', targetEntity: Offre::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Offre::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $offres;
 
-    #[ORM\OneToMany(mappedBy: 'CLUB_RH', targetEntity: Publication::class)]
+    #[ORM\OneToMany(mappedBy: 'CLUB_RH', targetEntity: Publication::class, cascade: ['persist', 'remove'])]
     private Collection $publications;
 
-    #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: Inscription::class)]
+    #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: Inscription::class, cascade: ['persist', 'remove'])]
     private Collection $inscriptions;
 
-    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Cours::class)]
+    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Cours::class, cascade: ['persist', 'remove'])]
     private Collection $cours;
 
-    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Project::class)]
+    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Project::class, cascade: ['persist', 'remove'])]
     private Collection $projects;
 
-    #[ORM\ManyToMany(targetEntity: ProjectMembers::class, mappedBy: 'student')]
+    #[ORM\ManyToMany(targetEntity: ProjectMembers::class, mappedBy: 'student', cascade: ['persist', 'remove'])]
     private Collection $projectMembers;
 
-    #[ORM\OneToMany(mappedBy: 'sender', targetEntity: Message::class)]
+    #[ORM\OneToMany(mappedBy: 'sender', targetEntity: Message::class, cascade: ['persist', 'remove'])]
     private Collection $messages;
 
-    #[ORM\OneToMany(mappedBy: 'uploaded_by', targetEntity: File::class)]
+    #[ORM\OneToMany(mappedBy: 'uploaded_by', targetEntity: File::class, cascade: ['persist', 'remove'])]
     private Collection $files;
 
-    #[ORM\OneToMany(mappedBy: 'admin', targetEntity: Events::class)]
+    #[ORM\OneToMany(mappedBy: 'admin', targetEntity: Events::class, cascade: ['persist', 'remove'])]
     private Collection $events;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventReactions::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventReactions::class, cascade: ['persist', 'remove'])]
     private Collection $eventReactions;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventComments::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventComments::class, cascade: ['persist', 'remove'])]
     private Collection $eventComments;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notifications::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notifications::class, cascade: ['persist', 'remove'])]
     private Collection $notifications;
 
-    #[ORM\ManyToMany(targetEntity: Events::class, mappedBy: 'participants')]
+    #[ORM\ManyToMany(targetEntity: Events::class, mappedBy: 'participants', cascade: ['persist', 'remove'])]
     private Collection $event_participant;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPasswordToken::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPasswordToken::class, cascade: ['persist', 'remove'])]
     private Collection $resetPasswordTokens;
 
     public function __construct()
@@ -314,7 +314,7 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        return [$this->role->value];
+        return ['ROLE_' . $this->role->value];
     }
     public function getSalt(): ?string
     {

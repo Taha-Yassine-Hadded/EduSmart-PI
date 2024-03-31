@@ -81,21 +81,23 @@ class ForgotPasswordController extends AbstractController
     #[Route('/resetPassword', name: 'resetPassword')]
     public function resetPassword(Request $request): Response
     {
-        $token = $request->query->get('token');
-        $user = $this->tokenService->getByToken($token)->getUser();
+        $tokenValue = $request->query->get('token');
 
-        if (!$user) {
-            if ( new \DateTime() >= $this->tokenService->getByToken($token)->getExpiresAt()) {
-                // Token expired
-                $message = "Token expiré !";
-                return $this->render('ForgotPassword.html.twig', ['message' => $message]);
-            } else {
-                // Token is invalid
-                $message = "Token invalid !";
-                return $this->render('ForgotPassword.html.twig', ['message' => $message]);
+        $token = $this->tokenService->getByToken($tokenValue);
+
+        if ($token) {
+            if(new \DateTime() < $token->getExpiresAt()) {
+                return $this->render('ResetPassword.html.twig', ['token' => $tokenValue]);
             }
+            else {
+                $this->addFlash('msg', 'Token expiré !');
+                return $this->redirectToRoute('forgotPassword');
+            }
+        } else {
+            $this->addFlash('msg', 'Token invalid !');
+            return $this->redirectToRoute('forgotPassword');
         }
-        return $this->render('ResetPassword.html.twig', ['token' => $token]);
+
 }
 
 
