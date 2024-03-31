@@ -13,6 +13,7 @@ class UserService implements UserServiceInterface {
     private $userRepository;
     private $entityManager;
     private $passwordHasher;
+    
 
     public function __construct(UserPasswordHasherInterface $passwordHasher,UserRepository $userRepository, EntityManagerInterface $entityManager)
     {
@@ -106,21 +107,25 @@ class UserService implements UserServiceInterface {
     public function blockUser(int $id) : void
     {
         $this->userRepository->find($id)->setIsEnabled(false);
+        $this->entityManager->flush();
     }
 
     public function unblockUser(int $id) : void
     {
         $this->userRepository->find($id)->setIsEnabled(true);
+        $this->entityManager->flush();
     }
 
     public function toClubRH(int $id) : void 
     {
         $this->userRepository->changeRoleFromStudentToClub($id);
+        $this->entityManager->flush();
     }
 
     public function toStudent(int $id) : void 
     {
         $this->userRepository->changeRoleFromClubToStudent($id);
+        $this->entityManager->flush();
     }
 
     public function changePassword(string $password, User $user) : void
