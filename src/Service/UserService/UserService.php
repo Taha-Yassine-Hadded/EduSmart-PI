@@ -64,6 +64,20 @@ class UserService implements UserServiceInterface {
         }
     }
 
+    public function addClub(User $student) : User {
+        try {
+            $student->setPassword($this->passwordHasher->hashPassword($student, $student->getPassword()));
+            $student->setRole(RoleEnum::CLUB);
+            $student->setIsEnabled(true);
+            $this->entityManager->persist($student);
+            $this->entityManager->flush();
+    
+            return $student;
+        } catch (\Exception $e) {
+            throw new \Exception("There was an error adding the student: " . $e->getMessage());
+        }
+    }
+
     public function addEntreprise(User $entreprise) : User {
         try {
             $entreprise->setPassword($this->passwordHasher->hashPassword($entreprise, $entreprise->getPassword()));

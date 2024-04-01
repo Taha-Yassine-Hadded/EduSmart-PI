@@ -135,7 +135,7 @@
                 </section>
                 <section class="sign-up-form">
                         <h2 class="title" style="margin-top : 100px;">Compte entreprise</h2>
-                        <form action="{{ path('addEntreprise') }}" method="post">
+                        <form action="{{ path('addEntreprise') }}" method="post" id="entrepriseForm">
                             <div class="form-group">
                                 <label>Nom d'entreprise :</label>
                                 <input type="text" class="form-control hm" name="nomEntreprise" required>
@@ -159,6 +159,7 @@
                             <div class="form-group">
                                 <label>Mot de passe :</label>
                                 <input type="password" id="pass" class="form-control hm" name="password" required>
+                                <span style="color: red;"><small id="pwdError"></small></span>
                             </div>
                             <button type="submit" class="btn" style="color : white; margin-top : 20px;">Créer Compte</button>
                         </form>
@@ -199,6 +200,21 @@
            loginForm.style.marginLeft = "0%";
            loginText.style.marginLeft = "0%";
          });
+
+         document.getElementById('entrepriseForm').addEventListener('submit', function(event)  {
+            var password = document.querySelector('#pass').value;
+            var pwdError = document.getElementById('pwdError');
+
+            var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+            if (!regex.test(password)) {
+                event.preventDefault();
+                pwdError.textContent = 'MAJ/min/chiffre/caractère spécial';
+            } else {
+                pwdError.textContent = '';
+            }
+            });
+
 </script>
 
 <script src="/js/register.js"></script>

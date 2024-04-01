@@ -4,12 +4,16 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'L\'email est déjà utilisé.', groups: ['registration'])]
 class User implements UserInterface
 {
     #[ORM\Id]
@@ -18,9 +22,17 @@ class User implements UserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le nom ne peut pas être vide.", groups: ['Default'])]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, unique:true)]
+    #[Assert\NotBlank(message: "L'email ne peut pas être vide.", groups: ['Default'])]
+    #[Assert\Email(message: "L'email '{{ value }}' n'est pas un email valide.", groups: ['Entreprise'])]
+    #[Assert\Regex(
+        pattern: '/^[^@]+@esprit\.tn$/',
+        message: "L'email doit se terminer par @esprit.tn.",
+        groups: ['Student','Teacher']
+    )]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -30,33 +42,87 @@ class User implements UserInterface
     private ?RoleEnum $role = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le site web ne peut pas être vide.", groups: ['Entreprise'])]
     private ?string $website = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le classe ne peut pas être vide.", groups: ['Student'])]
     private ?string $classe = null;
 
+    #[Assert\Callback(groups: ['Student'])]
+    public function validateClasse(ExecutionContextInterface $context): void
+    {
+    if ($this->classe !== null && $this->niveau !== null) {
+        $niveauFirstChar = substr((string) $this->niveau, 0, 1);
+        $classeFirstChar = substr($this->classe, 0, 1);
+
+            if ($classeFirstChar !== $niveauFirstChar || strlen($this->classe) < 2) {
+                $context->buildViolation('La classe doit commencer par le même chiffre que le niveau')
+                        ->atPath('classe')
+                        ->addViolation();
+            }
+        }
+    }
+
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le pays ne peut pas être vide.", groups: ['Entreprise'])]
     private ?string $pays = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "La localisation ne peut pas être vide.", groups: ['Entreprise'])]
     private ?string $localisation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le cin ne peut pas être vide.", groups: ['Teacher','Student'])]
+    #[Assert\Length(
+        exactMessage: "Le cin doit être de longueur 8.",
+        min: 8,
+        max: 8,
+        groups: ['Teacher', 'Student']
+    )]
+    #[Assert\Regex(
+        pattern: '/^[01]\d{7}$/',
+        message: "Le cin doit commencer par 0 ou 1 et contenir 8 chiffres.",
+        groups: ['Teacher', 'Student']
+    )]
     private ?string $cin = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank(message: "Le niveau ne peut pas être vide.", groups: ['Student'])]
+    #[Assert\Range(
+        min: 1,
+        max: 5,
+        notInRangeMessage: 'Le niveau doit être entre {{ min }} et {{ max }}.',
+        groups: ['Student']
+    )]
     private ?int $niveau = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le genre ne peut pas être vide.", groups: ['Student','Teacher'])]
     private ?string $genre = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    #[Assert\NotBlank(message: "La date de naissance ne peut pas être vide.", groups: ['Student','Teacher'])]
     private ?\DateTimeImmutable $date_naissance = null;
+
+    #[Assert\Callback(groups: ['Student', 'Teacher'])]
+    public function validateDateNaissance(ExecutionContextInterface $context, $payload): void
+    {
+    
+    $latestDate = new \DateTimeImmutable('2006-01-01');
+
+    if ($this->date_naissance !== null && $this->date_naissance > $latestDate) {
+        $context->buildViolation('La date de naissance doit être moins de l\'année 2006')
+                ->atPath('dateNaissance')
+                ->addViolation();
+        }  
+    }
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profil_picture = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.", groups: ['Student','Teacher'])]
     private ?string $prenom = null;
 
     #[ORM\Column(nullable: true)]
