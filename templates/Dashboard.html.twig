@@ -39,7 +39,7 @@
                     <i class="uil uil-chart"></i>
                     <span class="link-name">Analytique</span>
                 </a></li>
-				<li><a href="#">
+				<li><a href="{{ path('changePasswordAdmin') }}">
                     <i class="uil uil-key-skeleton"></i>
                     <span class="link-name">Mot de passe</span>
                 </a></li>
@@ -50,9 +50,11 @@
             </ul>
             
             <ul class="logout-mode">
-                <li><a href="#">
+                <li><a href="#" id="logoutLink">
                     <i class="uil uil-signout"></i>
                     <span class="link-name">Se déconnecter</span>
+                    <form id="logoutForm" action="{{ path('logout') }}" method="post" style="display: none;">
+                    </form>
                 </a></li>
                 <li class="mode">
                     <a href="#">
@@ -116,7 +118,7 @@
                     <i class="uil uil-list-ol"></i>
                     <span class="text">Liste des enseignants</span>
                 </div>
-                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="#">
+                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="{{ path('newTeacher') }}">
                     <i class="uil uil-plus"></i> Ajouter
                 </a>
                 {% if teachers is empty %}
@@ -151,10 +153,10 @@
                                             <i class="uil uil-unlock"></i>
                                         </a>
                                         {% endif %}
-                                        <a class="btn btn-info m-1 p-1 text-white" href="#" >
+                                        <a class="btn btn-info m-1 p-1 text-white" href="{{ path('editTeacher',{'id':teacher.id}) }}" >
                                             <i class="uil uil-edit-alt"></i>
                                         </a>
-                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':teacher.id}) }}" >
+                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':teacher.id}) }}" onclick="return confirmDelete()">
                                             <i class="uil uil-trash"></i>
                                         </a>
                                     </td>
@@ -171,7 +173,7 @@
                     <span class="text">Liste des étudiants</span>
                 </div>
 
-                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="#">
+                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="{{ path('newStudent') }}">
                     <i class="uil uil-plus"></i> Ajouter
                 </a>
                 {% if students is empty %}
@@ -213,10 +215,10 @@
                                             <i class="uil uil-unlock"></i>
                                         </a>
                                         {% endif %}
-                                        <a class="btn btn-info m-1 p-1 text-white" href="#" >
+                                        <a class="btn btn-info m-1 p-1 text-white" href="{{ path('editStudent',{'id':student.id}) }}" >
                                             <i class="uil uil-edit-alt"></i>
                                         </a>
-                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':student.id}) }}" >
+                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':student.id}) }}" onclick="return confirmDelete()">
                                             <i class="uil uil-trash"></i>
                                         </a>
                                     </td>
@@ -232,10 +234,6 @@
                     <i class="uil uil-list-ol"></i>
                     <span class="text">Liste des clubs RH</span>
                 </div>
-
-                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="#">
-                    <i class="uil uil-plus"></i> Ajouter
-                </a>
                 {% if clubs is empty %}
                 <p class="h5 my-alert alert text-center border-light border-3">Aucun club RH pour le moment !</p>
                 {% else %}
@@ -275,10 +273,10 @@
                                             <i class="uil uil-unlock"></i>
                                         </a>
                                         {% endif %}
-                                        <a class="btn btn-info m-1 p-1 text-white" href="#" >
+                                        <a class="btn btn-info m-1 p-1 text-white" href="{{ path('editClub',{'id':club.id}) }}" >
                                             <i class="uil uil-edit-alt"></i>
                                         </a>
-                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':club.id}) }}" >
+                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':club.id}) }}" onclick="return confirmDelete()">
                                             <i class="uil uil-trash"></i>
                                         </a>
                                     </td>
@@ -295,7 +293,7 @@
                     <span class="text">Liste des entreprises</span>
                 </div>
 
-                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="#">
+                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="{{ path('newEntreprise') }}">
                     <i class="uil uil-plus"></i> Ajouter
                 </a>
                 {% if entreprises is empty %}
@@ -330,10 +328,10 @@
                                             <i class="uil uil-unlock"></i>
                                         </a>
                                         {% endif %}
-                                        <a class="btn btn-info m-1 p-1 text-white" href="#" >
+                                        <a class="btn btn-info m-1 p-1 text-white" href="{{ path('editEntreprise',{'id':entreprise.id}) }}" >
                                             <i class="uil uil-edit-alt"></i>
                                         </a>
-                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':entreprise.id}) }}" >
+                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':entreprise.id}) }}" onclick="return confirmDelete()">
                                             <i class="uil uil-trash"></i>
                                         </a>
                                     </td>
@@ -349,5 +347,20 @@
     </section>
 
     <script src="/js/dashboard.js"></script>
+
+    <script>
+        function confirmDelete() {
+
+            var confirmAction = confirm("êtes-vous sure de supprimer cet utilisateur ?");
+
+            return confirmAction;
+        }
+
+        document.getElementById('logoutLink').addEventListener('click', function(event) {
+            event.preventDefault(); // Stop the link from causing a page navigate
+            document.getElementById('logoutForm').submit(); // Submit the invisible form
+        });
+
+    </script> 
 </body>
 </html>

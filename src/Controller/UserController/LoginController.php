@@ -18,9 +18,13 @@ class LoginController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         $captchaFailed = $request->query->get('captcha_failed', false);
-        
+
         if($authenticationUtils->getLastAuthenticationError()) {
-            $error = 'Veuillez vérifiez vos informations de connexion.';    
+            if ($authenticationUtils->getLastAuthenticationError() != null && $authenticationUtils->getLastAuthenticationError()->getMessageKey() === 'Votre compte pas désactivé.') {
+                $error = 'Votre compte est pas désactivé. Veuillez contacter l\'administrateur.';
+            } else {
+                $error = 'Veuillez vérifier vos informations de connexion.';
+            }   
         }elseif($captchaFailed) {
             $error = 'Veuillez vérifiez le CAPTCHA.';
         }else {
