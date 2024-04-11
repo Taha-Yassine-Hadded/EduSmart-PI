@@ -31,6 +31,13 @@ class Candidature
 
     #[ORM\Column(length: 255)]
     private ?string $cv = null;
+    private ?User $entreprise = null;
+
+    public function __construct()
+    {
+        $this->candidatures = null;
+        $this->entreprise = null;
+    }
 
     public function getId(): ?int
     {

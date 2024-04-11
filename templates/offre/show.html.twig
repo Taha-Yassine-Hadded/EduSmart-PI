@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Offre{% endblock %}
+
+{% block body %}
+    <h1>Offre</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Titre</th>
+                <td>{{ offre.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ offre.description }}</td>
+            </tr>
+            <tr>
+                <th>Competences</th>
+                <td>{{ offre.competences }}</td>
+            </tr>
+            <tr>
+                <th>Nbr</th>
+                <td>{{ offre.nbr }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h1>candidature list</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                
+                <th>competences</th>
+                <th>cv</th>
+                <th>Date</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in list %}
+            <tr>
+                
+                <td>{{ c.competences }}</td>
+                <td>{{ c.cv }}</td>
+                <td>{{ c.date ? c.date|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="#">accepter</a>
+                    <a href="#">refuser</a>
+                  
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_offre_index') }}">back to list</a>
+
+    {{ include('offre/_delete_form.html.twig') }}
+{% endblock %}

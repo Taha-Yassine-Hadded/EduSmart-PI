@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Candidature;
+use App\Entity\Offre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,14 @@ class CandidatureRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Candidature::class);
+    }
+    public function findByOffre(Offre $offre)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.offre= :offre')
+            ->setParameter('offre', $offre)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**
