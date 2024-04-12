@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CandidatureRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CandidatureRepository::class)]
 class Candidature
@@ -27,9 +28,11 @@ class Candidature
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "competences ne peut pas être vide.")]
     private ?string $competences = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "cv ne peut pas être vide.")]
     private ?string $cv = null;
     private ?User $entreprise = null;
 
