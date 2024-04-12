@@ -58,7 +58,8 @@ class SignUpController extends AbstractController
                 'nom' => $request->request->get('nom'),
                 'prenom' => $request->request->get('prenom'),
                 'genre' => $request->request->get('genre'),
-                'dateNaissance' => $request->request->get('dateNaissance')
+                'dateNaissance' => $request->request->get('dateNaissance'),
+                'cin' => $request->request->get('cinTeacher')
             ];
 
             $fileName = "";
@@ -204,8 +205,8 @@ class SignUpController extends AbstractController
     }
 
 
-    #[Route('/saveTeacher', name: 'saveTeacher', methods: ["POST"])]
-    public function saveTeacher(Request $request, SessionInterface $session) {
+    #[Route('/saveUser', name: 'saveUser', methods: ["POST"])]
+    public function saveUser(Request $request, SessionInterface $session) {
 
         $teacherData = $session->get('teacherData');
         $studentData = $session->get('studentData');
@@ -215,6 +216,7 @@ class SignUpController extends AbstractController
             $teacher->setNom($teacherData['nom']);
             $teacher->setPrenom($teacherData['prenom']);
             $teacher->setGenre($teacherData['genre']);
+            $teacher->setCin($teacherData['cin']);
             $teacher->setDateNaissance(new \DateTimeImmutable($teacherData['dateNaissance']));
             if ($teacherData['profilPicture'] !== "") {
                 $teacher->setProfilPicture($teacherData['profilPicture']);

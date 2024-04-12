@@ -29,8 +29,12 @@ class ResetPasswordTokenService {
         }
     }
 
-    public function getById(int $id) : ResetPasswordToken {
+    public function getById(int $id) : ?ResetPasswordToken {
         return $this->repo->find($id);
+    }
+
+    public function getByToken(string $token) : ?ResetPasswordToken {
+        return $this->repo->findByToken($token);
     }
 
     public function delete(int $id): void {
