@@ -19,8 +19,18 @@ class FeedController extends AbstractController
     public function index(EventsRepository $eventReporsitory): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $user = $entityManager->getRepository(User::class)->find(3);
-        return $this->render('event_controllers/feed/index.html.twig', [
+        $currentPort = $_SERVER['SERVER_PORT'];
+        
+        // Fetch the user based on the port
+        $userId = ($currentPort == '8000') ? 3 : (($currentPort == '8001') ? 4 : null);
+
+        // If the port is not 8000 or 8001, set user to null
+        if ($userId === null) {
+            throw new \RuntimeException('User not defined for this port');
+        }
+
+        $user = $entityManager->getRepository(User::class)->find($userId);       
+         return $this->render('event_controllers/feed/index.html.twig', [
             'events' => $eventReporsitory->findAll(),
             'user' => $user,
         ]);
@@ -32,8 +42,17 @@ class FeedController extends AbstractController
         $reactionType = $request->query->get('reaction');
     
         // Find the user associated with the reaction
-        $user = $entityManager->getRepository(User::class)->find(3);
-    
+        $currentPort = $_SERVER['SERVER_PORT'];
+        
+        // Fetch the user based on the port
+        $userId = ($currentPort == '8000') ? 3 : (($currentPort == '8001') ? 4 : null);
+
+        // If the port is not 8000 or 8001, set user to null
+        if ($userId === null) {
+            throw new \RuntimeException('User not defined for this port');
+        }
+
+        $user = $entityManager->getRepository(User::class)->find($userId);    
         // Find the existing reaction for the user and event, if any
         $existingReaction = $entityManager->getRepository(EventReactions::class)->findOneBy([
             'user' => $user,
@@ -70,7 +89,7 @@ public function addComment(Request $request, Events $event): Response
     $entityManager = $this->getDoctrine()->getManager();
 
     // Fetch the currently logged-in user (assuming you have user authentication)
-    $user = $entityManager->getRepository(User::class)->find(3);
+    $user = $entityManager->getRepository(User::class)->find(4);
 
     // Create a new comment entity
     $comment = new EventComments();
@@ -192,8 +211,17 @@ public function deleteComment(Request $request, Events $event, int $commentId): 
        
     
         // Find the user associated with the reaction
-        $user = $entityManager->getRepository(User::class)->find(3);
-         return $this->render('event_controllers/feed/show.html.twig', [
+        $currentPort = $_SERVER['SERVER_PORT'];
+        
+        // Fetch the user based on the port
+        $userId = ($currentPort == '8000') ? 3 : (($currentPort == '8001') ? 4 : null);
+
+        // If the port is not 8000 or 8001, set user to null
+        if ($userId === null) {
+            throw new \RuntimeException('User not defined for this port');
+        }
+
+        $user = $entityManager->getRepository(User::class)->find($userId);         return $this->render('event_controllers/feed/show.html.twig', [
              'event' => $event,
              'user' => $user,
          ]);

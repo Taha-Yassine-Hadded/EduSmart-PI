@@ -129,11 +129,31 @@
             <div class="post">
                 <img src="{{ asset('uploads/' ~ event.getEventPhoto()) }}" alt="{{ event.getEventPhoto() }}" style="object-fit: cover; width:100%; height:100%;">
             </div>
+            <div style="position: relative; display: inline-block; min-height:30px;">
+              {% set distinctReactions = [] %}
+              {% set reactionsCount = {} %}
+              {% set break = false %}
+              {% for reaction in event.getEventReactions() %}
+                  {% if not break %}
+                      {% if reaction.getReactionType() not in distinctReactions %}
+                          {% set distinctReactions = distinctReactions|merge([reaction.getReactionType()]) %}
+                          {% set reactionType = reaction.getReactionType() %}
+                          {% set reactionsCount = reactionsCount|merge({(reactionType): reactionsCount[reactionType]|default(0) + 1}) %}
+                          <img src="{{ asset('assets/reactions/' ~ reactionType ~ '.png') }}" alt="{{ reactionType }}" width="20px" style="box-shadow: rgba(255, 255, 255, 1) 0px 0px 4px, rgb(255, 255, 255) 0px 0px 0px 3px; position: absolute; left: {{ loop.index0 * 20 }}px; top:2px; border-radius: 50%;">
+                          {% if loop.index == 3 %}
+                              {% set break = true %}
+                          {% endif %}
+                      {% endif %}
+                  {% endif %}
+              {% endfor %}
+              <p style="color: black; position: absolute; left: {{distinctReactions|length * 20}}px; top: 0; margin-left: 5px;margin-bottom:3px font-size:15px;">({{ event.getEventReactions()|length }})</p>
+          </div>
+          
             <div class="post-interactions">
                 <button>
                     {% set hasLiked = false %}
                      {% for reaction in event.getEventReactions() %}
-                        {% if reaction.getUser == user%}
+                        {% if reaction.getUser() == user %}
                             {% set hasLiked = true %}
                             <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': reaction.getReactionType() }) }}" style="color: 
                             {% if reaction.getReactionType() == 'like' %}
@@ -146,13 +166,13 @@
                             text-align: center;
                             font-size: 18px;">
                             <img src="{{ asset('assets/reactions/' ~ reaction.getReactionType() ~ '.png') }}" alt="{{ reaction.getReactionType() }}" width="25px">
-                            {{ reaction.getReactionType() }} ({{ event.getEventReactions()|length }})
+                            {{ reaction.getReactionType() }} 
                         </a>
                         {% endif %}
                     {% endfor %}
                     {% if not hasLiked %}
                         <a style="color: #3A3B3C" href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'like'}) }}">
-                            Like ({{ event.getEventReactions()|length }})
+                            Like
                         </a>
                     {% endif %}
                     <span>
@@ -171,12 +191,9 @@
             <div class="container p-0 comment-form" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease;">
                 <form action="{{ path('add_comment', {'id': event.getId()}) }}" method="post" class="d-flex mb-4">
                    
-                    <div class="input-group mt-3">
-                        <input type="text" class="form-control rounded-1 " id="comment_text" name="comment_text" placeholder="Add Comment">
-                        <div class="input-group-append ">
-                          <button class="btn btn-secondary rounded-1" type="submit">Button</button>
-                        </div>
-                        </div>
+                  <div class="InputContainer">
+                    <input placeholder="Search.." id="input" class="input" name="text" type="text">
+                  </div>
                 </form>
                 {% for comment in event.getEventComments() %}
                 <div class="comment mt-3">
@@ -184,6 +201,7 @@
                         <div class="col-9">
                             <p>{{ comment.getCommentText() }}</p>
                         </div>
+                        {% if comment.getUser() == user %}
                         <div class="col-3 d-flex align-items-center justify-content-end ">
                             <div class="btn-group " role="group">
                                 <a href="{{ path('edit_comment', {'id': event.getId(), 'commentId': comment.getId()}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
@@ -193,6 +211,7 @@
                                 </form>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="event-data" 
@@ -206,7 +225,17 @@
       
         {% endfor %}
     </div>
-    <div class="col-3" >bingo</div>
+    <div class="col-3" > 
+      {% for event in events %}
+      {% if user in event.getParticipants() %}
+      <div class="row">
+        <div id="chat{{event.getId()}}" class="contqiner" ></div>
+        <input id="send{{event.getId()}}"  type="text" >
+        <button type="button" class="sendBtn" data-send-id="{{event.getId()}}">Send</button>
+      </div>
+      {% endif %}
+       {% endfor %} 
+    </div>
 </div>
     <script src="{{asset('js/share.js')}}"></script>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v11.0" nonce="C8UzOqqF"></script>
@@ -223,6 +252,49 @@
             });
         });
     </script>
+    <script type="text/javascript">
+    const socket = new WebSocket("ws://localhost:3001");
+    socket.addEventListener("open", function() {
+        console.log("CONNECTED");
+    });
+
+    function addMessage(name, message, chatId) {
+        const messageHTML = "<div class='message'><strong>" + name + ":</strong> " + message + "</div>";
+        document.getElementById(`chat${chatId}`).innerHTML += messageHTML;
+    }
+
+    socket.addEventListener("message", function(e) {
+        console.log(e.data);
+        try {
+            const message = JSON.parse(e.data);
+            addMessage(message.senderName, message.message, message.chatId);
+        } catch (e) {
+            // Catch any errors
+        }
+    });
+
+    function sendMessage(chatId) {
+        const messageInput = document.querySelector(`#send${chatId}`);
+        const message = {
+            message: messageInput.value,
+            chatId: chatId,
+            senderName: "{{ user.getNom() }}" 
+        };
+        document.getElementById(`chat${chatId}`).innerHTML += message.message
+        socket.send(JSON.stringify(message));
+        messageInput.value = ''; 
+    }
+    
+    document.querySelectorAll(".sendBtn").forEach(button => {
+        button.addEventListener("click", function(e) {
+            const sender = e.target.dataset.sendId;
+            
+            sendMessage(sender);
+        });
+    });
+</script>
+
+
 
 
 {% endblock %}

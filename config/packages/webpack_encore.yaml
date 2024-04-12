@@ -1,0 +1,9 @@
+# config/packages/webpack_encore.yaml
+webpack_encore:
+    # Other configurations...
+
+    script_attributes:
+        defer: true
+        'data-turbo-track': reload
+    link_attributes:
+        'data-turbo-track': reload

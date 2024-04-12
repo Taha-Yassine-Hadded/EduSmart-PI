@@ -2,5 +2,13 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 event_show_route:
-      path: /event/{id}
+      path: /event
       controller: App\Controller\EventControllers\EventController::index
+feeds:
+    path: /feed
+    controller: App\Controller\EventControllers\FeedController::index
+    methods: GET
+add_reaction:
+      path: /feed/{id}/reaction
+      controller: App\Controller\EventControllers\FeedController::add
+      methods: ['GET', 'POST']
