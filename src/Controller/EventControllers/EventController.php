@@ -91,9 +91,6 @@ class EventController extends AbstractController
         'form' => $form->createView(),
     ]);
 }
-private const OPENAI_API_KEY = "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";
-private const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
-
 #[Route('/event/{id}', name: 'event_show', methods: ['GET'])]
 public function show(Events $event): Response
 {
