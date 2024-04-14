@@ -11,3 +11,15 @@ app_offre_list:
     controller: App\Controller\OffreController::list
     methods: [GET, POST]
 
+app_accepter_candidature:
+    path: /candidature/{id}/accepter
+    controller: App\Controller\CandidatureController::accepterCandidature
+
+app_refuser_candidature:
+    path: /candidature/{id}/refuser
+    controller: App\Controller\CandidatureController::refuserCandidature
+    methods: ['POST']
+
+download_pdf:
+    path: /download-pdf/{id}
+    controller: App\Controller\CandidatureController::downloadPdf

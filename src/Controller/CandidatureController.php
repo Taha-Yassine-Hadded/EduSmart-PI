@@ -15,6 +15,8 @@ use App\Service\UserService\UserService;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Entity\Offre;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Psr\Log\LoggerInterface;
 
 #[Route('/candidature')]
 class CandidatureController extends AbstractController
@@ -131,4 +133,53 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
 
         return $this->redirectToRoute('app_candidature_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/candidature/{id}/accepter', name: 'app_accepter_candidature')]
+    public function accepterCandidature(Candidature $candidature, EntityManagerInterface $entityManager): Response
+    {
+        $candidature->setStatus('Acceptée');
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Candidature acceptée avec succès.');
+
+        return $this->redirectToRoute('candidature_list');
+    }
+
+    #[Route('/candidature/{id}/refuser', name: 'app_refuser_candidature')]
+    public function refuserCandidature(Candidature $candidature, EntityManagerInterface $entityManager): Response
+    {
+        $candidature->setStatus('Refusée');
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Candidature refusée avec succès.');
+
+        return $this->redirectToRoute('candidature_list');
+    }
+
+    #[Route('/download-pdf/{id}', name: 'download_pdf')]
+public function downloadPdf($id, CandidatureRepository $repo): Response
+{
+    $candidature = $repo->find($id);
+    if (!$candidature) {
+        throw $this->createNotFoundException('Candidature non trouvée');
+    }
+
+    // Chemin du fichier PDF
+    $pdfPath = $this->getParameter('candidature_directory') . '/' . $candidature->getCv();
+
+    // Créer la réponse
+    $response = new BinaryFileResponse($pdfPath);
+
+    // Définir les en-têtes pour indiquer qu'il s'agit d'un téléchargement de fichier PDF
+    $response->headers->set('Content-Type', 'application/pdf');
+    $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+        $candidature->getCv()
+    ));
+
+    return $response;
+}
+
+    
+
 }

@@ -25,9 +25,12 @@
                 <td>{{ candidature.competences }}</td>
                 <td>{{ candidature.cv }}</td>
                 <td>
-                    <a href="{{ path('app_candidature_show', {'id': candidature.id}) }}">show</a>
-                    <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}">edit</a>
-                    <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}">delete</a>
+                   
+    <a href="{{ path('app_candidature_show', {'id': candidature.id}) }}" class="btn btn-outline-primary">Show</a>
+    <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}" class="btn btn-outline-secondary">Edit</a>
+    <a href="{{ path('app_candidature_delete', {'id': candidature.id}) }}" class="btn btn-danger">Delete</a>
+</td>
+
 
                 </td>
             </tr>
@@ -39,5 +42,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_candidature_new') }}">Create new</a>
+    <a href="{{ path('app_candidature_new') }}" class="btn btn-outline-primary">Create new</a>
+
 {% endblock %}

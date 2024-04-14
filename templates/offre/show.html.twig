@@ -34,7 +34,6 @@
     <table class="table">
         <thead>
             <tr>
-                
                 <th>competences</th>
                 <th>cv</th>
                 <th>Date</th>
@@ -44,21 +43,22 @@
         <tbody>
         {% for c in list %}
             <tr>
-                
                 <td>{{ c.competences }}</td>
                 <td>{{ c.cv }}</td>
                 <td>{{ c.date ? c.date|date('Y-m-d') : '' }}</td>
                 <td>
-                    <a href="#">accepter</a>
-                    <a href="#">refuser</a>
-                  
+                    <a href="#" class="btn btn-outline-success">Accepter</a>
+                    <a href="#" class="btn btn-outline-danger">Refuser</a>
+                    <a href="#" class="btn btn-outline-secondary" download>Télécharger PDF</a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_offre_index') }}">back to list</a>
+    <div class="container mt-3">
+        <a href="{{ path('app_offre_index') }}" class="btn btn-outline-primary">Back to List</a>
+    </div>
 
     {{ include('offre/_delete_form.html.twig') }}
 {% endblock %}

@@ -27,10 +27,12 @@
                 <td>{{ offre.nbr }}</td>
                 <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_offre_show', {'id': offre.id}) }}">show</a>
-                    <a href="{{ path('app_offre_edit', {'id': offre.id}) }}">edit</a>
-                    <a href="{{ path('app_offre_delete', {'id': offre.id}) }}">delete</a>
-                </td>
+                    
+    <a href="{{ path('app_offre_show', {'id': offre.id}) }}" class="btn btn-outline-primary">Show</a>
+    <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="btn btn-outline-secondary">Edit</a>
+    <a href="{{ path('app_offre_delete', {'id': offre.id}) }}" class="btn btn-danger">Delete</a>
+</td>
+
             </tr>
         {% else %}
             <tr>
@@ -40,5 +42,12 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_offre_new') }}">Create new</a>
+    <a href="{{ path('app_offre_new') }}" class="btn btn-outline-danger mt-3">Create new</a>
+    </div>
+
+    <!-- Assurez-vous d'inclure jQuery et Bootstrap JS avant la fermeture du corps -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 {% endblock %}
