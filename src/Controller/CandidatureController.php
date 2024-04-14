@@ -74,6 +74,7 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
     #[Route('/{id}', name: 'app_candidature_show', methods: ['GET'])]
     public function show(Candidature $candidature): Response
     {
+        $url = $this->generateUrl('candidature_show', ['id' => $candidature->getId()]);
         return $this->render('candidature/show.html.twig', [
             'candidature' => $candidature,
         ]);

@@ -32,7 +32,7 @@ class Candidature
     private ?string $competences = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "cv ne peut pas être vide.")]
+    
     private ?string $cv = null;
     private ?User $entreprise = null;
 

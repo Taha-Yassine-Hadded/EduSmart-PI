@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les Offres Disponibles {% endblock %}
+
+{% block body %}
+    <h1>Les Offres Disponibles  </h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Competences</th>
+                <th>Nbr</th>
+                <th>Date</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for offre in offres %}
+            <tr>
+                
+                <td>{{ offre.titre }}</td>
+                <td>{{ offre.description }}</td>
+                <td>{{ offre.competences }}</td>
+                <td>{{ offre.nbr }}</td>
+                <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_candidature_new') }}">Create new Candidature</a> <!-- Nouveau lien vers la création d'une nouvelle candidature -->
+                    
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

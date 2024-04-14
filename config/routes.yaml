@@ -1,7 +1,13 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+candidature_show:
+    path: /candidature/{id}
+    controller: App\Controller\CandidatureController::show
+    methods: GET
 
-
-
+app_offre_list:
+    path: /list
+    controller: App\Controller\OffreController::list
+    methods: [GET, POST]
 

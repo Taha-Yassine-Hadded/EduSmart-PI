@@ -109,6 +109,15 @@ public function edit(Request $request, Offre $offre, EntityManagerInterface $ent
             'candidatures' => $candidatures,
         ]);
     }
+    #[Route('/list', name: 'app_offre_list', methods:['GET', 'POST'])]
+    public function list(OffreRepository $offreRepository , Request $request): Response
+    {
+
+        return $this->render('offre/list.html.twig', [
+            
+            'offres' => $offreRepository->findAll(),
+        ]);
+    }
 
     
 }
