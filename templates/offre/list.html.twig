@@ -27,7 +27,7 @@
                 <td>{{ offre.nbr }}</td>
                 <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_candidature_new') }}">Create new Candidature</a> <!-- Nouveau lien vers la création d'une nouvelle candidature -->
+                    <a href="{{ path('app_candidature_new', {'offre_id': offre.id}) }}">Create new Candidature</a>
                     
                 </td>
             </tr>

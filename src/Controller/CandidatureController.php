@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints\Date;
 use App\Service\UserService\UserService;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Entity\Offre;
 
 #[Route('/candidature')]
 class CandidatureController extends AbstractController
@@ -36,12 +37,19 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
 {
     $candidature = new Candidature();
     $candidature->setStatus('En attente');
+    // Récupérer l'offre_id depuis la requête
+    $offreId = $request->query->get('offre_id');
+    // Utilisez $offreId pour charger l'offre associée depuis la base de données
+    $offre = $entityManager->getRepository(Offre::class)->find($offreId);
+
     $form = $this->createForm(CandidatureType::class, $candidature);
     $form->handleRequest($request);
     $cvFile = $form->get('cv')->getData();
 
     if ($form->isSubmitted() && $form->isValid()) {
         $candidature->setDate(new \DateTime());
+        $candidature->setUser($this->service->getUserById(9));
+        $candidature->setOffre($offre);
 
         if ($cvFile) {
             $originalFilename = pathinfo($cvFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -67,6 +75,7 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
     return $this->render('candidature/new.html.twig', [
         'candidature' => $candidature,
         'form' => $form->createView(),
+        'offre_id' => $offreId,
     ]);
 }
 
@@ -110,7 +119,7 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
             'candidature' => $candidature,
             'form' => $form,
         ]);
-    }
+    }  
 
     #[Route('/{id}', name: 'app_candidature_delete', methods: ['POST'])]
     public function delete(Request $request, Candidature $candidature, EntityManagerInterface $entityManager): Response
