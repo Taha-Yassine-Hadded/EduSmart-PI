@@ -87,6 +87,20 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $cvFile = $form->get('cv')->getData();
+
+            if ($cvFile) {
+                $originalFilename = pathinfo($cvFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename.'-'.uniqid().'.'.$cvFile->guessExtension();
+
+                $cvFile->move(
+                    $this->getParameter('cv_directory'),
+                    $newFilename
+                );
+
+                $candidature->setCv($newFilename);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_candidature_index', [], Response::HTTP_SEE_OTHER);
