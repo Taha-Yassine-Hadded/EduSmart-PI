@@ -6,6 +6,7 @@ use App\Repository\EvaluationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EvaluationRepository::class)]
 class Evaluation
@@ -19,6 +20,13 @@ class Evaluation
     private ?Cours $cours = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Titre name cannot be empty")]
+    #[Assert\Length(
+        min: 3,
+        max: 5,
+        minMessage: "The evaluation name must be at least {{ limit }} characters long",
+        maxMessage: "The evaluation name cannot be longer than {{ limit }} characters"
+    )]
     private ?string $titre = null;
 
     #[ORM\OneToMany(mappedBy: 'evaluation', targetEntity: Question::class)]

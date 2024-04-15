@@ -20,7 +20,7 @@ final class Version20240322214239 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE activite (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, description VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+      /*  $this->addSql('CREATE TABLE activite (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, description VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE candidature (id INT AUTO_INCREMENT NOT NULL, offre_id INT DEFAULT NULL, user_id INT DEFAULT NULL, date DATE NOT NULL, status VARCHAR(255) NOT NULL, competences VARCHAR(255) NOT NULL, cv VARCHAR(255) NOT NULL, INDEX IDX_E33BD3B84CC8505A (offre_id), INDEX IDX_E33BD3B8A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE cours (id INT AUTO_INCREMENT NOT NULL, teacher_id INT DEFAULT NULL, nom_cours VARCHAR(255) DEFAULT NULL, nom_module VARCHAR(255) DEFAULT NULL, niveau INT DEFAULT NULL, INDEX IDX_FDCA8C9C41807E1D (teacher_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE evaluation (id INT AUTO_INCREMENT NOT NULL, cours_id INT DEFAULT NULL, titre VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_1323A5757ECF78B0 (cours_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -71,11 +71,12 @@ final class Version20240322214239 extends AbstractMigration
         $this->addSql('ALTER TABLE project_members_user ADD CONSTRAINT FK_E85E128FA5A78EDF FOREIGN KEY (project_members_id) REFERENCES project_members (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE project_members_user ADD CONSTRAINT FK_E85E128FA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE publication ADD CONSTRAINT FK_AF3C677982CCADCE FOREIGN KEY (club_rh_id) REFERENCES user (id)');
-        $this->addSql('ALTER TABLE question ADD CONSTRAINT FK_B6F7494E456C5646 FOREIGN KEY (evaluation_id) REFERENCES evaluation (id)');
+        $this->addSql('ALTER TABLE question ADD CONSTRAINT FK_B6F7494E456C5646 FOREIGN KEY (evaluation_id) REFERENCES evaluation (id)');*/
     }
 
     public function down(Schema $schema): void
     {
+        /*
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE candidature DROP FOREIGN KEY FK_E33BD3B84CC8505A');
         $this->addSql('ALTER TABLE candidature DROP FOREIGN KEY FK_E33BD3B8A76ED395');
@@ -129,5 +130,6 @@ final class Version20240322214239 extends AbstractMigration
         $this->addSql('DROP TABLE question');
         $this->addSql('DROP TABLE user');
         $this->addSql('DROP TABLE messenger_messages');
+        */
     }
 }

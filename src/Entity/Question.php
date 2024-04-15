@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 class Question
@@ -20,6 +21,11 @@ class Question
     private ?Evaluation $evaluation = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\NotBlank(message:"Question value cannot be empty")]
+    #[Assert\Regex(
+        pattern: '/\?$/', 
+        message: 'Question must end with a question mark "?"'
+    )]
     private ?string $valeur = null;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Option::class)]

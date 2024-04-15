@@ -21,6 +21,26 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
+    public function findQuestionsByEvaluation($evaluationId)
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.evaluation = :evaluationId')
+            ->setParameter('evaluationId', $evaluationId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findCorrectOptionForQuestion($questionId)
+    {
+    return $this->createQueryBuilder('q')
+        ->join('q.options', 'o')
+        ->andWhere('q.id = :questionId')
+        ->andWhere('o.isCorrect = :isCorrect')
+        ->setParameter('questionId', $questionId)
+        ->setParameter('isCorrect', true)
+        ->getQuery()
+        ->getOneOrNullResult();
+    }
 //    /**
 //     * @return Question[] Returns an array of Question objects
 //     */
