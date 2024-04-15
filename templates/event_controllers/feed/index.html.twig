@@ -4,12 +4,11 @@
 <div class="container d-flex justify-content-around align-items-start flex-row">
     <div class="col-3 " >
         <h2 class="text-center mt-5 mb-3">Events</h2>
-        <div class="container d-flex gap-2 flex-column">
+        <div id="eventParticipationContainer" class="container d-flex gap-2 flex-column">
         {% for event in events %}
             {% if user in event.getParticipants() %}
-            <div class=" d-flex justify-content-start align-items-center flex-row gap-3">{{event.getEventName()}} 
-                <a href="{{ path('event_remove_participant', {'eventId': event.getId(), 'userId': user.getId() }) }} ">
-                <button class="bin-button">
+            <div id="event_{{ event.getId() }}" class=" d-flex justify-content-start align-items-center flex-row gap-3">{{event.getEventName()}} 
+                <button class="bin-button" onclick="removeParticipant('{{ event.getId() }}', '{{ user.getId() }}', '{{ event.getId() }}')">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -110,23 +109,23 @@
             <div class="post-header">
                 <div class="user-profile-image"></div>
                 <div class="user-info">
-                    <span>John Smith</span>
-                    <span>19hr</span>
+                    <span>{{ event.getEventName() }}</span>
+                    <span>......</span>
                 </div>
                 <img class="icon" src="{{ asset('assets/ellipsis.svg') }}" alt="">
             </div>
-            <div style="height: 200px;max-height:300px;">title+desc</div>
-            {% if user not in event.getParticipants() %}
-            <div class="d-flex justify-content-end pe-2">
-                <a href="{{ path('event_add_participant', {'eventId': event.getId(), 'userId': user.getId() }) }}"><button class="ui-btn">
+            <div style="height: 200px;max-height:300px;">{{ event.getDescription() }}</div>
+            
+            <div   class="d-flex justify-content-end pe-2">
+                <button id="join_{{ event.getId }}" {% if user in event.getParticipants() %}disabled="true" {% endif %} class="ui-btn {% if user in event.getParticipants() %}disabled-button{% endif %}" onclick="addParticipant(this,'{{ event.getId() }}', '{{ user.getId() }}', '{{ event.getEventName() }}')">
                 <span> 
                   join
                 </span>
               </button>
             </a>
             </div>
-            {% endif %}
-            <div class="post">
+            
+            <div  class="post">
                 <img src="{{ asset('uploads/' ~ event.getEventPhoto()) }}" alt="{{ event.getEventPhoto() }}" style="object-fit: cover; width:100%; height:100%;">
             </div>
             <div style="position: relative; display: inline-block; min-height:30px;">
@@ -146,7 +145,7 @@
                       {% endif %}
                   {% endif %}
               {% endfor %}
-              <p style="color: black; position: absolute; left: {{distinctReactions|length * 20}}px; top: 0; margin-left: 5px;margin-bottom:3px font-size:15px;">({{ event.getEventReactions()|length }})</p>
+              <p style="color: black; position: absolute; left: {{distinctReactions|length * 20}}px; top: 0; margin-left: 5px;margin-bottom:3px font-size:15px;">(<span id="counter_{{ event.getId() }}">{{ event.getEventReactions()|length }}</span>)</p>
           </div>
           
             <div class="post-interactions">
@@ -155,7 +154,7 @@
                      {% for reaction in event.getEventReactions() %}
                         {% if reaction.getUser() == user %}
                             {% set hasLiked = true %}
-                            <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': reaction.getReactionType() }) }}" style="color: 
+                            <div id="div_reaction_{{ event.getId }}"  onclick="addLikeReaction('{{ event.getId() }}','{{ reaction.getReactionType() }}')" style="color: 
                             {% if reaction.getReactionType() == 'like' %}
                                 #77A7FF
                             {% elseif reaction.getReactionType() == 'heart' %}
@@ -165,23 +164,26 @@
                             {% endif %};
                             text-align: center;
                             font-size: 18px;">
-                            <img src="{{ asset('assets/reactions/' ~ reaction.getReactionType() ~ '.png') }}" alt="{{ reaction.getReactionType() }}" width="25px">
-                            {{ reaction.getReactionType() }} 
-                        </a>
+                            <img data-reaction-type="{{ reaction.getReactionType() }}" id="mainReaction_{{ event.getId() }}" src="{{ asset('assets/reactions/' ~ reaction.getReactionType() ~ '.png') }}" alt="{{ reaction.getReactionType() }}" width="25px">
+                            <p style="display: inline-block;margin-bottom:0;" id="span_{{ event.getId() }}">{{ reaction.getReactionType() }}</p>
+                          </div>
                         {% endif %}
                     {% endfor %}
                     {% if not hasLiked %}
-                        <a style="color: #3A3B3C" href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'like'}) }}">
-                            Like
-                        </a>
-                    {% endif %}
+                    <div style="display: inline-block;" id="div_reaction_{{ event.getId }}"  onclick="addLikeReaction('{{ event.getId() }}','like')" style="color: #77A7FF;
+                    text-align: center;
+                    font-size: 18px;">
+                    <img data-reaction-type="{{ "like"}}" id="mainReaction_{{ event.getId() }}" src="{{ asset('assets/reactions/like.png') }}" alt="like" width="25px">
+                    <p style="display: inline-block;margin-bottom:0; color:#77A7FF;" id="span_{{ event.getId() }}">like</p>
+                  </div>                    
+                  {% endif %}
                     <span>
-                        <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'like'}) }}"><img src="{{ asset('assets/reactions/like.png') }}"></a>
-                        <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'heart'}) }}"><img src="{{ asset('assets/reactions/heart.png') }}"></a>
-                        <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'wow'}) }}"><img src="{{ asset('assets/reactions/wow.png') }}"></a>
-                        <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'laugh'}) }}"><img src="{{ asset('assets/reactions/laugh.png') }}"></a>
-                        <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'sad'}) }}"><img src="{{ asset('assets/reactions/sad.png') }}"></a>
-                        <a href="{{ path('add_reaction', {'id': event.getId(), 'reaction': 'angry'}) }}"><img src="{{ asset('assets/reactions/angry.png') }}"></a>
+                        <img onclick="addReaction('{{ event.getId() }}','like')" src="{{ asset('assets/reactions/like.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','heart')" src="{{ asset('assets/reactions/heart.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','wow')" src="{{ asset('assets/reactions/wow.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','laugh')" src="{{ asset('assets/reactions/laugh.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','sad')" src="{{ asset('assets/reactions/sad.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','angry')" src="{{ asset('assets/reactions/angry.png') }}">
                     </span>
                 </button>
                 <button class="toggle-comment-form">comment</button>
@@ -190,9 +192,8 @@
             </div>
             <div class="container p-0 comment-form" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease;">
                 <form action="{{ path('add_comment', {'id': event.getId()}) }}" method="post" class="d-flex mb-4">
-                   
                   <div class="InputContainer">
-                    <input placeholder="Search.." id="input" class="input" name="text" type="text">
+                    <input placeholder="Search.." id="input" class="input" name="comment_text" type="text">
                   </div>
                 </form>
                 {% for comment in event.getEventComments() %}
@@ -225,19 +226,20 @@
       
         {% endfor %}
     </div>
-    <div class="col-3" > 
+    <div id="chatContainer" class="col-3" > 
       {% for event in events %}
       {% if user in event.getParticipants() %}
-      <div class="row">
+      <div id="chat_{{ event.getId() }}" class="row">
         <div id="chat{{event.getId()}}" class="contqiner" ></div>
         <input id="send{{event.getId()}}"  type="text" >
-        <button type="button" class="sendBtn" data-send-id="{{event.getId()}}">Send</button>
+        <button type="button" class="sendBtn" data-send-id="{{event.getId()}}">{{event.getId()}}</button>
       </div>
       {% endif %}
        {% endfor %} 
     </div>
 </div>
     <script src="{{asset('js/share.js')}}"></script>
+    <script src="{{asset('js/feed.js')}}"></script>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v11.0" nonce="C8UzOqqF"></script>
        <script>
         // Add event listeners to toggle comment form visibility

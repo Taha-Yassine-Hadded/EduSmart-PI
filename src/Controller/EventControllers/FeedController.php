@@ -12,47 +12,51 @@ use App\Entity\EventReactions;
 use App\Entity\EventComments;
 use App\Form\CommentType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class FeedController extends AbstractController
 {
+    private $currentPort;
+    private $userId;
+
+    public function __construct()
+    {
+        $this->currentPort = $_SERVER['SERVER_PORT'];
+        $this->userId = ($this->currentPort == '8000') ? 3 : (($this->currentPort == '8001') ? 4 : null);
+    }
+
     #[Route('/feed', name: 'feeds',methods: 'GET')]
     public function index(EventsRepository $eventReporsitory): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $currentPort = $_SERVER['SERVER_PORT'];
-        
-        // Fetch the user based on the port
-        $userId = ($currentPort == '8000') ? 3 : (($currentPort == '8001') ? 4 : null);
 
         // If the port is not 8000 or 8001, set user to null
-        if ($userId === null) {
+        if ($this->userId === null) {
             throw new \RuntimeException('User not defined for this port');
         }
 
-        $user = $entityManager->getRepository(User::class)->find($userId);       
+        $user = $entityManager->getRepository(User::class)->find($this->userId);       
          return $this->render('event_controllers/feed/index.html.twig', [
             'events' => $eventReporsitory->findAll(),
             'user' => $user,
         ]);
     }
-    #[Route('/feed/{id}/reaction', name: 'add_reaction', methods: ['GET', 'POST'])]
+    #[Route('/feed/{id}/reaction', name: 'add_reaction', methods: ['POST'])]
     public function add(Request $request, Events $event): Response
     {
+        $action = null;
         $entityManager = $this->getDoctrine()->getManager();
-        $reactionType = $request->query->get('reaction');
-    
-        // Find the user associated with the reaction
-        $currentPort = $_SERVER['SERVER_PORT'];
-        
-        // Fetch the user based on the port
-        $userId = ($currentPort == '8000') ? 3 : (($currentPort == '8001') ? 4 : null);
+        $data = json_decode($request->getContent(), true);
+        $reactionType = $data['reactionType'];
+       
 
         // If the port is not 8000 or 8001, set user to null
-        if ($userId === null) {
+        if ($this->userId === null) {
             throw new \RuntimeException('User not defined for this port');
         }
 
-        $user = $entityManager->getRepository(User::class)->find($userId);    
+        $user = $entityManager->getRepository(User::class)->find($this->userId);    
         // Find the existing reaction for the user and event, if any
         $existingReaction = $entityManager->getRepository(EventReactions::class)->findOneBy([
             'user' => $user,
@@ -64,10 +68,12 @@ class FeedController extends AbstractController
             if ($existingReaction->getReactionType() === $reactionType) {
                 $entityManager->remove($existingReaction);
                 $entityManager->flush();
+                $action = 0;
             } else {
                 // If the existing reaction type is different, update it
                 $existingReaction->setReactionType($reactionType);
                 $entityManager->flush();
+                $action = 2;
             }
         } else {
             // Create a new reaction
@@ -79,9 +85,10 @@ class FeedController extends AbstractController
     
             $entityManager->persist($reaction);
             $entityManager->flush();
+            $action = 1;
         }
     
-        return $this->redirectToRoute('feeds', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse(['message' => 'Reacted successfully','action' => $action], JsonResponse::HTTP_OK);
     }
     #[Route('/feed/{id}/comment', name: 'add_comment', methods: ['POST'])]
 public function addComment(Request $request, Events $event): Response
@@ -89,7 +96,7 @@ public function addComment(Request $request, Events $event): Response
     $entityManager = $this->getDoctrine()->getManager();
 
     // Fetch the currently logged-in user (assuming you have user authentication)
-    $user = $entityManager->getRepository(User::class)->find(4);
+    $user = $entityManager->getRepository(User::class)->find($this->userId);
 
     // Create a new comment entity
     $comment = new EventComments();
@@ -148,9 +155,9 @@ public function deleteComment(Request $request, Events $event, int $commentId): 
     $entityManager->remove($comment);
     $entityManager->flush();
 
-    return $this->redirectToRoute('feeds');
+    return new JsonResponse(['message' => 'Comment deleted successfully'], JsonResponse::HTTP_OK);
 }
-#[Route('/event/{eventId}/add-participant/{userId}', name: 'event_add_participant')]
+#[Route('/feed/{eventId}/add-participant/{userId}', name: 'event_add_participant')]
     public function addParticipant($eventId, $userId): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -163,7 +170,7 @@ public function deleteComment(Request $request, Events $event, int $commentId): 
         }
 
         // Retrieve the User entity
-        $user = $entityManager->getRepository(User::class)->find($userId);
+        $user = $entityManager->getRepository(User::class)->find($this->userId);
 
         if (!$user) {
             throw $this->createNotFoundException('User not found');
@@ -175,53 +182,49 @@ public function deleteComment(Request $request, Events $event, int $commentId): 
         // Persist the changes to the database
         $entityManager->flush();
 
-        return $this->redirectToRoute('feeds');    
+        return new JsonResponse(['message' => 'Participant added successfully'], JsonResponse::HTTP_OK);
     }
-    #[Route('/event/{eventId}/remove-participant/{userId}', name: 'event_remove_participant')]
+    #[Route('/feed/{eventId}/remove-participant/{userId}', name: 'event_remove_participant')]
     public function removeParticipant($eventId, $userId): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
-
+    
         // Retrieve the Event entity
         $event = $entityManager->getRepository(Events::class)->find($eventId);
-
+    
         if (!$event) {
             throw $this->createNotFoundException('Event not found');
         }
-
+    
         // Retrieve the User entity
-        $user = $entityManager->getRepository(User::class)->find($userId);
-
+        $user = $entityManager->getRepository(User::class)->find($this->userId);
+    
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
-
-        // Add the user to the event's list of participants
+    
+        // Remove the user from the event's list of participants
         $event->removeParticipant($user);
-
+    
         // Persist the changes to the database
         $entityManager->flush();
-
-        return $this->redirectToRoute('feeds');   
-     }
+    
+        // Return a JSON response indicating success
+        return new JsonResponse(['message' => 'Participant removed successfully'], JsonResponse::HTTP_OK);
+    }
      #[Route('/feed/{id}', name: 'event_show_one',methods: ['GET'])]
      public function showEvent(Events $event): Response
      {
         $entityManager = $this->getDoctrine()->getManager();
        
     
-        // Find the user associated with the reaction
-        $currentPort = $_SERVER['SERVER_PORT'];
         
-        // Fetch the user based on the port
-        $userId = ($currentPort == '8000') ? 3 : (($currentPort == '8001') ? 4 : null);
-
-        // If the port is not 8000 or 8001, set user to null
-        if ($userId === null) {
+        if ($this->userId === null) {
             throw new \RuntimeException('User not defined for this port');
         }
 
-        $user = $entityManager->getRepository(User::class)->find($userId);         return $this->render('event_controllers/feed/show.html.twig', [
+        $user = $entityManager->getRepository(User::class)->find($this->userId);         
+        return $this->render('event_controllers/feed/show.html.twig', [
              'event' => $event,
              'user' => $user,
          ]);

@@ -91,6 +91,10 @@ class EventController extends AbstractController
         'form' => $form->createView(),
     ]);
 }
+
+
+
+
 #[Route('/event/{id}', name: 'event_show', methods: ['GET'])]
 public function show(Events $event): Response
 {

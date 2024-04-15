@@ -24,12 +24,15 @@ class MessageHandler implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
 {
     foreach ($this->connections as $connection) {
-        // Send the message to all connected clients
+        if($connection === $from)
+        {
+            continue;
+        }
         $connection->send($msg);
     }
 
     // Also, send the message back to the sender
-    $from->send($msg);
+    
 }
  
     public function onClose(ConnectionInterface $conn)
