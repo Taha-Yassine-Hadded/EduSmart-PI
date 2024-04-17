@@ -20,6 +20,7 @@ app_refuser_candidature:
     controller: App\Controller\CandidatureController::refuserCandidature
     methods: ['POST']
 
-download_pdf:
+candidature_download_cv:
     path: /download-pdf/{id}
     controller: App\Controller\CandidatureController::downloadPdf
+

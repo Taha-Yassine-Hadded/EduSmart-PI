@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Entity\Offre;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+
 
 #[Route('/candidature')]
 class CandidatureController extends AbstractController
@@ -60,7 +63,7 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
 
             // Déplacez le fichier dans le répertoire où les CV sont stockés
             $cvFile->move(
-                $this->getParameter('cv_directory'),
+                $this->getParameter('candidature_directory'),
                 $newFilename
             );
 
@@ -155,6 +158,7 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
 
         return $this->redirectToRoute('candidature_list');
     }
+
 
     #[Route('/download-pdf/{id}', name: 'download_pdf')]
 public function downloadPdf($id, CandidatureRepository $repo): Response
