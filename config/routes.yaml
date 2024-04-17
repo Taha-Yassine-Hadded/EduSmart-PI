@@ -12,11 +12,11 @@ app_offre_list:
     methods: [GET, POST]
 
 app_accepter_candidature:
-    path: /candidature/{id}/accepter
+    path: /accepter/{id}
     controller: App\Controller\CandidatureController::accepterCandidature
 
 app_refuser_candidature:
-    path: /candidature/{id}/refuser
+    path: /refuser/{id}
     controller: App\Controller\CandidatureController::refuserCandidature
     methods: ['POST']
 

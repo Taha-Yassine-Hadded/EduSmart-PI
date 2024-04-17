@@ -47,8 +47,8 @@
                 <td>{{ c.cv }}</td>
                 <td>{{ c.date ? c.date|date('Y-m-d') : '' }}</td>
                 <td>
-                    <a href="#" class="btn btn-outline-success">Accepter</a>
-                    <a href="#" class="btn btn-outline-danger">Refuser</a>
+                    <a href="{{ path('accepter', {'id': c.id}) }}" class="btn btn-outline-success">Accepter</a>
+                    <a href="{{ path('refuser', {'id': c.id}) }}" class="btn btn-outline-danger">Refuser</a>
                      <a href="{{ path('download_pdf', {'id': c.id}) }}" class="btn btn-outline-secondary" downloadPdf>downloadPdf</a>
                 </td>
             </tr>

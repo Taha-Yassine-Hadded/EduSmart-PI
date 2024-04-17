@@ -137,26 +137,28 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
         return $this->redirectToRoute('app_candidature_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/candidature/{id}/accepter', name: 'app_accepter_candidature')]
-    public function accepterCandidature(Candidature $candidature, EntityManagerInterface $entityManager): Response
+    #[Route('/accepter/{id}', name: 'accepter')]
+    public function accepterCandidature(Candidature $candidature, EntityManagerInterface $entityManager, Request $request): Response
     {
+        $referer = $request->headers->get('referer');
         $candidature->setStatus('Acceptée');
         $entityManager->flush();
 
         $this->addFlash('success', 'Candidature acceptée avec succès.');
 
-        return $this->redirectToRoute('candidature_list');
+        return $this->redirect($referer);
     }
 
-    #[Route('/candidature/{id}/refuser', name: 'app_refuser_candidature')]
-    public function refuserCandidature(Candidature $candidature, EntityManagerInterface $entityManager): Response
+    #[Route('/refuser/{id}', name: 'refuser')]
+    public function refuserCandidature(Candidature $candidature, EntityManagerInterface $entityManager, Request $request): Response
     {
+        $referer = $request->headers->get('referer');
         $candidature->setStatus('Refusée');
         $entityManager->flush();
 
         $this->addFlash('success', 'Candidature refusée avec succès.');
 
-        return $this->redirectToRoute('candidature_list');
+        return $this->redirect($referer);
     }
 
 
