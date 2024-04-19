@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProjectMembersRepository::class)]
+
 class ProjectMembers
 {
     #[ORM\Id]
@@ -22,8 +23,6 @@ class ProjectMembers
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'projectMembers')]
     private Collection $student;
 
-    #[ORM\Column]
-    private ?bool $is_owner = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $joined_at = null;
@@ -33,6 +32,9 @@ class ProjectMembers
 
     #[ORM\OneToMany(mappedBy: 'member', targetEntity: Tache::class)]
     private Collection $taches;
+
+
+
 
     public function __construct()
     {
@@ -58,6 +60,7 @@ class ProjectMembers
         return $this;
     }
 
+
     /**
      * @return Collection<int, User>
      */
@@ -82,17 +85,6 @@ class ProjectMembers
         return $this;
     }
 
-    public function isIsOwner(): ?bool
-    {
-        return $this->is_owner;
-    }
-
-    public function setIsOwner(bool $is_owner): static
-    {
-        $this->is_owner = $is_owner;
-
-        return $this;
-    }
 
     public function getJoinedAt(): ?\DateTimeInterface
     {

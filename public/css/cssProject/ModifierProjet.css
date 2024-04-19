@@ -1,0 +1,272 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Tauri', sans-serif;
+}
+
+body {
+    background: linear-gradient(150deg, #E3CDCD, #AF1010);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.red-container {
+    max-width: 800px;
+    width: 90%;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.9); /* Blanc avec transparence */
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    color: #0b0e1b;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.project-details {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.7); /* Blanc avec transparence */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: start;
+    font-family: 'Tauri', sans-serif;
+}
+
+.project-details strong {
+    font-weight: bold;
+}
+
+h1, h2 {
+    margin: 0;
+    color: #0b0e1b;
+    font-family: 'Tauri', sans-serif;
+}
+
+p {
+    margin-bottom: 10px;
+    color: #0b0e1b;
+    font-family: 'Tauri', sans-serif;
+}
+
+.icon1 {
+    width: 20px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 5px;
+    animation: bounce1 1s infinite alternate;
+}
+
+.icon2 {
+    width: 20px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 5px;
+    animation: bounce2 1.2s infinite alternate;
+}
+
+.icon3 {
+    width: 20px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 5px;
+    animation: bounce3 0.8s infinite alternate; /* Animation pour la troisième image */
+}
+
+.icon4 {
+    width: 20px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 5px;
+    animation: bounce4 1.1s infinite alternate; /* Animation pour la quatrième image */
+}
+
+
+@keyframes bounce1 {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes bounce2 {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes bounce3 {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes bounce4 {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-5px);
+    }
+}
+
+
+.form-container {
+    display: none;
+    margin-top: 20px;
+    opacity: 0;
+    animation: slideIn 0.5s forwards; /* Animation d'apparition */
+}
+
+.form-container.show {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.form-container input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-container button {
+    padding: 10px 20px;
+    background-color: #AF1010;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-family: 'Tauri', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+}
+.success-message {
+    position: fixed;
+    top: 6px;
+    width: 290px;
+    background-color: #d4edda; /* Couleur de fond */
+    border-bottom: 1px solid #c3e6cb; /* Bordure inférieure */
+    padding: 10px 20px; /* Espacement interne */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    opacity: 0; /* Définir l'opacité initiale à 0 */
+    animation: fadeInOut 0.9s ease-in-out;
+}
+
+.success-message img.success-icon {
+    width: 24px; /* Taille de l'icône */
+    height: 24px;
+    margin-right: 10px; /* Espacement entre l'icône et le texte */
+}
+
+/* Définir les animations fadeIn et fadeOut */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Définir l'animation fadeInOut */
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+.icon5 {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+    animation: bounce5 1.1s infinite alternate;
+}
+@keyframes bounce5 {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-5px);
+    }
+}
+.show-form {
+    display: block !important;
+}
+
+.blur-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Opacité réglable */
+    backdrop-filter: blur(5px); /* Ajustez le flou selon vos préférences */
+    z-index: 999; /* Assurez-vous que le fond est au-dessus de tout le reste */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.members-container {
+    background-color: white; /* Fond blanc ou toute autre couleur */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Ombre légère pour la profondeur */
+}
+
+/* Style pour l'icône d'image */
+.icon-image {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px; /* Espacement entre l'icône et le texte du membre */
+    animation: zoomIcon 0.5s ease-in-out infinite alternate; /* Animation de zoom */
+}
+
+/* Définition de l'animation */
+@keyframes zoomIcon {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.2);
+    }
+}
+
+

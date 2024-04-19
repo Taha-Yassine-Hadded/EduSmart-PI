@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>eLEARNING - eLearning HTML Template</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Tauri&display=swap" rel="stylesheet">
+    <style>
+        .navbar {
+            width: 100%;
+            height: 120px;
+            display: flex;
+            background: #a20b0b;
+            margin-top: -30px;
+            margin-right: -40px;
+        }
+
+        .itemnav {
+            margin-top: 30px;
+            align-items: center;
+            margin-left: 20px;
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+        }
+        .itemnav img{
+            margin-right: 330px;
+            margin-top: 20px;
+        }
+
+        .nav-item a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Tauri', sans-serif;
+            transition: color 0.3s ease;
+            position: relative;
+            margin-right: 80px;
+            font-size: 16px;
+        }
+
+        .nav-item a:hover {
+            color: #070000;
+            animation: moveRight 0.5s ease forwards;
+        }
+
+        @keyframes moveRight {
+            0% {
+                left: 0;
+            }
+            100% {
+                left: 10px; /* Déplace l'élément de 10 pixels vers la droite */
+            }
+        }
+
+
+
+
+        .logout-btn {
+            background-color: #fcfcfc;
+            color: #6b0c0c;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: 'Tauri', sans-serif;
+            font-size: 16px;
+        }
+
+
+
+        .logout-btn:hover {
+            background-color: #6b0c0c;
+            color: white;
+            animation: pulse 0.5s ease forwards;
+        }
+
+
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar Start -->
+<nav class="navbar">
+    <ul class="itemnav">
+        <li class="img">
+            <img src="/images/Project/Capture-removebg-preview.png" height="90px" width="90px" />
+        </li>
+        <li class="nav-item">
+            <a href="{{ path('homeS') }}" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ path('home-student') }}" class="nav-link active">Projet</a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">Cours</a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">Événement</a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">Stage</a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">Activité</a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">Profil</a>
+        </li>
+        <li class="nav-item">
+            <button class="logout-btn">Se déconnecter</button>
+        </li>
+    </ul>
+</nav>
+<!-- Navbar End -->
+
+{% block body %}
+{% endblock %}
+
+</body>
+
+</html>

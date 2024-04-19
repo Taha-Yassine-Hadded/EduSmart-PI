@@ -1,0 +1,111 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(150deg, #E3CDCD, #AF1010);
+    font-family: 'Tauri', serif;
+    padding: 20px;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 80%;
+    max-width: 800px;
+}
+
+.member-form, .members-list {
+    background-color: #f2f2f2;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.member-form h2, .members-list h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    background-color: transparent;
+    font-size: 16px;
+    transition: border-bottom-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus {
+    border-bottom-color: #AF1010;
+    outline: none;
+}
+
+button {
+    padding: 12px 40px;
+    background-color: #AF1010;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Tauri', serif;
+}
+
+button:hover {
+    background-color: #A70B0B;
+}
+
+.members-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.members-list li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#finishBtn {
+    background-color: #9F1C00;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: auto;
+    margin-bottom: 20px;
+    font-family: 'Tauri', serif;
+    transition: background-color 0.3s ease;
+}
+
+#finishBtn:hover {
+    background-color: #A70B0B;
+}
