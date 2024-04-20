@@ -3,39 +3,45 @@
 {% block title %}Les Offres Disponibles {% endblock %}
 
 {% block body %}
-    <h1>Les Offres Disponibles  </h1>
+    <h1>Les Offres Disponibles</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                
-                <th>Titre</th>
-                <th>Description</th>
-                <th>Competences</th>
-                <th>Nbr</th>
-                <th>Date</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for offre in offres %}
-            <tr>
-                
-                <td>{{ offre.titre }}</td>
-                <td>{{ offre.description }}</td>
-                <td>{{ offre.competences }}</td>
-                <td>{{ offre.nbr }}</td>
-                <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_candidature_new', {'offre_id': offre.id}) }}" class="btn btn-outline-primary">Add Candidature</a>
+    <form id="search-form" action="{{ path('search_offres') }}" method="post">
+        <input type="text" id="search-term" name="search" placeholder="Rechercher par titre ou description">
+        <button type="submit">Rechercher</button>
+    </form>
 
-                </td>
-            </tr>
+    <div id="search-results">
+        {% if offres is not empty %}
+            <h2>Résultats de la recherche</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Competences</th>
+                        <th>Nbr</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for offre in offres %}
+                        <tr>
+                            <td>{{ offre.titre }}</td>
+                            <td>{{ offre.description }}</td>
+                            <td>{{ offre.competences }}</td>
+                            <td>{{ offre.nbr }}</td>
+                            <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
+                            <td>
+                                <a href="{{ path('app_candidature_new', {'offre_id': offre.id}) }}" class="btn btn-outline-primary">Add Candidature</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <p>Aucun résultat trouvé.</p>
+        {% endif %}
+    </div>
+
 {% endblock %}

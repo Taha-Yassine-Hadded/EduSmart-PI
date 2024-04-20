@@ -24,3 +24,8 @@ candidature_download_cv:
     path: /download-pdf/{id}
     controller: App\Controller\CandidatureController::downloadPdf
 
+search_offres:
+    path: /search
+    controller: App\Controller\OffreController::search
+    methods: [GET, POST]
+

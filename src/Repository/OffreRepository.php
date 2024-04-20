@@ -28,6 +28,14 @@ class OffreRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function searchByTitleOrDescription($searchTerm)
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.titre LIKE :search_term OR o.description LIKE :search_term')
+            ->setParameter('search_term', '%'.$searchTerm.'%')
+            ->getQuery()
+            ->getResult();
+    }    
 
 //    /**
 //     * @return Offre[] Returns an array of Offre objects

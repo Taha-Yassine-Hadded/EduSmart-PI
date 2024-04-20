@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 use App\Service\UserService\UserService;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 #[Route('/offre')]
 class OffreController extends AbstractController
@@ -52,7 +54,7 @@ class OffreController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_offre_show', methods: ['GET'])]
+    #[Route('/offre/{id}', name: 'app_offre_show', methods: ['GET'])]
     public function show(Offre $offre,CandidatureRepository $repo , $id , OffreRepository $repo1): Response
     {
         $offre=$repo1->find($id);
@@ -119,6 +121,17 @@ public function edit(Request $request, Offre $offre, EntityManagerInterface $ent
         ]);
     }
 
-    
+    #[Route('/search', name: 'search_offres')]
+public function search(Request $request, OffreRepository $offreRepository): Response
+{
+    $searchTerm = $request->request->get('search');
+    $offres = $offreRepository->searchByTitleOrDescription($searchTerm);
+
+    return $this->render('offre/list.html.twig', [
+        'offres' => $offres,  // Utilisez le même nom de variable ici
+    ]);
+}
+
+
 }
 
