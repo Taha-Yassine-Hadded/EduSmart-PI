@@ -25,10 +25,13 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class CandidatureController extends AbstractController
 {
     private $service;
+    private $flash;
     public function __construct(UserService $service)
     {
         $this->service=$service;
+        $this->flash = 'Hello'; // Example value
     }
+   
     #[Route('/', name: 'app_candidature_index', methods: ['GET'])]
     public function index(CandidatureRepository $candidatureRepository): Response
     {
@@ -143,23 +146,23 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
         $referer = $request->headers->get('referer');
         $candidature->setStatus('Acceptée');
         $entityManager->flush();
-
         $this->addFlash('success', 'Candidature acceptée avec succès.');
-
         return $this->redirect($referer);
+
     }
 
     #[Route('/refuser/{id}', name: 'refuser')]
-    public function refuserCandidature(Candidature $candidature, EntityManagerInterface $entityManager, Request $request): Response
-    {
-        $referer = $request->headers->get('referer');
-        $candidature->setStatus('Refusée');
-        $entityManager->flush();
+public function refuserCandidature(Candidature $candidature, EntityManagerInterface $entityManager, Request $request): Response
+{
+    $referer = $request->headers->get('referer');
+    $candidature->setStatus('Refusée');
+    $entityManager->flush();
 
-        $this->addFlash('success', 'Candidature refusée avec succès.');
+    $this->addFlash('danger', 'Candidature refusée avec succès.');
 
-        return $this->redirect($referer);
-    }
+    return $this->redirect($referer);
+}
+
 
 
     #[Route('/download-pdf/{id}', name: 'download_pdf')]
