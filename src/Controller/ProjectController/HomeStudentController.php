@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Tache; // Ajout du namespace pour la classe Tache
+use App\Entity\Tache;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\Projet\ProjectMembersService;
 use App\Entity\ProjectMembers;
@@ -61,6 +61,7 @@ class HomeStudentController extends AbstractController
 
         $taches = $this->tacheService->getTachesByUserIdAndProjectId($userId, $projectId);
         $projectNames = $this->projectService->getProjectNamesForUserId($userId);
+        $fichiers = $this->fichierService->getFichiersByProjectId($projectId);
 
 
         // Utiliser la méthode getValidStates() de l'énumération EtatEnum pour obtenir les valeurs valides
@@ -70,6 +71,8 @@ class HomeStudentController extends AbstractController
             'projectNames' => $projectNames,
             'taches' => $taches,
             'etatEnumValues' => $etatEnumValues,
+            'fichiers' => $fichiers,
+
         ]);
     }
 

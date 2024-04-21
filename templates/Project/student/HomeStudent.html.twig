@@ -208,6 +208,11 @@
 </div>>
 <div class="horizontal-scroll-container">
     <div class="scroll-content">
+        {% for fichier in fichiers %}
+            <div>
+                <a href="{{ path('download_fichier', {'id': fichier.id}) }}">{{ fichier.nom }}</a>
+            </div>
+        {% endfor %}
     </div>
     <div class="import-button" id="importBtn">
         <button>

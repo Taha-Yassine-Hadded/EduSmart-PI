@@ -30,8 +30,10 @@ class FichierService
     {
         return $this->entityManager->getRepository(Fichier::class)->find($id);
     }
-
-
+    public function getFichiersByProjectId(int $projectId): array
+    {
+        return $this->entityManager->getRepository(Fichier::class)->findBy(['project' => $projectId]);
+    }
 
     // Ajoutez d'autres méthodes de service ici selon vos besoins
 }
