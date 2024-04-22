@@ -783,6 +783,16 @@ public function getUserIdentifier(): string
 
         return $this;
     }
+    public function __toString(): string
+{
+    if ($this->nom && $this->prenom) {
+        return $this->prenom . ' ' . $this->nom;
+    }
+    
+    return $this->email ?? '';
+}
+
+
 
 
 

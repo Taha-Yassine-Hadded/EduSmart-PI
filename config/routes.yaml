@@ -1,3 +1,11 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+app_inscription_new:
+    path: /inscrire/new/{id_activite}
+    controller: 'App\Controller\ActivitesController\InscrireController::new'
+    methods: ['GET', 'POST']
+
+checkout_payment:
+    path: /checkout/payment
+    controller: App\Controller\ActivitesController\CheckoutController::payment
+
+
+

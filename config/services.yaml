@@ -6,6 +6,17 @@
 parameters:
 
 services:
+    # Ajoutez votre contrôleur en tant que service
+    App\Controller\ActivitesController\InscrireController:
+        autowire: true
+        autoconfigure: true
+        public: true
+        arguments:
+            $entityManager: '@doctrine.orm.default_entity_manager'
+        tags: ['controller.service_arguments']
+
+
+        
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -27,3 +38,4 @@ services:
             $captchaSecret: '%env(RECAPTCHA_SECRET_KEY)%'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 300 }
+        

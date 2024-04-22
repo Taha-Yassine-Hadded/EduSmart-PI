@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fil d'actualité{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">Fil d'actualité</h1>
+
+    <div class="container mt-4">
+        <div class="list-group">
+            {% for publication in publications %}
+                {% if publication.contenu %}
+                    <div class="list-group-item list-group-item-action">
+                        <div class="publication-content mb-1">{{ publication.contenu }}</div>
+                        <div class="d-flex w-100 justify-content-between">
+                            <div class="btn-group">
+                                <a href="{{ path('app_publication_edit', {'id': publication.id}) }}" class="btn btn-sm btn-primary" style="background-color: midnightblue;"><i class="fas fa-edit"></i> </a>
+                                <form id="publication-form-{{ publication.id }}" class="publication-form" action="{{ path('app_publication_delete', {'id': publication.id}) }}" method="post" style="display: inline;">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ publication.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="background-color: maroon;"><i class="fas fa-trash"></i> </button>
+                                </form>
+                            </div>
+                            <small>{{ publication.date ? publication.date|date('Y-m-d') : '' }}</small>
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <p class="text-muted text-center mt-4">Aucune publication disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <a href="{{ path('app_publication_new') }}" class="btn btn-primary btn-block mt-4">Nouvelle publication</a>
+
+{% endblock %}
