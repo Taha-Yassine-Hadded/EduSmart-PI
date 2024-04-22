@@ -47,24 +47,45 @@ class OptionController extends AbstractController
     }
     return $this->redirectToRoute('app_option_for_evaluation', ['questionId' => $option->getQuestion()->getId()]);
 }
-#[Route('/optionE/modify/{id}', name: 'app_optionEModifier')]
-public function modify(Request $request, ManagerRegistry $manager, OptionRepository $repo, $id): Response
+#[Route('/optionE/modify/{id}/{id_option}', name: 'app_optionEModifier')]
+public function modify(Request $request, ManagerRegistry $manager, OptionRepository $repo, QuestionRepository $repoQ, $id,$id_option): Response
 {
-    $option = $repo->find($id);
+    $option = $repo->find($id_option);
     $form = $this->createForm(OptionType::class, $option);
     $em = $manager->getManager();
     $form->handleRequest($request);
     
+    $errorOccurred = false;
     if ($form->isSubmitted() && $form->isValid()) {
-        // Persist changes to the database
+        $evaluation = $repoQ->find($id);
+        $option->setQuestion($evaluation);
+        $isCorrect = $option->isIsCorrect();
+
+        if ($isCorrect) {
+            $existingCorrectOption = $repoQ->findCorrectOptionForQuestion($id);
+
+            if ($existingCorrectOption !== null) {
+                $errorOccurred = true;
+            } else {
+                $errorOccurred = false;
+                $em->persist($option);
+                $em->flush();
+                return $this->redirectToRoute('app_option_for_evaluation', ['questionId' => $id]);
+            }
+
+    } 
+    else {
+        $errorOccurred = false;
         $em->persist($option);
         $em->flush();
-
-        return $this->redirectToRoute('app_option_for_evaluation', ['questionId' => $option->getQuestion()->getId()]);
+        return $this->redirectToRoute('app_option_for_evaluation', ['questionId' => $id]);
+    }
+    
     }
 
-    return $this->render('option/optionForm.html.twig', [
-        'f' => $form->createView()
+    return $this->renderForm('option/optionForm.html.twig', [
+        'f' => $form,
+        'errorOccurred' => $errorOccurred
     ]);
 }
 #[Route('/optionE/add{id}', name: 'app_option_add')]
