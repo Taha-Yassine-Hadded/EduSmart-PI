@@ -7,7 +7,7 @@
 
     <form id="search-form" action="{{ path('search_offres') }}" method="post">
         <input type="text" id="search-term" name="search" placeholder="Rechercher par titre ou description">
-        <button type="submit">Rechercher</button>
+        
     </form>
 
     <div id="search-results">
@@ -43,5 +43,26 @@
             <p>Aucun résultat trouvé.</p>
         {% endif %}
     </div>
+
+    <script>
+        function search() {
+            let searchTerm = document.getElementById('search-term').value.toUpperCase();
+            let rows = document.querySelectorAll('#search-results table tbody tr');
+            rows.forEach(row => {
+                let title = row.querySelector('td:nth-child(1)').textContent.toUpperCase();
+                let description = row.querySelector('td:nth-child(2)').textContent.toUpperCase();
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        document.getElementById('search-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            search();
+        });
+        document.getElementById('search-term').addEventListener('input', search);
+    </script>
 
 {% endblock %}
