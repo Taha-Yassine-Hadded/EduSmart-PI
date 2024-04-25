@@ -19,17 +19,20 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-
+use App\Service\StatistiqueService;
 
 #[Route('/candidature')]
 class CandidatureController extends AbstractController
 {
     private $service;
     private $flash;
-    public function __construct(UserService $service)
+    private $statistiqueService;
+
+    public function __construct(UserService $service, StatistiqueService $statistiqueService)
     {
-        $this->service=$service;
+        $this->service = $service;
         $this->flash = 'Hello'; // Example value
+        $this->statistiqueService = $statistiqueService;
     }
    
     #[Route('/', name: 'app_candidature_index', methods: ['GET'])]
@@ -187,6 +190,15 @@ public function downloadPdf($id, CandidatureRepository $repo): Response
     ));
 
     return $response;
+}
+#[Route('/statistiques', name: 'app_candidature_statistiques', methods: ['GET'])]
+public function statistiques(): Response
+{
+    $statistiques = $this->statistiqueService->getStatistiquesCandidaturesParOffre();
+
+    return $this->render('candidature/statistiques.html.twig', [
+        'statistiques' => $statistiques,
+    ]);
 }
 
     

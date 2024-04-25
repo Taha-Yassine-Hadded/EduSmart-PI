@@ -1,52 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Offres {% endblock %}
+{% block title %}Offres{% endblock %}
 
 {% block body %}
-    <h1>Offres </h1>
+    <h1>Offres</h1>
 
     <table class="table">
         <thead>
             <tr>
-                
                 <th>Titre</th>
                 <th>Description</th>
-                <th>Competences</th>
+                <th>Compétences</th>
                 <th>Nbr</th>
                 <th>Date</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for offre in offres %}
             <tr>
-                
                 <td>{{ offre.titre }}</td>
                 <td>{{ offre.description }}</td>
                 <td>{{ offre.competences }}</td>
                 <td>{{ offre.nbr }}</td>
                 <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
                 <td>
-                    
-    <a href="{{ path('app_offre_show', {'id': offre.id}) }}" class="btn btn-outline-primary">Show</a>
-    <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="btn btn-outline-secondary">Edit</a>
-</td>
-
+                    <a href="{{ path('app_offre_show', {'id': offre.id}) }}" class="btn btn-outline-primary">Show</a>
+                    <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="btn btn-outline-secondary">Edit</a>
+                </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="6">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Statistiques des candidatures</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Offre</th>
+                <th>Nombre de candidatures</th>
+                <th>Pourcentage</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for statistique in statistiques %}
+            <tr>
+                <td>{{ statistique.offre }}</td>
+                <td>{{ statistique.nbCandidatures }}</td>
+                <td>{{ statistique.pourcentage }}%</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
     <a href="{{ path('app_offre_new') }}" class="btn btn-outline-danger mt-3">Create new</a>
-    </div>
-
-    <!-- Assurez-vous d'inclure jQuery et Bootstrap JS avant la fermeture du corps -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
 {% endblock %}

@@ -30,6 +30,19 @@ class CandidatureRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getStatistiquesCandidaturesByOffre($offreId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT c.user as etudiant, COUNT(c) as nbCandidatures
+            FROM App\Entity\Candidature c
+            WHERE c.offre = :offreId
+            GROUP BY c.user'
+        )->setParameter('offreId', $offreId);
+
+        return $query->getResult();
+    }
 //    /**
 //     * @return Candidature[] Returns an array of Candidature objects
 //     */

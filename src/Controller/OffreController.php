@@ -15,20 +15,27 @@ use Symfony\Component\Validator\Constraints\Date;
 use App\Service\UserService\UserService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use App\Service\StatistiqueService;
+
 
 #[Route('/offre')]
 class OffreController extends AbstractController
 {
     private $service;
-    public function __construct(UserService $service)
+    private $statistiqueService;
+
+    public function __construct(UserService $service, StatistiqueService $statistiqueService)
     {
-        $this->service=$service;
+        $this->service = $service;
+        $this->statistiqueService = $statistiqueService;
     }
     #[Route('/', name: 'app_offre_index', methods: ['GET'])]
     public function index(OffreRepository $offreRepository): Response
     {
+        $statistiques = $this->statistiqueService->getStatistiquesCandidaturesParOffre();
         return $this->render('offre/index.html.twig', [
             'offres' => $offreRepository->findAll(),
+            'statistiques' => $statistiques,
         ]);
     }
 
@@ -66,16 +73,17 @@ class OffreController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_offre_edit', methods: ['GET', 'POST'])]
-public function edit(Request $request, Offre $offre, EntityManagerInterface $entityManager): Response
-{
-    $form = $this->createForm(OffreType::class, $offre);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
+    public function edit(Request $request, Offre $offre, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(OffreType::class, $offre);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
         $message = Offre::creerMessage('Titre de l\'offre', 'Description de l\'offre', 'Compétences requises', 'nouveau nbr');
         echo $message;        
     
         $entityManager->flush();
+        $this->addFlash('success', 'L\'offre a été modifiée avec succès.');
 
         return $this->redirectToRoute('app_offre_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -86,16 +94,17 @@ public function edit(Request $request, Offre $offre, EntityManagerInterface $ent
     ]);
 }
 
-    #[Route('/{id}', name: 'app_offre_delete', methods: ['POST'])]
-    public function delete(Request $request, Offre $offre, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$offre->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($offre);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_offre_index', [], Response::HTTP_SEE_OTHER);
+#[Route('/{id}', name: 'app_offre_delete', methods: ['POST'])]
+public function delete(Request $request, Offre $offre, EntityManagerInterface $entityManager): Response
+{
+    if ($this->isCsrfTokenValid('delete' . $offre->getId(), $request->request->get('_token'))) {
+        $entityManager->remove($offre);
+        $entityManager->flush();
     }
+
+    return $this->redirectToRoute('app_offre_index', [], Response::HTTP_SEE_OTHER);
+}
+
 
     /**
      * @Route("/offres/{id}/candidatures", name="app_offre_candidatures")
@@ -132,6 +141,20 @@ public function search(Request $request, OffreRepository $offreRepository): Resp
     ]);
 }
 
+#[Route('/{id}/statistiques', name: 'app_offre_statistiques', methods: ['GET'])]
+public function statistiques(Offre $offre, StatistiqueService $statistiqueService): Response
+{
+    // Vérifiez si l'utilisateur actuel est de rôle "entreprise"
+    $this->denyAccessUnlessGranted('ROLE_ENTREPRISE');
+
+    // Obtenez les statistiques des candidatures des étudiants pour cette offre
+    $statistiques = $statistiqueService->getStatistiquesCandidatures($offre->getId());
+
+    return $this->render('offre/statistiques.html.twig', [
+        'offre' => $offre,
+        'statistiques' => $statistiques,
+    ]);
+}
 
 }
 

@@ -5,9 +5,61 @@
 {% block body %}
     <h1>Edit Offre</h1>
 
-    {{ include('offre/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="col-lg-12 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
+        <div class="container mb-2 col-lg-15">
+            <div class="row justify-content-left mt-4 mb-2">
+                <div class="col-md-5">
+                    <div class="card border-danger border-3 shadow" style="border-radius : 2%;">
+                        <div class="card-header bg-danger text-center">
+                            <h3 style="color : white;">Modifier Offre</h3>
+                        </div>
+                        <div class="card-body">
+                            {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': 'novalidate'}}) }}
 
-    <a href="{{ path('app_offre_index') }}">back to list</a>
+                            <div class="form-group mb-3">
+                                {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                                <div class="text-danger">
+                                    {{ form_errors(form.titre) }}
+                                </div>
+                            </div>
 
-    {{ include('offre/_delete_form.html.twig') }}
+                            <div class="form-group mb-3">
+                                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                                <div class="text-danger">
+                                    {{ form_errors(form.description) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                {{ form_label(form.competences, 'Competences', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.competences, {'attr': {'class': 'form-control'}}) }}
+                                <div class="text-danger">
+                                    {{ form_errors(form.competences) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                {{ form_label(form.nbr, 'Nombre', {'label_attr': {'class': 'form-label'}}) }}
+                                {{ form_widget(form.nbr, {'attr': {'class': 'form-control', 'type': 'number'}}) }}
+                                <div class="text-danger">
+                                    {{ form_errors(form.nbr) }}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-outline-danger mt-3">Modifier</button>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-3">
+        <a href="{{ path('app_offre_index') }}" class="btn btn-outline-primary">back to liste</a>
+    </div>
 {% endblock %}
