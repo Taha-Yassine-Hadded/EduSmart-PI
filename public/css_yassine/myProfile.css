@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background:#eee;
+}
+
+.card{
+    border:none;
+
+    position:relative;
+    overflow:hidden;
+    border-radius:8px;
+}
+
+a {
+    text-decoration : none;
+}
+
+::selection{
+    background: #9f1c00;
+    color: #fff;
+}
+
+.card:before{
+    
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:4px;
+    height:100%;
+    background-color:#f8bdbd;
+    transform:scaleY(1);
+    transition:all 0.5s;
+    transform-origin: bottom
+}
+
+.card:after{
+    
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:4px;
+    height:100%;
+    background-color:#fd0d0d;
+    transform:scaleY(0);
+    transition:all 0.5s;
+    transform-origin: bottom
+}
+
+.card:hover::after{
+    transform:scaleY(1);
+}
+
+.header {
+  display: inline-flex;
+  align-items: center;
+}
+
+
+
+/*new*/
+
+.hm:focus {
+    outline: none;
+    border-color: rgb(251, 251, 251);
+    box-shadow: 0 0 0 0.15rem rgba(167, 1, 1, 0.5);
+}
+
+.mouraba3 {
+        background: none; /* Removes the background */
+        border: none; /* Removes the border */
+        padding: 0; /* Removes padding */
+        margin: 0; /* Removes margin */
+        color: inherit; /* Inherits text color from parent */
+        font: inherit; /* Inherits font settings from parent */
+        cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+.hov {
+    position: relative;
+    display: inline-block; /* Ensures the div doesn't span the full width if not needed */
+    overflow: hidden; /* Keeps the pseudo-elements within the bounds of the container */
+}
+
+.hov::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.2); /* Grey color with 50% opacity */
+    opacity: 0; /* Start fully transparent */
+    transition: opacity 0.5s ease; /* Smooth transition for the hover effect */
+}
+
+.hov::after {
+    content: '\f044'; /* Font Awesome edit icon unicode */
+    font-family: 'Font Awesome 5 Free'; /* Specifying the icon font family */
+    font-weight: 900; /* Necessary for solid icons in Font Awesome 5 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the icon */
+    color: rgb(191, 191, 191); /* Icon color */
+    font-size: 24px; /* Icon size */
+    opacity: 0;
+    transition: opacity 0.3s ease; /* Smooth transition for the icon */
+}
+
+.hov:hover::before,
+.hov:hover::after {
+    opacity: 1;
+}
+
+
+   /* background-color: rgba(0, 0, 0, 0.2);  Grey color with 50% opacity */
+   /* opacity: 0; Start fully transparent */
+   /* transition: opacity 0.3s ease;  Smooth transition for the hover effect */
+
+
+

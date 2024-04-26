@@ -44,6 +44,7 @@
         "symfony/ux-turbo": "^2.16",
         "symfony/validator": "5.4.*",
         "symfony/web-link": "5.4.*",
+        "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "5.4.*",
         "teamtnt/tntsearch": "^4.2",
         "twig/extra-bundle": "^2.12|^3.0",

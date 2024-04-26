@@ -13,6 +13,11 @@
           {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('showDashboard') }}" class="btn btn-outline-danger mt-2">Dashboard</a>
           {% endif %}
+          {% if is_granted('ROLE_TEACHER') or is_granted('ROLE_STUDENT') or is_granted('ROLE_CLUB') or is_granted('ROLE_ENTREPRISE') %}
+            <a href="{{ path('myProfile') }}" class="btn btn-danger mt-2">
+            <i class="fa fa-eye"></i> Profil
+            </a>
+          {% endif %}
         {% endif %}
     </div>
 </div>

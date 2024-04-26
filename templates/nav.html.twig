@@ -15,7 +15,7 @@
                             <ul class="dropdown-menu" style="margin-left: 1280px;">
                                 <li>
                                     {% if is_granted('ROLE_TEACHER') or is_granted('ROLE_STUDENT') or is_granted('ROLE_ENTREPRISE') or is_granted('ROLE_CLUB') %}
-                                    <a class="dropdown-item" href="#"><span><i class="fa-regular fa-user" style="color: #9f1c00;"></i></span><span>&nbsp;Profil</span></a>
+                                    <a class="dropdown-item" href="{{path ('myProfile')}}"><span><i class="fa-regular fa-user" style="color: #9f1c00;"></i></span><span>&nbsp;Profil</span></a>
                                     {% endif %}
                                 </li>
                                 {% if is_granted('ROLE_ADMIN') %}
