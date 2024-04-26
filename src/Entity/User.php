@@ -97,6 +97,8 @@ class User implements UserInterface
     )]
     private ?int $niveau = null;
 
+    private $entityManager;
+
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le genre ne peut pas être vide.", groups: ['Student','Teacher'])]
     private ?string $genre = null;
@@ -173,6 +175,73 @@ class User implements UserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPasswordToken::class, cascade: ['persist', 'remove'])]
     private Collection $resetPasswordTokens;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="following")
+     */
+    private $followers;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="followers")
+     * @ORM\JoinTable(name="user_follows",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="followed_user_id", referencedColumnName="id")}
+     * )
+     */
+    private $following;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: FollowNotification::class)]
+    private Collection $followNotifications;
+
+    public function getFollowers(): ?Collection {
+        return $this->followers;
+    }
+
+    public function getFollowing(): ?Collection {
+        return $this->following;
+    }
+
+    public function setFollowers(ArrayCollection $followers): void {
+        $this->followers = $followers;
+    }
+
+    public function setFollowing(ArrayCollection $following): void {
+        $this->following = $following;
+    }
+
+    public function addFollower(User $user): self {
+        if (!$this->followers->contains($user)) {
+            $this->followers[] = $user;
+            $user->addFollowing($this);
+        }
+
+        return $this;
+    }
+
+    public function addFollowing(User $user): self {
+        if (!$this->following->contains($user)) {
+            $this->following[] = $user;
+            $user->addFollower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollower(User $user): self {
+        if ($this->followers->removeElement($user)) {
+            $user->removeFollowing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowing(User $user): self {
+        if ($this->following->removeElement($user)) {
+            $user->removeFollower($this);
+        }
+
+        return $this;
+    }
+
     public function __construct()
     {
         $this->candidatures = new ArrayCollection();
@@ -190,6 +259,9 @@ class User implements UserInterface
         $this->notifications = new ArrayCollection();
         $this->event_participant = new ArrayCollection();
         $this->resetPasswordTokens = new ArrayCollection();
+        $this->followers = new ArrayCollection();
+        $this->following = new ArrayCollection();
+        $this->followNotifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -387,8 +459,7 @@ class User implements UserInterface
         return null;
     }
 
-public function eraseCredentials(): void
-{}
+public function eraseCredentials(): void {}
 
 public function getUsername(): string
 {
@@ -850,10 +921,35 @@ public function getUserIdentifier(): string
         return $this;
     }
 
+    /**
+     * @return Collection<int, FollowNotification>
+     */
+    public function getFollowNotifications(): Collection
+    {
+        return $this->followNotifications;
+    }
 
+    public function addFollowNotification(FollowNotification $followNotification): static
+    {
+        if (!$this->followNotifications->contains($followNotification)) {
+            $this->followNotifications->add($followNotification);
+            $followNotification->setUser($this);
+        }
 
+        return $this;
+    }
 
+    public function removeFollowNotification(FollowNotification $followNotification): static
+    {
+        if ($this->followNotifications->removeElement($followNotification)) {
+            // set the owning side to null (unless already changed)
+            if ($followNotification->getUser() === $this) {
+                $followNotification->setUser(null);
+            }
+        }
 
+        return $this;
+    }
 
 
 }

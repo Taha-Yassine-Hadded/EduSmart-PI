@@ -97,7 +97,7 @@ class SignUpController extends AbstractController
                 'prenom' => $request->request->get('prenomStudent'),
                 'genre' => $request->request->get('genreStudent'),
                 'dateNaissance' => $request->request->get('dateNaissanceStudent'),
-                'classe' => $request->request->get('calsse'),
+                'classe' => $request->request->get('classe'),
                 'niveau' => $request->request->get('niveau'),
                 'cin' => $request->request->get('cin')
             ];
@@ -164,11 +164,10 @@ class SignUpController extends AbstractController
 
                 $validationCode = $this->codeService->add($pr);
 
-                return $this->json(['status' => 'success', 'message' => 'Email sent successfully', 'id' => $validationCode->getId(), 'exist' => 'false']);
+                return $this->json(['status' => 'success', 'message' => 'Email sent successfully',
+                                    'id' => $validationCode->getId(), 'exist' => 'false']);
 
-            } 
-
-            else {
+            } else{
                 return $this->json(['exist' => 'true']);
             }
     
