@@ -97,8 +97,6 @@ class User implements UserInterface
     )]
     private ?int $niveau = null;
 
-    private $entityManager;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "Le genre ne peut pas être vide.", groups: ['Student','Teacher'])]
     private ?string $genre = null;
@@ -117,7 +115,7 @@ class User implements UserInterface
         $context->buildViolation('La date de naissance doit être moins de l\'année 2006')
                 ->atPath('dateNaissance')
                 ->addViolation();
-        }  
+        }
     }
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -175,19 +173,16 @@ class User implements UserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPasswordToken::class, cascade: ['persist', 'remove'])]
     private Collection $resetPasswordTokens;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="following")
-     */
-    private $followers;
+    
+    #[ORM\ManyToMany(targetEntity: User::class, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'user_follows',
+        joinColumns: [new ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')],
+        inverseJoinColumns: [new ORM\JoinColumn(name: 'followed_user_id', referencedColumnName: 'id')]
+    )]
+    private Collection $following;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="followers")
-     * @ORM\JoinTable(name="user_follows",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="followed_user_id", referencedColumnName="id")}
-     * )
-     */
-    private $following;
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'following')]
+    private Collection $followers;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: FollowNotification::class)]
     private Collection $followNotifications;
@@ -259,8 +254,8 @@ class User implements UserInterface
         $this->notifications = new ArrayCollection();
         $this->event_participant = new ArrayCollection();
         $this->resetPasswordTokens = new ArrayCollection();
-        $this->followers = new ArrayCollection();
         $this->following = new ArrayCollection();
+        $this->followers = new ArrayCollection();
         $this->followNotifications = new ArrayCollection();
     }
 
