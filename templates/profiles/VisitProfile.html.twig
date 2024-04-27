@@ -46,24 +46,26 @@
                             </div>
                         {% endif %}
                         <div class="text-center mt-3">
-                            <span class="bg-secondary p-1 px-4 rounded text-white">
                                 {% if user.getRole().value == 'ENTREPRISE' %}
+                                <span class="bg-secondary p-1 px-4 rounded text-white">
                                     Entreprise
-                                                                                    
+                                </span>                                     
                                 {% elseif user.getRole().value == 'TEACHER' %}
+                                <span class="bg-danger p-1 px-4 rounded text-white">
                                     Enseignant
-                                                                                    
+                                </span>                                      
                                 {% elseif user.getRole().value == 'STUDENT' %}
+                                <span class="bg-secondary-subtle p-1 px-4 rounded text-black">
                                     Etudiant
-                                                                                    
+                                </span>                                     
                                 {% elseif user.getRole().value == 'CLUB' %}
+                                <span class="bg-dark p-1 px-4 rounded text-white">
                                     Club RH
-                                                                                    
+                                </span>                                         
                                 {% endif %}
-                            </span>
                             <br>
                             <span class="header text-danger">
-                                <span class="h3 mt-2 mb-2">
+                                <span class="h3 mt-2">
                                     {{ user.getNom() }}
                                 </span>
                                 {% if user.getRole().value != 'ENTREPRISE' %}
@@ -144,7 +146,7 @@
                                     {{ user.getPays() }}
                                 </span>
                                 <span style="padding-left : 10px;">
-                                    <i class="fa-solid fa-location-crosshairs" style="color: #fd0d0d;"></i>
+                                    <i class="fa-solid fa-location-dot" style="color: #fd0d0d;"></i>
                                 </span>
                                 <span>
                                     Localisation :
@@ -173,19 +175,32 @@
                                 </div>
                             </div>
                         {% endif %}
-                        <div class="follow-unfollow-button">
-                        {% if following == 'false'%}
-                    <h1>{{following}}</h1>
-                    <h1>{{user.getFollowers()}}</h1>
-                            <a href="{{path ('followUser',{'id': user.getId()})}}" class="btn btn-outline-danger">
-                                Suivre
-                            </a>
+                        <br>
+                        <div style="display: inline-block; margin-top: 10px; margin-bottom: 10px;">
+                            <span>
+                                Suivi par : &nbsp;
+                                {{ user.getFollowers()|length }}
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-users" style="padding-right : 10px;padding-left : 5px;color: #fd0d0d; border-right : solid 2px red;"></i>
+                            </span>
+                            <span>
+                                &nbsp; Suivre : &nbsp;
+                                {{ user.getFollowing()|length }}
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-users" style="padding-right : 10px;padding-left : 5px;color: #fd0d0d;"></i>
+                            </span>
+                        </div>
+                        <div class="follow-unfollow-button" id="followUnfollowButton">
+                        {% if me == 'true' %}
+                            <button id="followButton" class="btn btn-danger"><i class="fa-solid fa-user-plus" style="color: #ffffff;"></i> Suivre</button>
                         {% else %}
-                    <h1>{{following}}</h1>
-                    <h1>{{user.getFollowers()}}</h1>
-                        <a href="#" class="btn btn-danger">
-                                Ne plus suivre
-                            </a>
+                            {% if following == 'false' %}
+                                <a href="{{path ('followUser',{'id': user.getId()})}}" id="followButton" class="btn btn-danger"><i class="fa-solid fa-user-plus" style="color: #ffffff;"></i> Suivre</a>
+                            {% else %}
+                            <a href="{{path ('unfollowUser',{'id': user.getId()})}}" id="unfollowButton" class="btn btn-outline-danger" onclick="unfollowUser('{{ user.getId() }}')">Ne plus suivre</a>
+                            {% endif %}
                         {% endif %}
                         </div>
                     </div>

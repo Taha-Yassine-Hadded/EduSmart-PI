@@ -31,75 +31,79 @@ class ProfilController extends AbstractController
 
     #[Route('/',name:'myProfile')]
     public function myProfile(Security $security, UserService $userService) {
-        $email = $security->getUser()->getUserIdentifier();
-        $user = $userService->getUserByEmail($email);
-        return $this->render('/profiles/Profile.html.twig', ['user' => $user]);
+        $user = $userService->getUserByEmail($email = $security->getUser()->getUserIdentifier());
+        
+        return $this->render(
+            '/profiles/Profile.html.twig',
+            ['user' => $user]
+        );
     }
 
     #[Route('/user/{id}',name:'visitProfile')]
     public function visitProfile(Security $security, UserService $userService, $id) {
+
             $userToVisit = $userService->getUserById($id);
             $userLoggedIn = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
+            $nbFollowers = sizeof($userToVisit->getFollowers());
+            $nbFollowing = sizeof($userToVisit->getFollowing());
+
+
             if ($userLoggedIn->getFollowing() != null && $userLoggedIn->getFollowing()->contains($userToVisit)) {
-                $infos = ['user' => $userToVisit, 'following' => 'true'];
+                if($userLoggedIn == $userToVisit) {
+                    $infos = ['user' => $userToVisit, 'following' => 'true', 'me' => 'true', 'nbFollowers' => $nbFollowers , 'nbFollowing' => $nbFollowing ];
+                } else {
+                    $infos = ['user' => $userToVisit, 'following' => 'true', 'me' => 'false', 'nbFollowers' => $nbFollowers , 'nbFollowing' => $nbFollowing ];
+                }
             } else {
-                $infos = ['user' => $userToVisit, 'following' => 'false'];
-                
+                if($userLoggedIn == $userToVisit) {
+                    $infos = ['user' => $userToVisit, 'following' => 'false', 'me' => 'true', 'nbFollowers' => $nbFollowers , 'nbFollowing' => $nbFollowing ];
+                } else {
+                    $infos = ['user' => $userToVisit, 'following' => 'false', 'me' => 'false', 'nbFollowers' => $nbFollowers , 'nbFollowing' => $nbFollowing ];
+                }
             }
+
             return $this->render(
-                '/profiles/VisitProfile.html.twig',
-                $infos
-            );
+                    '/profiles/VisitProfile.html.twig',
+                    $infos
+                );
 
     }
 
-    #[Route('/follow-user/{id}',name:'followUser')]
-    public function followUser(Security $security, UserService $userService, $id){
-
+    #[Route('/follow-user/{id}', name: 'followUser')]
+    public function followUser(Security $security, UserService $userService, EntityManagerInterface $entityManager, $id) : Response {
         $userToFollow = $userService->getUserById($id);
         $userLoggedIn = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
 
-        if($userLoggedIn->getFollowing() != null && $userToFollow->getFollowers() != null) {
-            $userLoggedIn->addFollowing($userToFollow);
-            $userToFollow->addFollower($userLoggedIn);
-        } elseif ($userLoggedIn->getFollowing() == null && $userToFollow->getFollowers() != null) {
-            $following = new ArrayCollection();
-            $following->add($userToFollow);
-            $userLoggedIn->setFollowing($following);
-            $userToFollow->addFollower($userLoggedIn);
-        } elseif ($userLoggedIn->getFollowing() != null && $userToFollow->getFollowers() == null) {
-            $followers = new ArrayCollection();
-            $followers->add($userLoggedIn);
-            $userLoggedIn->addFollowing($userToFollow);
-            $userToFollow->setFollowers($followers);
-        } else {
-            $followers = new ArrayCollection();
-            $followers->add($userLoggedIn);
-            $following = new ArrayCollection();
-            $following->add($userToFollow);
-            $userLoggedIn->setFollowing($following);
-            $userToFollow->setFollowers($followers);
-        }
+        $userLoggedIn->addFollowing($userToFollow);
+        $userToFollow->addFollower($userLoggedIn);
+
+        $entityManager->persist($userLoggedIn);
+        $entityManager->persist($userToFollow);
+        $entityManager->flush();
+
         return $this->redirectToRoute('visitProfile', ['id' => $id]);
+
     }
-/*
-    #[Route('/unfollow-user/{id}',name:'unfollowUser')]
-    public function unfollowUser(,$id){
 
-        $student = $this->userService->getUserById($id);
+    #[Route('/unfollow-user/{id}', name: 'unfollowUser')]
+    public function unfollowUser(Security $security, UserService $userService, EntityManagerInterface $entityManager, $id): Response {
 
-        $form = $this->createForm(StudentType::class, $student, ['include_password' => false]);
-        $form->handleRequest($request);
-        if ( $form->isSubmitted() && $form->isValid()) {
-
-            $this->userService->addClub($student);
-            
-            return $this->redirectToRoute('showDashboard');
+        $userToUnfollow = $userService->getUserById($id);
+        $userLoggedIn = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
+    
+        if ($userLoggedIn->getFollowing()->contains($userToUnfollow)) {
+            $userLoggedIn->removeFollowing($userToUnfollow);
+            $userToUnfollow->removeFollower($userLoggedIn);
+    
+            $entityManager->persist($userLoggedIn);
+            $entityManager->persist($userToUnfollow);
+            $entityManager->flush();
         }
-
-        return $this->render('formStudent.html.twig', ['f' => $form->createView(), 'is_edit' => true]);
+    
+        return $this->redirectToRoute('visitProfile', ['id' => $id]);
+    
     }
-*/
+    
     /**
      * @Route("/getProfilePicture/{nomFile}", name="get_profile_picture")
      */
