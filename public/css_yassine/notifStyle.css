@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.8;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: 900 !important;
+}
+
+a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.btn {
+    transition: all 0.4s ease;
+    font-weight: 800;
+}
+
+.btn:hover {
+    background-color: #890707;
+    color : azure;
+    transform: translateY(-5px);
+}
+
+.btn:hover a, .btn:hover a * {
+    color: azure !important; /* Force all text inside .btn to turn white on hover */
+}
