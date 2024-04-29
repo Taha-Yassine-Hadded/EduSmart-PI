@@ -144,6 +144,9 @@
                                     <td>{{ teacher.genre }}</td>
                                     <td>{{ teacher.dateNaissance|date("d/m/Y") }}</td>
                                     <td>
+                                        <a class="btn btn-primary m-1 p-1 text-white" href="{{ path('visitProfile', {'id':teacher.id} )}}" >
+                                            <i class="uil uil-eye"></i>
+                                        </a>
                                         {% if teacher.getIsEnabled() %}
                                         <a class="btn btn-warning m-1 p-1 text-white" href="{{ path('blockUser',{'id':teacher.id}) }}" >
                                             <i class="uil uil-ban"></i>
@@ -203,6 +206,9 @@
                                     <td>{{ student.genre }}</td>
                                     <td>{{ student.dateNaissance|date("d/m/Y") }}</td>
                                     <td>
+                                        <a class="btn btn-primary m-1 p-1 text-white" href="{{ path('visitProfile', {'id':student.id} )}}" >
+                                            <i class="uil uil-eye"></i>
+                                        </a>
                                         <a class="btn btn-secondary m-1 p-1 text-white" href="{{ path('toRH',{'id':student.id}) }}" >
                                             <i class="uil uil-award"></i>
                                         </a>
@@ -261,6 +267,9 @@
                                     <td>{{ club.genre }}</td>
                                     <td>{{ club.dateNaissance|date("d/m/Y") }}</td>
                                     <td>
+                                        <a class="btn btn-primary m-1 p-1 text-white" href="{{ path('visitProfile', {'id':club.id} )}}" >
+                                            <i class="uil uil-eye"></i>
+                                        </a>
                                         <a class="btn btn-secondary m-1 p-1 text-white" href="{{ path('toStudent',{'id':club.id}) }}" >
                                             <i class="uil uil-book-reader"></i>
                                         </a>
@@ -319,6 +328,9 @@
                                     <td>{{ entreprise.localisation }}</td>
                                     <td>{{ entreprise.website }}</td>
                                     <td>
+                                        <a class="btn btn-primary m-1 p-1 text-white" href="{{ path('visitProfile', {'id':entreprise.id} )}}" >
+                                            <i class="uil uil-eye"></i>
+                                        </a>
                                         {% if entreprise.getIsEnabled() %}
                                         <a class="btn btn-warning m-1 p-1 text-white" href="{{ path('blockUser',{'id':entreprise.id}) }}" >
                                             <i class="uil uil-ban"></i>

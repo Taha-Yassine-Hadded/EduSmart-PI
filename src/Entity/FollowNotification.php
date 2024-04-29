@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\FollowNotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 #[ORM\Entity(repositoryClass: FollowNotificationRepository::class)]
 class FollowNotification
@@ -21,6 +23,30 @@ class FollowNotification
 
     #[ORM\ManyToOne(inversedBy: 'followNotifications')]
     private ?User $user = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ManyToOne(targetEntity: User::class)]
+    #[JoinColumn(nullable: false)]
+    private ?User $follower = null;
+
+    public function getFollower(): ?User
+    {
+        return $this->follower;
+    }
+
+    public function setFollower(?User $follower): self
+    {
+        $this->follower = $follower;
+        return $this;
+    }
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->seen = false;
+    }
 
     public function getId(): ?int
     {
@@ -62,4 +88,16 @@ class FollowNotification
 
         return $this;
     }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
 }

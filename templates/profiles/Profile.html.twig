@@ -70,11 +70,11 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{ path('user_notifications') }}">
                             <i class="uil uil-bell"></i>
                             <span class="link-name">
                                 Notifications
-                                                                                                                            
+                                <span class="badge text-bg-danger">{{unseenNotifications}}</span>                                                                               
                                                                                             
                                                             
                             </span>
@@ -396,6 +396,40 @@
         </section>
         
         <script>
+        
+        document.getElementById('logoutLink').addEventListener('click', function(event) {
+            event.preventDefault(); // Stop the link from causing a page navigate
+            document.getElementById('logoutForm').submit(); // Submit the invisible form
+        });
+
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const followerFilter = document.getElementById('followerFilter');
+            const followingFilter = document.getElementById('followingFilter');
+        
+            followerFilter.addEventListener('change', function() {
+                filterList('followerList', this.value);
+            });
+        
+            followingFilter.addEventListener('change', function() {
+                filterList('followingList', this.value);
+            });
+        
+            function filterList(listId, role) {
+                const list = document.getElementById(listId);
+                const items = list.querySelectorAll('li');
+        
+                items.forEach(item => {
+                    if (role === 'Tous' || item.getAttribute('data-role') === role) {
+                        item.style.display = ''; // Show
+                    } else {
+                        item.style.display = 'none'; // Hide
+                    }
+                });
+            }
+        });
+
+
         document.getElementById('profilePhoto').addEventListener('change', function() {
             var file = this.files[0];
             if (file) {
@@ -441,37 +475,6 @@
             }
         });         
 
-        document.getElementById('logoutLink').addEventListener('click', function(event) {
-            event.preventDefault(); // Stop the link from causing a page navigate
-            document.getElementById('logoutForm').submit(); // Submit the invisible form
-        });
-
-        
-        document.addEventListener("DOMContentLoaded", function() {
-            const followerFilter = document.getElementById('followerFilter');
-            const followingFilter = document.getElementById('followingFilter');
-        
-            followerFilter.addEventListener('change', function() {
-                filterList('followerList', this.value);
-            });
-        
-            followingFilter.addEventListener('change', function() {
-                filterList('followingList', this.value);
-            });
-        
-            function filterList(listId, role) {
-                const list = document.getElementById(listId);
-                const items = list.querySelectorAll('li');
-        
-                items.forEach(item => {
-                    if (role === 'Tous' || item.getAttribute('data-role') === role) {
-                        item.style.display = ''; // Show
-                    } else {
-                        item.style.display = 'none'; // Hide
-                    }
-                });
-            }
-        });
         </script>
         <script src="/js/dashboard.js"></script>
     </body>
