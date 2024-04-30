@@ -15,10 +15,5 @@ class HomesController extends AbstractController
         // Code pour gérer la page d'accueil
         return $this->render('HomeS.html.twig');
     }
-    #[Route("/home-student", name: "home-student")]
-    public function homeSt(): Response
-    {
-        // Code pour gérer la page d'accueil
-        return $this->render('/Project/student/HomeStudent.html.twig');
-    }
+
 }

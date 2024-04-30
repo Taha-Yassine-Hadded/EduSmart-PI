@@ -3,6 +3,7 @@
 namespace App\Service\Projet;
 
 use App\Entity\Fichier;
+use App\Entity\ProjectMembers;
 use Doctrine\ORM\EntityManagerInterface;
 
 class FichierService
@@ -32,8 +33,16 @@ class FichierService
     }
     public function getFichiersByProjectId(int $projectId): array
     {
-        return $this->entityManager->getRepository(Fichier::class)->findBy(['project' => $projectId]);
+        $fichiers = [];
+        $sql = "SELECT f FROM App\Entity\Fichier f JOIN f.member pm WHERE pm.project = :projectId";
+        try {
+            $query = $this->entityManager->createQuery($sql);
+            $query->setParameter('projectId', $projectId);
+            $fichiers = $query->getResult();
+        } catch (\Exception $e) {
+            // Gérer l'erreur
+            echo "Erreur lors de la récupération des fichiers : " . $e->getMessage();
+        }
+        return $fichiers;
     }
-
-    // Ajoutez d'autres méthodes de service ici selon vos besoins
 }

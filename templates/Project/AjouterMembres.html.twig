@@ -9,37 +9,39 @@
     <link rel="stylesheet" href="/css/cssProject/AjouterMembre.css">
     <title>Ajouter un membre</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% include 'navT.html.twig' %}
+
 </head>
 <body>
 
 <div class="container">
-    <div class="member-form">
-        <h2>Ajouter un membre</h2>
-        <div class="form-group">
-            <input type="text" id="email" name="email" placeholder="Adresse mail">
+    <div class="wrapper">
+        <div class="member-form">
+            <h2>Ajouter un membre</h2>
+            <div class="form-group">
+                <input type="text" id="email" name="email" placeholder="Adresse mail">
+            </div>
+            <button id="addMemberBtn">Ajouter</button>
         </div>
-        <button id="addMemberBtn">Ajouter</button>
+
+        <div class="members-list">
+            <h2>Liste des membres</h2>
+            <ul id="membersUl">
+                <li>
+                    <!-- Liste des membres affichée ici -->
+                </li>
+            </ul>
+        </div>
     </div>
-
-    <div class="members-list">
-        <h2>Liste des membres</h2>
-        <ul id="membersUl">
-            <li>
-                <!-- Liste des membres affichée ici -->
-
-            </li>
-        </ul>
-    </div>
-
     <button id="finishBtn">Terminer</button>
 </div>
+
 
 <script>
     $(document).ready(function() {
         $('#addMemberBtn').click(function() {
             var email = $('#email').val();
 
-            // Envoie de la requête AJAX au contrôleur
             $.ajax({
                 url: "{{ path('ajouter_membre') }}",
                 method: 'POST',

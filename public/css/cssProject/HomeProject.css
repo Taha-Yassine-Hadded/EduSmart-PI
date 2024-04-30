@@ -103,7 +103,7 @@ html, body {
 
 /* Dégradés */
 .parent-container {
-    background: linear-gradient(150deg,#E3CDCD, #AF1010);
+    background: whitesmoke;
 }
 
 /* Effets de Survol Avancés */

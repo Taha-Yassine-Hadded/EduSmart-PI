@@ -10,17 +10,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mailer\MailerInterface;
+
 
 class AjouterMembreController extends AbstractController
 {
     private $projectMembersService;
     private $entityManager;
+    private $mailer; // Ajoutez la propriété pour le service MailerInterface
 
-    public function __construct(ProjectMembersService $projectMembersService, EntityManagerInterface $entityManager)
+
+
+
+    public function __construct(ProjectMembersService $projectMembersService, EntityManagerInterface $entityManager, MailerInterface $mailer )
     {
         $this->projectMembersService = $projectMembersService;
         $this->entityManager = $entityManager;
+        $this->mailer = $mailer; // Injectez le service MailerInterface
+
+
     }
 
     #[Route('/ajouter-membre', name: 'ajouter_membre')]
@@ -35,6 +45,8 @@ class AjouterMembreController extends AbstractController
 
             if ($user !== null) {
                 $project = $this->entityManager->getRepository(Project::class)->findOneBy([], ['id' => 'DESC']);
+                $nom = $user->getNom();
+
                 if ($project !== null) {
                     $projectMember = new ProjectMembers();
                     $projectMember->addStudent($user);
@@ -49,6 +61,16 @@ class AjouterMembreController extends AbstractController
                         'email' => $email // Adresse email du membre ajouté
                     ];
 
+                    $email = (new Email())
+                        ->from('espritedusmart@gmail.com')
+                        ->to($email)
+                        ->subject('Vous avez été ajouté à un nouveau projet')
+                        ->html('
+        <p style="color: #333; font-size: 16px; font-family: Arial, sans-serif;">Bonjour, '. $nom .'</p>
+        <p style="color: #333; font-size: 16px; font-family: Arial, sans-serif;">Vous avez été ajouté à un nouveau projet.</p>
+        <p style="color: #333; font-size: 16px; font-family: Arial, sans-serif;">Cordialement,<br>L\'équipe de Esprit-EduSmart</p>
+    ');
+                    $this->mailer->send($email);
                     // Renvoyez la réponse JSON
                     return new JsonResponse($response);
                 } else {
@@ -70,4 +92,6 @@ class AjouterMembreController extends AbstractController
         // Si ce n'est pas une requête AJAX, affichez simplement la page
         return $this->render('/Project/AjouterMembres.html.twig');
     }
+
+
 }

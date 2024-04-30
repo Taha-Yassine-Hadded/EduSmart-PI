@@ -9,6 +9,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Tauri&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/cssProject/AjouterProjet.css">
+
+    <style>
+        /* styles.css */
+
+        .custom-alert {
+            background-color: rgba(255, 255, 255, 0.58); /* Rouge */
+            border-color: #6a1a21;
+            color: #070000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            top: 17px; /* Positionner l'alerte en haut */
+            left: 50%; /* Centrer horizontalement */
+            transform: translateX(-50%); /* Centrer horizontalement */
+            font-size: 16px;
+            text-align: center;
+            display: none; /* Cacher l'alerte par défaut */
+            position: fixed; /* Position fixe pour rester en haut même en faisant défiler la page */
+            z-index: 9999; /* Pour être sûr que l'alerte soit au-dessus du reste du contenu */
+        }
+
+    </style>
+    {% include 'navT.html.twig' %}
+
 </head>
 <body>
 <div class="container">
@@ -28,6 +52,13 @@
     </div>
     <button type="submit">Ajouter</button>
     {{ form_end(form) }}
+
+    {% if not matiereExists %}
+        <div id="custom-alert" class="custom-alert">
+            <img src="/images/Project/al.gif" style="vertical-align: middle; margin-right: 10px;">
+            <h4 style="display: inline;">La matière spécifiée n'existe pas.</h4>
+        </div>
+    {% endif %}
 </div>
 
 <a href="#" onclick="goBack()">
@@ -38,6 +69,17 @@
     function goBack() {
         window.history.back();
     }
+
+    // Afficher l'alerte pendant 3 secondes après le chargement de la page
+    window.onload = function() {
+        var alertDiv = document.getElementById('custom-alert');
+        if (alertDiv) {
+            alertDiv.style.display = 'block';
+            setTimeout(function() {
+                alertDiv.style.display = 'none';
+            }, 3000); // 3 secondes
+        }
+    };
 </script>
 </body>
 </html>

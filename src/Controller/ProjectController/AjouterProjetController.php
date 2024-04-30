@@ -5,12 +5,14 @@ namespace App\Controller\ProjectController;
 
 use App\Entity\Project;
 use App\Form\ProjectType;
+use App\Service\Projet\MatiereService;
 use App\Service\Projet\ProjectService;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 // ...
@@ -18,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AjouterProjetController extends AbstractController
 {
     #[Route("/ajouter_projet" , name: "ajouter_projet")]
-    public function ajouterProjet(Request $request, ProjectService $projectService): Response
+    public function ajouterProjet(Request $request, ProjectService $projectService, MatiereService $matiereService, FlashBagInterface $flashBag): Response
     {
         $project = new Project();
         // Récupérer l'utilisateur actuellement connecté (enseignant)
@@ -35,19 +37,29 @@ class AjouterProjetController extends AbstractController
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
+        // Initialiser la variable pour vérifier l'existence de la matière
+        $matiereExists = true;
+
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $projectService->add($project);
-                $this->addFlash('success', 'Le projet a été ajouté avec succès.');
-                // Redirection vers la page AjouterMembre.html.twig
-                return new RedirectResponse($this->generateUrl('ajouter_membre'));
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'Erreur lors de l\'ajout du projet: ' . $e->getMessage());
+            $matiere = $project->getMatiere();
+            if (!$matiereService->matiereExists($matiere)) {
+                $matiereExists = false;
+                $flashBag->add('error', 'La matière spécifiée n\'existe pas.');
+            } else {
+                try {
+                    $projectService->add($project);
+                    $this->addFlash('success', 'Le projet a été ajouté avec succès.');
+                    // Redirection vers la page AjouterMembre.html.twig
+                    return new RedirectResponse($this->generateUrl('ajouter_membre'));
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'ajout du projet: ' . $e->getMessage());
+                }
             }
         }
 
         return $this->render('/Project/AjouterProjet.html.twig', [
             'form' => $form->createView(),
+            'matiereExists' => $matiereExists, // Passer l'information à Twig
         ]);
     }
 }

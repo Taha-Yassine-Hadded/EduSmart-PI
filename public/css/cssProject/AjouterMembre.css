@@ -1,37 +1,41 @@
 body {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(150deg, #E3CDCD, #AF1010);
+    background: whitesmoke;
     font-family: 'Tauri', serif;
-    padding: 20px;
-    margin: 0;
-}
 
+}
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 80%;
-    max-width: 800px;
+    border-color: #a20b0b;
+
 }
 
-.member-form, .members-list {
-    background-color: #f2f2f2;
+.member-form {
+    background-color: rgba(162, 11, 11, 0.4);
+    border-radius: 20px;
+    border-color: #a20b0b;
+    padding: 30px;
+    margin-bottom: 20px;
+    margin-top: 150px;
+    margin-left: -1200px;
+    width: 400px;
+}
+.members-list {
+    background-color: rgba(162, 11, 11, 0.4);
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-color: #a20b0b;
     margin-bottom: 20px;
-    width: 100%;
+    margin-top: -260px;
+    margin-left: -500px;
+    width: 300px;
 }
 
 .member-form h2, .members-list h2 {
     margin-bottom: 20px;
     font-size: 24px;
-    color: #333;
+    color: #6b0c0c;
     text-align: center;
+    font-family: 'Tauri', serif;
 }
 
 .form-group {
@@ -43,9 +47,11 @@ body {
     padding: 10px;
     border: none;
     border-bottom: 2px solid #ddd;
-    background-color: transparent;
+    background-color: white;
     font-size: 16px;
     transition: border-bottom-color 0.3s ease;
+    margin-right: 20px;
+    border-radius: 10px;
 }
 
 .form-group input[type="text"]:focus {
@@ -100,7 +106,8 @@ button:hover {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: auto;
+    margin-top: 300px;
+    margin-left: -1450px;
     margin-bottom: 20px;
     font-family: 'Tauri', serif;
     transition: background-color 0.3s ease;
