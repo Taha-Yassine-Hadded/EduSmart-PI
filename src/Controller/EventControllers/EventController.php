@@ -110,17 +110,8 @@ public function show(Events $event): Response
     $concatenatedText = implode(' ',$commentTexts);
     
     // Build the prompt
-    $prompt = "Please analyze the sentiment of these comments to gauge public opinion regarding the event.
-
-    Provide a brief summary of the sentiment in one or two phrases.
-    
-    Additionally, offer suggestions for improvement based on any negative comments.
-    
-    If there are no comments, please indicate so.
-    
-    When providing suggestions for improvement, ensure to start each suggestion on a new line.
-    dont forget to structure the response to bea clear by getting back to new lines
-    " . $concatenatedText;
+    $prompt = $concatenatedText."Let's analyze public opinion on a recent event!  Can you take a look at the comments I provide and give me a quick summary of the overall feeling (positive, negative, mixed?) in a sentence or two? Additionally, if there are any negative comments, what suggestions for improvement can you glean from them? List each suggestion on a separate line. If there are no negative comments, simply state 'No suggestions for improvement based on comments.' Finally, let me know if there are 'No comments found' altogether. Remember, a clear and concise response is key!
+    " ;
     
     // Build the request body
     $data = [

@@ -155,7 +155,7 @@ public function deleteComment(Request $request, Events $event, int $commentId): 
     $entityManager->remove($comment);
     $entityManager->flush();
 
-    return new JsonResponse(['message' => 'Comment deleted successfully'], JsonResponse::HTTP_OK);
+    return $this->redirectToRoute('feeds');
 }
 #[Route('/feed/{eventId}/add-participant/{userId}', name: 'event_add_participant')]
     public function addParticipant($eventId, $userId): Response
