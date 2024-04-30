@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Entity\EventReactions;
+
+
+#[Route('/admin')]
 class EventController extends AbstractController
 {
 

@@ -13,6 +13,7 @@ use App\Entity\EventComments;
 use App\Form\CommentType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Security;
 
 
 class FeedController extends AbstractController
@@ -20,10 +21,12 @@ class FeedController extends AbstractController
     private $currentPort;
     private $userId;
 
-    public function __construct()
+    public function __construct(Security $security)
     {
-        $this->currentPort = $_SERVER['SERVER_PORT'];
-        $this->userId = ($this->currentPort == '8000') ? 3 : (($this->currentPort == '8001') ? 4 : null);
+        $this->userId = $security->getUser()->getId();
+        if (!$this->userId) {
+            throw new \RuntimeException('User not authenticated');
+        }
     }
 
     #[Route('/feed', name: 'feeds',methods: 'GET')]
