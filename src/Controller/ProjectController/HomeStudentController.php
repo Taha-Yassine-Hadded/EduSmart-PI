@@ -46,7 +46,7 @@ class HomeStudentController extends AbstractController
     #[Route('/home-student', name: 'home-student')]
     public function showProjects(): Response
     {
-        $userId = 2; // Remplacez ceci par l'ID de l'utilisateur dont vous voulez récupérer les projets
+        $userId = 3; // Remplacez ceci par l'ID de l'utilisateur dont vous voulez récupérer les projets
 
         // Récupérer les noms de projet pour affichage
         $projectNames = $this->projectService->getProjectNamesForUserId($userId);
@@ -66,7 +66,7 @@ class HomeStudentController extends AbstractController
     #[Route('/home-student/{projectId}', name: 'home-student-project')]
     public function index(Request $request, $projectId ,SessionInterface $session): Response
     {
-        $userId = 2;
+        $userId = 3;
 
         $taches = $this->tacheService->getTachesByUserIdAndProjectId($userId, $projectId);
         $projectNames = $this->projectService->getProjectNamesForUserId($userId);
@@ -166,7 +166,7 @@ class HomeStudentController extends AbstractController
     {
         try {
             // Récupérer l'ID de l'utilisateur actuel
-            $userId = 2;
+            $userId = 3;
             dump($projectId);
             // Récupérer l'ID du membre pour l'utilisateur actuel et le projet spécifié
             $memberId = $projectMembersService->findIdMemberByUserIdAndProjectId($userId, $projectId);
@@ -213,8 +213,8 @@ class HomeStudentController extends AbstractController
     #[Route('/import-fichier', name: 'import_fichier')]
     public function importFichier(Request $request, ProjectMembersService $projectMembersService): Response
     {
-        // Récupérer l'ID de l'utilisateur (vous pouvez remplacer 2 par la méthode appropriée pour récupérer l'ID de l'utilisateur)
-        $userId = 2;
+        // Récupérer l'ID de l'utilisateur (vous pouvez remplacer 3 par la méthode appropriée pour récupérer l'ID de l'utilisateur)
+        $userId = 3;
 
         // Récupérer l'ID du projet à partir des données de la requête
         $projectId = $request->request->get('projectId');
