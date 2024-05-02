@@ -20,6 +20,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use App\Service\StatistiqueService;
+use Symfony\Component\Security\Core\Security;
+use App\Repository\UserRepository;
 
 #[Route('/candidature')]
 class CandidatureController extends AbstractController
@@ -44,8 +46,9 @@ class CandidatureController extends AbstractController
     }
 
     #[Route('/new', name: 'app_candidature_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager): Response
+public function new(Request $request, UserRepository $repo, EntityManagerInterface $entityManager, Security $security): Response
 {
+    $user = $repo->getByEmail($security->getUser()->getUserIdentifier());
     $candidature = new Candidature();
     $candidature->setStatus('En attente');
     // Récupérer l'offre_id depuis la requête
@@ -59,7 +62,7 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
 
     if ($form->isSubmitted() && $form->isValid()) {
         $candidature->setDate(new \DateTime());
-        $candidature->setUser($this->service->getUserById(9));
+        $candidature->setUser($user);
         $candidature->setOffre($offre);
 
         if ($cvFile) {

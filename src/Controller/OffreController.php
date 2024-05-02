@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Offre;
 use App\Form\OffreType;
 use App\Repository\OffreRepository;
+use App\Repository\UserRepository;
+
 use App\Repository\CandidatureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +18,7 @@ use App\Service\UserService\UserService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Service\StatistiqueService;
+use Symfony\Component\Security\Core\Security;
 
 
 #[Route('/offre')]
@@ -40,8 +43,9 @@ class OffreController extends AbstractController
     }
 
     #[Route('/offre',name: 'app_offre_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, UserRepository $repo, EntityManagerInterface $entityManager, Security $security): Response
     {
+        $user = $repo->getByEmail($security->getUser()->getUserIdentifier());
         $offre = new Offre();
         $form = $this->createForm(OffreType::class, $offre);
         $form->handleRequest($request);
@@ -49,7 +53,7 @@ class OffreController extends AbstractController
     
         if ($form->isSubmitted() && $form->isValid()) {
             $offre->setDate(new \DateTime());
-            $offre->setEntreprise($this->service->getUserById(10));
+            $offre->setEntreprise($user);
             $entityManager->persist($offre);
             $entityManager->flush();
     

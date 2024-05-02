@@ -1,61 +1,66 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Offres{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('public/maram.css/styles.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>Offres</h1>
+<h1 class=" text-center font-weight-bold ">OFFRES</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>Compétences</th>
-                <th>Nbr</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for offre in offres %}
-            <tr>
-                <td>{{ offre.titre }}</td>
-                <td>{{ offre.description }}</td>
-                <td>{{ offre.competences }}</td>
-                <td>{{ offre.nbr }}</td>
-                <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_offre_show', {'id': offre.id}) }}" class="btn btn-outline-primary">Show</a>
-                    <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="btn btn-outline-secondary">Edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">No records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="row">
+    {% for offre in offres %}
+        <div class="col-md-4 mb-3">
+            <div class="card bg-secondary">
+                <div class="card-body">
+                    <div class="rounded-pill bg-light text-center p-2 mb-3">
+                        <h5 class="card-title m-0" style="color: #9F1C00;">{{ offre.titre }}</h5>
+                    </div>
+                    <div class="rounded-pill bg-light text-center p-2 mb-3">
+                        <p class="card-text m-0" style="color: #6c757d;">{{ offre.description }}</p>
+                    </div>
+                    <div class="rounded-pill bg-light text-center p-2 mb-3">
+                        <p class="card-text m-0" style="color: black; font-weight: bold;">{{ offre.nbr }}</p>
+                    </div>
+                    <div class="rounded-pill bg-light text-center p-2 mb-3">
+                        <p class="card-text m-0"><small class="text-muted" style="color: #333;">Date: {{ offre.date ? offre.date|date('Y-m-d') : '' }}</small></p>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a href="{{ path('app_offre_show', {'id': offre.id}) }}" class="btn btn-primary rounded-pill me-3"><i class="fas fa-eye"></i> Show</a>
+                        <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="btn btn-secondary rounded-pill"><i class="fas fa-edit"></i> Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col">
+            <p>No records found</p>
+        </div>
+    {% endfor %}
 
-    <h2>Statistiques des candidatures</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Offre</th>
-                <th>Nombre de candidatures</th>
-                <th>Pourcentage</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for statistique in statistiques %}
-            <tr>
-                <td>{{ statistique.offre }}</td>
-                <td>{{ statistique.nbCandidatures }}</td>
-                <td>{{ statistique.pourcentage }}%</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    </div>
+<h2 class="text-center font-weight-bold">STATISTIQUE DES CANDIDATURES</h2>
+<div class="row">
+    {% set colors = ['#6cb2eb', '#28a745', '#dc3545', '#ffc107', '#17a2b8'] %}
+    {% for loopIndex, statistique in statistiques %}
+        {% set colorIndex = loopIndex % colors|length %}
+        <div class="col-md-4 mb-4">
+            <div class="card text-center" style="background-color: {{ colors[colorIndex] }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ statistique.offre }}</h5>
+                    <p class="card-text">Nombre de candidatures : {{ statistique.nbCandidatures }}</p>
+                    <div class="progress-circle" data-percentage="{{ statistique.pourcentage }}">
+                        <span>{{ statistique.pourcentage }}%</span>
+                        <div class="progress-circle-inner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 
-    <a href="{{ path('app_offre_new') }}" class="btn btn-outline-danger mt-3">Create new</a>
+<div class="d-flex justify-content-center">
+    <a href="{{ path('app_offre_new') }}" class="btn btn-outline-primary mt-3 rounded-pill btn-lg">Create new</a>
+</div>
 {% endblock %}

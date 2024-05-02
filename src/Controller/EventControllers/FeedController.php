@@ -29,7 +29,7 @@ class FeedController extends AbstractController
         }
     }
 
-    #[Route('/feed', name: 'feeds',methods: 'GET')]
+    #[Route('/feed', name: 'feeds',methods: 'GET' )]
     public function index(EventsRepository $eventReporsitory): Response
     {
         $entityManager = $this->getDoctrine()->getManager();

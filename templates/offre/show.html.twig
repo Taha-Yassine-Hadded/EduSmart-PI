@@ -2,63 +2,71 @@
 
 {% block title %}Offre{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('public/maram.css/styles.css') }}">
+{% endblock %}
+
 {% block body %}
-    <h1>Offre</h1>
+    <div class="container">
+        <h1 class="text-center font-weight-bold text-color-9F1C00 mt-4 mb-4">OFFRE</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Titre</th>
-                <td>{{ offre.titre }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ offre.description }}</td>
-            </tr>
-            <tr>
-                <th>Competences</th>
-                <td>{{ offre.competences }}</td>
-            </tr>
-            <tr>
-                <th>Nbr</th>
-                <td>{{ offre.nbr }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <h1>candidature list</h1>
+        <table class="table table-bordered table-striped">
+            <tbody>
+                <tr>
+                    <th style="background-color: #781C10; color: white;">Titre</th>
+                    <td>{{ offre.titre }}</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #781C10; color: white;">Description</th>
+                    <td>{{ offre.description }}</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #781C10; color: white;">Competences</th>
+                    <td>{{ offre.competences }}</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #781C10; color: white;">Nbr</th>
+                    <td>{{ offre.nbr }}</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #781C10; color: white;">Date</th>
+                    <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>competences</th>
-                <th>cv</th>
-                <th>Date</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for c in list %}
-            <tr>
-                <td>{{ c.competences }}</td>
-                <td>{{ c.cv }}</td>
-                <td>{{ c.date ? c.date|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('accepter', {'id': c.id}) }}" class="btn btn-outline-success">Accepter</a>
-                    <a href="{{ path('refuser', {'id': c.id}) }}" class="btn btn-outline-danger">Refuser</a>
-                     <a href="{{ path('download_pdf', {'id': c.id}) }}" class="btn btn-outline-secondary" downloadPdf>downloadPdf</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <h2 class="text-center font-weight-bold text-color-9F1C00 mt-4 mb-4">CANDIDATURE LIST</h2>
 
-    <div class="container mt-3">
-        <a href="{{ path('app_offre_index') }}" class="btn btn-outline-primary">Back to List</a>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="background-color: #781C10; color: white;">Competences</th>
+                    <th style="background-color: #781C10; color: white;">CV</th>
+                    <th style="background-color: #781C10; color: white;">Date</th>
+                    <th style="background-color: #781C10; color: white;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in list %}
+                    <tr>
+                        <td>{{ c.competences }}</td>
+                        <td>{{ c.cv }}</td>
+                        <td>{{ c.date ? c.date|date('Y-m-d') : '' }}</td>
+                        <td>
+                            <a href="{{ path('accepter', {'id': c.id}) }}" class="btn btn-outline-success rounded-pill me-3">Accepter</a>
+                            <a href="{{ path('refuser', {'id': c.id}) }}" class="btn btn-outline-danger rounded-pill me-3">Refuser</a>
+                            <a href="{{ path('download_pdf', {'id': c.id}) }}" class="btn btn-outline-secondary rounded-pill me-3" downloadPdf>Download PDF</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-center mt-3">
+            <a href="{{ path('app_offre_index') }}" class="btn btn-outline-primary rounded-pill">Back to List</a>
+        </div>
+
+        {{ include('offre/_delete_form.html.twig') }}
     </div>
-
-    {{ include('offre/_delete_form.html.twig') }}
 {% endblock %}
