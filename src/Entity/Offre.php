@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OffreRepository::class)]
 class Offre
@@ -17,15 +18,24 @@ class Offre
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre ne peut pas être vide.")]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "la description ne peut pas être vide.")]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "competneces ne peut pas être vide.")]
     private ?string $competences = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "nbr ne peut pas être vide.")]
+    #[Assert\Range(
+        min: 1,
+        max: 100,
+        notInRangeMessage: 'nbr doit être strictement positive.'
+    )]
     private ?string $nbr = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -41,7 +51,7 @@ class Offre
     public function __construct()
     {
         $this->candidatures = new ArrayCollection();
-        $this->entreprise = new ArrayCollection();
+        $this->entreprise = null;
     }
 
     public function getId(): ?int
@@ -151,6 +161,13 @@ class Offre
 
         return $this;
     }
+    public function __toString(): string
+    {
+        return $this->titre ?? ''; // Renvoie le titre de l'offre s'il est défini, sinon une chaîne vide
+    }
+    public static function creerMessage(string $titre, string $description, string $competences, string $nbr): string
+{
+    return sprintf('Offre avec titre : %s, description : %s, compétences : %s, nombre : %s', $titre, $description, $competences, $nbr);
+}
 
-    
 }
