@@ -13,6 +13,7 @@ class UserService implements UserServiceInterface {
     private $userRepository;
     private $entityManager;
     private $passwordHasher;
+    
 
     public function __construct(UserPasswordHasherInterface $passwordHasher,UserRepository $userRepository, EntityManagerInterface $entityManager)
     {
@@ -63,6 +64,20 @@ class UserService implements UserServiceInterface {
         }
     }
 
+    public function addClub(User $student) : User {
+        try {
+            $student->setPassword($this->passwordHasher->hashPassword($student, $student->getPassword()));
+            $student->setRole(RoleEnum::CLUB);
+            $student->setIsEnabled(true);
+            $this->entityManager->persist($student);
+            $this->entityManager->flush();
+    
+            return $student;
+        } catch (\Exception $e) {
+            throw new \Exception("There was an error adding the student: " . $e->getMessage());
+        }
+    }
+
     public function addEntreprise(User $entreprise) : User {
         try {
             $entreprise->setPassword($this->passwordHasher->hashPassword($entreprise, $entreprise->getPassword()));
@@ -77,11 +92,11 @@ class UserService implements UserServiceInterface {
         }
     }
 
-    public function getUserById(int $id) : User {
+    public function getUserById(int $id) : ?User {
         return $this->userRepository->find($id);
     }
     
-    public function getUserByEmail(string $email) : User {
+    public function getUserByEmail(string $email) : ?User {
         return $this->userRepository->getByEmail($email);
     }
 
@@ -106,21 +121,25 @@ class UserService implements UserServiceInterface {
     public function blockUser(int $id) : void
     {
         $this->userRepository->find($id)->setIsEnabled(false);
+        $this->entityManager->flush();
     }
 
     public function unblockUser(int $id) : void
     {
         $this->userRepository->find($id)->setIsEnabled(true);
+        $this->entityManager->flush();
     }
 
     public function toClubRH(int $id) : void 
     {
         $this->userRepository->changeRoleFromStudentToClub($id);
+        $this->entityManager->flush();
     }
 
     public function toStudent(int $id) : void 
     {
         $this->userRepository->changeRoleFromClubToStudent($id);
+        $this->entityManager->flush();
     }
 
     public function changePassword(string $password, User $user) : void
@@ -133,6 +152,11 @@ class UserService implements UserServiceInterface {
     public function getUserCountByRole(): array 
     {
         return $this->userRepository->getCountByRole();
+    }
+
+    public function getUserByResetPassworToken(string $tokenValue): ?User
+    {
+        return $this->userRepository->findByResetPasswordToken($tokenValue);
     }
 
 }

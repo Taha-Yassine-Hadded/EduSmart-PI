@@ -11,11 +11,13 @@ interface UserServiceInterface {
 
     public function addStudent(User $student) : User;
 
+    public function addClub(User $student) : User;
+
     public function addEntreprise(User $entreprise) : User;
 
-    public function getUserById(int $id) : User;
+    public function getUserById(int $id) : ?User;
 
-    public function getUserByEmail(string $email) : User;
+    public function getUserByEmail(string $email) : ?User;
 
     public function delete(int $id): void;
 

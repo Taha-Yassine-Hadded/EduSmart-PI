@@ -1,0 +1,12 @@
+@import "~bootstrap/scss/bootstrap";
+
+.modal.fade .modal-dialog {
+    // State at the start of showing the modal
+    transform: scale(0.8);
+}
+
+.modal.show .modal-dialog {
+    // State when the modal is fully displayed
+    transform: scale(1); // Scale to 100% when modal is shown
+}
+

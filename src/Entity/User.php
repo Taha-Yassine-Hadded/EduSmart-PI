@@ -4,12 +4,16 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'L\'email est déjà utilisé.', groups: ['registration'])]
 class User implements UserInterface
 {
     #[ORM\Id]
@@ -18,9 +22,17 @@ class User implements UserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le nom ne peut pas être vide.", groups: ['Default'])]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, unique:true)]
+    #[Assert\NotBlank(message: "L'email ne peut pas être vide.", groups: ['Default'])]
+    #[Assert\Email(message: "L'email '{{ value }}' n'est pas un email valide.", groups: ['Entreprise'])]
+    #[Assert\Regex(
+        pattern: '/^[^@]+@esprit\.tn$/',
+        message: "L'email doit se terminer par @esprit.tn.",
+        groups: ['Student','Teacher']
+    )]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -30,82 +42,200 @@ class User implements UserInterface
     private ?RoleEnum $role = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le site web ne peut pas être vide.", groups: ['Entreprise'])]
     private ?string $website = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le classe ne peut pas être vide.", groups: ['Student'])]
     private ?string $classe = null;
 
+    #[Assert\Callback(groups: ['Student'])]
+    public function validateClasse(ExecutionContextInterface $context): void
+    {
+    if ($this->classe !== null && $this->niveau !== null) {
+        $niveauFirstChar = substr((string) $this->niveau, 0, 1);
+        $classeFirstChar = substr($this->classe, 0, 1);
+
+            if ($classeFirstChar !== $niveauFirstChar || strlen($this->classe) < 2) {
+                $context->buildViolation('La classe doit commencer par le même chiffre que le niveau')
+                        ->atPath('classe')
+                        ->addViolation();
+            }
+        }
+    }
+
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le pays ne peut pas être vide.", groups: ['Entreprise'])]
     private ?string $pays = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "La localisation ne peut pas être vide.", groups: ['Entreprise'])]
     private ?string $localisation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le cin ne peut pas être vide.", groups: ['Teacher','Student'])]
+    #[Assert\Length(
+        exactMessage: "Le cin doit être de longueur 8.",
+        min: 8,
+        max: 8,
+        groups: ['Teacher', 'Student']
+    )]
+    #[Assert\Regex(
+        pattern: '/^[01]\d{7}$/',
+        message: "Le cin doit commencer par 0 ou 1 et contenir 8 chiffres.",
+        groups: ['Teacher', 'Student']
+    )]
     private ?string $cin = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank(message: "Le niveau ne peut pas être vide.", groups: ['Student'])]
+    #[Assert\Range(
+        min: 1,
+        max: 5,
+        notInRangeMessage: 'Le niveau doit être entre {{ min }} et {{ max }}.',
+        groups: ['Student']
+    )]
     private ?int $niveau = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le genre ne peut pas être vide.", groups: ['Student','Teacher'])]
     private ?string $genre = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_naissance = null;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    #[Assert\NotBlank(message: "La date de naissance ne peut pas être vide.", groups: ['Student','Teacher'])]
+    private ?\DateTimeImmutable $date_naissance = null;
+
+    #[Assert\Callback(groups: ['Student', 'Teacher'])]
+    public function validateDateNaissance(ExecutionContextInterface $context, $payload): void
+    {
+    
+    $latestDate = new \DateTimeImmutable('2006-01-01');
+
+    if ($this->date_naissance !== null && $this->date_naissance > $latestDate) {
+        $context->buildViolation('La date de naissance doit être moins de l\'année 2006')
+                ->atPath('dateNaissance')
+                ->addViolation();
+        }
+    }
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profil_picture = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.", groups: ['Student','Teacher'])]
     private ?string $prenom = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $is_enabled = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: PasswordResetRequest::class)]
-    private Collection $passwordResetRequests;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Candidature::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Candidature::class, cascade: ['persist', 'remove'])]
     private Collection $candidatures;
 
-    #[ORM\OneToMany(mappedBy: 'entreprise_id', targetEntity: Offre::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Offre::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $offres;
 
-    #[ORM\OneToMany(mappedBy: 'CLUB_RH', targetEntity: Publication::class)]
+    #[ORM\OneToMany(mappedBy: 'CLUB_RH', targetEntity: Publication::class, cascade: ['persist', 'remove'])]
     private Collection $publications;
 
-    #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: Inscription::class)]
+    #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: Inscription::class, cascade: ['persist', 'remove'])]
     private Collection $inscriptions;
 
-    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Cours::class)]
+    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Cours::class, cascade: ['persist', 'remove'])]
     private Collection $cours;
 
-    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Project::class)]
+    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Project::class, cascade: ['persist', 'remove'])]
     private Collection $projects;
 
-    #[ORM\ManyToMany(targetEntity: ProjectMembers::class, mappedBy: 'student')]
+    #[ORM\ManyToMany(targetEntity: ProjectMembers::class, mappedBy: 'student', cascade: ['persist', 'remove'])]
     private Collection $projectMembers;
 
-    #[ORM\OneToMany(mappedBy: 'sender', targetEntity: Message::class)]
+    #[ORM\OneToMany(mappedBy: 'sender', targetEntity: Message::class, cascade: ['persist', 'remove'])]
     private Collection $messages;
 
-    #[ORM\OneToMany(mappedBy: 'uploaded_by', targetEntity: File::class)]
+    #[ORM\OneToMany(mappedBy: 'uploaded_by', targetEntity: File::class, cascade: ['persist', 'remove'])]
     private Collection $files;
 
-    #[ORM\OneToMany(mappedBy: 'admin', targetEntity: Events::class)]
+    #[ORM\OneToMany(mappedBy: 'admin', targetEntity: Events::class, cascade: ['persist', 'remove'])]
     private Collection $events;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventReactions::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventReactions::class, cascade: ['persist', 'remove'])]
     private Collection $eventReactions;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventComments::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventComments::class, cascade: ['persist', 'remove'])]
     private Collection $eventComments;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notifications::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notifications::class, cascade: ['persist', 'remove'])]
     private Collection $notifications;
 
-    #[ORM\ManyToMany(targetEntity: Events::class, mappedBy: 'participants')]
+    #[ORM\ManyToMany(targetEntity: Events::class, mappedBy: 'participants', cascade: ['persist', 'remove'])]
     private Collection $event_participant;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPasswordToken::class, cascade: ['persist', 'remove'])]
+    private Collection $resetPasswordTokens;
+
+    
+    #[ORM\ManyToMany(targetEntity: User::class, cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'user_follows',
+        joinColumns: [new ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')],
+        inverseJoinColumns: [new ORM\JoinColumn(name: 'followed_user_id', referencedColumnName: 'id')]
+    )]
+    private Collection $following;
+
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'following')]
+    private Collection $followers;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: FollowNotification::class)]
+    private Collection $followNotifications;
+
+    public function getFollowers(): ?Collection {
+        return $this->followers;
+    }
+
+    public function getFollowing(): ?Collection {
+        return $this->following;
+    }
+
+    public function setFollowers(ArrayCollection $followers): void {
+        $this->followers = $followers;
+    }
+
+    public function setFollowing(ArrayCollection $following): void {
+        $this->following = $following;
+    }
+
+    public function addFollower(User $user): self {
+        if (!$this->followers->contains($user)) {
+            $this->followers[] = $user;
+            $user->addFollowing($this);
+        }
+
+        return $this;
+    }
+
+    public function addFollowing(User $user): self {
+        if (!$this->following->contains($user)) {
+            $this->following[] = $user;
+            $user->addFollower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollower(User $user): self {
+        if ($this->followers->removeElement($user)) {
+            $user->removeFollowing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowing(User $user): self {
+        if ($this->following->removeElement($user)) {
+            $user->removeFollower($this);
+        }
+
+        return $this;
+    }
 
     public function __construct()
     {
@@ -123,7 +253,10 @@ class User implements UserInterface
         $this->eventComments = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->event_participant = new ArrayCollection();
-        $this->passwordResetRequests = new ArrayCollection();
+        $this->resetPasswordTokens = new ArrayCollection();
+        $this->following = new ArrayCollection();
+        $this->followers = new ArrayCollection();
+        $this->followNotifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -263,12 +396,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDateNaissance(): ?\DateTimeInterface
+    public function getDateNaissance(): ?\DateTimeImmutable
     {
         return $this->date_naissance;
     }
 
-    public function setDateNaissance(?\DateTimeInterface $date_naissance): static
+    public function setDateNaissance(?\DateTimeImmutable $date_naissance): static
     {
         $this->date_naissance = $date_naissance;
 
@@ -299,7 +432,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function isIsEnabled(): ?bool
+    public function getIsEnabled(): ?bool
     {
         return $this->is_enabled;
     }
@@ -312,49 +445,16 @@ class User implements UserInterface
     }
 
 
-    /**
-     * @return Collection<int, PasswordResetRequest>
-     */
-    public function getPasswordResetRequests(): Collection
-    {
-        return $this->passwordResetRequests;
-    }
-
-    public function addPasswordResetRequest(PasswordResetRequest $passwordResetRequest): static
-    {
-        if (!$this->passwordResetRequests->contains($passwordResetRequest)) {
-            $this->passwordResetRequests->add($passwordResetRequest);
-            $passwordResetRequest->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removePasswordResetRequest(PasswordResetRequest $passwordResetRequest): static
-    {
-        if ($this->passwordResetRequests->removeElement($passwordResetRequest)) {
-            if ($passwordResetRequest->getUser() === $this) {
-                $passwordResetRequest->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-
     public function getRoles(): array
     {
-    return [$this->role->value];
+        return ['ROLE_' . $this->role->value];
     }
-public function getSalt(): ?string
-{
-    return null;
-}
+    public function getSalt(): ?string
+    {
+        return null;
+    }
 
-public function eraseCredentials(): void
-{
-
-}
+public function eraseCredentials(): void {}
 
 public function getUsername(): string
 {
@@ -786,10 +886,65 @@ public function getUserIdentifier(): string
         return $this;
     }
 
+    /**
+     * @return Collection<int, ResetPasswordToken>
+     */
+    public function getResetPasswordTokens(): Collection
+    {
+        return $this->resetPasswordTokens;
+    }
 
+    public function addResetPasswordToken(ResetPasswordToken $resetPasswordToken): static
+    {
+        if (!$this->resetPasswordTokens->contains($resetPasswordToken)) {
+            $this->resetPasswordTokens->add($resetPasswordToken);
+            $resetPasswordToken->setUser($this);
+        }
 
+        return $this;
+    }
 
+    public function removeResetPasswordToken(ResetPasswordToken $resetPasswordToken): static
+    {
+        if ($this->resetPasswordTokens->removeElement($resetPasswordToken)) {
+            // set the owning side to null (unless already changed)
+            if ($resetPasswordToken->getUser() === $this) {
+                $resetPasswordToken->setUser(null);
+            }
+        }
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FollowNotification>
+     */
+    public function getFollowNotifications(): Collection
+    {
+        return $this->followNotifications;
+    }
+
+    public function addFollowNotification(FollowNotification $followNotification): static
+    {
+        if (!$this->followNotifications->contains($followNotification)) {
+            $this->followNotifications->add($followNotification);
+            $followNotification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowNotification(FollowNotification $followNotification): static
+    {
+        if ($this->followNotifications->removeElement($followNotification)) {
+            // set the owning side to null (unless already changed)
+            if ($followNotification->getUser() === $this) {
+                $followNotification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 
 
 }

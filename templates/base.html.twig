@@ -9,6 +9,7 @@
     <meta content="" name="description">
 
     {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
        <!-- Favicon -->
        <link href="img/favicon.ico" rel="icon">
 
@@ -35,6 +36,7 @@
    
        <!-- Template Stylesheet -->
        <link href="{{asset('css/style.css')}}" rel="stylesheet">
+       <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
        {% endblock %}
       
    </head>
@@ -167,6 +169,7 @@
     <script src="{{asset('lib/owlcarousel/owl.carousel.min.js')}}"></script>
     <!-- Template Javascript -->
     <script src="{{asset('js/main.js')}}"></script>
+    
        {% endblock %}
    </body>
    </html>

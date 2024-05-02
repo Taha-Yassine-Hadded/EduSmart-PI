@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+ 
+{% block body %}
+    <div class="container">
+        <h2 class="text-center mt-5 mb-3">Show Event</h2>
+        <div class="card">
+            <div class="card-header">
+                <a class="btn btn-outline-info float-right" href="{{ path('events') }}"> 
+                    View All Events
+                </a>
+            </div>
+            <div class="card-body">
+                <b class="text-muted">Name:</b>
+                <p>{{ event.getEventName() }}</p>
+                <b class="text-muted">Description:</b>
+                <p>{{ event.getDescription() }}</p>
+                <b class="text-muted">Date Created:</b>
+                <p>{{ event.getCreatedAt() ? event.getCreatedAt()|date('Y-m-d H:i:s') : '' }}</p>
+                <p>{{ analysis }}</p>               
+            </div>
+        </div>
+    </div>
+{% endblock %}

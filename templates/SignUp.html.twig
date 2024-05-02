@@ -17,58 +17,115 @@
     <div class="forms-container">
         <div class="signin-signup">
                 <section class="sign-in-form">
-                    <div class="bod" style="margin-top : 90px;">
+                    <div class="bod" style="margin-top : 20px;">
                         <div class="wrapper">
-                            <div class="title-text">
                                 <div class="title login">
-                                Login Form
+                                    Informations du compte
                                 </div>
-                                <div class="title signup">
-                                    Signup Form
-                                </div>
-                            </div>
                             <div class="form-container">
                                 <div class="slide-controls">
                                     <input type="radio" name="slide" id="login" checked>
                                     <input type="radio" name="slide" id="signup">
-                                    <label for="login" class="slide login">Login</label>
-                                    <label for="signup" class="slide signup">Signup</label>
+                                    <label for="login" class="slide login">Enseignant</label>
+                                    <label for="signup" class="slide signup">Etudiant</label>
                                     <div class="slider-tab">
                                     </div>
                                 </div>
                                 <div class="form-inner">
-                                    <form action="#" class="login">
-                                        <div class="field">
-                                            <input type="text" placeholder="Email Address" required>
-                                        </div>
-                                        <div class="field">
-                                            <input type="password" placeholder="Password" required>
-                                        </div>
-                                        <div class="pass-link">
-                                            <a href="#">Forgot password?</a>
-                                        </div>
-                                        <div class="field btn">
-                                            <div class="btn-layer">
+                                    <form action="{{ path('addTeacher') }}" method="post" enctype="multipart/form-data" id="registrationFormTeacher" class="login">
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="text" placeholder="Nom" name="nom" id="nomTeacher" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorNomTeacher"></small></span>
                                             </div>
-                                            <input type="submit" value="Login">
+                                            <div class="field">
+                                                <input type="text" placeholder="Prenom" name="prenom" id="prenomTeacher" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorPrenomTeacher"></small></span>
+                                            </div>
+                                        </div>
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <select class="form-select sel" aria-label="Genre" name="genre">
+                                                    <option value="male" selected >Male</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="other">Autre</option>
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                    <input type="date" class="myDate" class="form-control" name="dateNaissance" id="dateTeacher" required>
+                                                    <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorDateTeacher"></small></span>
+                                            </div>
+                                        </div>
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="text" placeholder="CIN" name="cinTeacher" id="cinTeacher" style="margin-left : 12px;" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 15px;"><small id="errorCinTeacher"></small></span>
+                                            </div>
+                                            <div class="field">
+                                                <input type="file" id="profilePhoto" name="profil_picture" style="display: none;" accept="image/*">
+                                                <button class="btn" type="button" style="color: white; margin-left: 10px;" onclick="document.getElementById('profilePhoto').click();">Ajouter photo</button>
+                                            </div>
+                                        </div>
+                                        <div class="btn-container">
+                                            <div class="field btn">
+                                                <input type="submit" value="Continuer">
+                                            </div>
                                         </div>
                                         <div class="signup-link">
-                                            Not a member? <a href="">Signup now</a>
+                                            Vous avez déja un compte ? <a href="{{ path('login') }}">Connecter</a>
                                         </div>
                                     </form>
-                                    <form action="#" class="signup">
-                                        <div class="field">
-                                            <input type="text" placeholder="Email Address" required>
+                                    <form action="{{ path('addStudent') }}" method="post" enctype="multipart/form-data" id="registrationFormStudent" class="signup">
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="text" placeholder="Nom" name="nomStudent" id="nomStudent" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorNomStudent"></small></span>
+                                            </div>
+                                            <div class="field">
+                                                <input type="text" placeholder="Prenom" name="prenomStudent" id="prenomStudent" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorPrenomStudent"></small></span>
+                                            </div>
                                         </div>
-                                        <div class="field">
-                                            <input type="password" placeholder="Password" required>
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="number" placeholder="Niveau" name="niveau" id="niveau" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorNiveau"></small></span>
+                                            </div>
+                                            <div class="field">
+                                                <input type="text" placeholder="Classe" name="classe" id="classe" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorClasse"></small></span>
+                                            </div>
                                         </div>
-                                        <div class="field">
-                                            <input type="password" placeholder="Confirm password" required>
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <select class="form-select sel" aria-label="Genre" name="genreStudent">
+                                                    <option value="male" selected >Male</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="other">Autre</option>
+                                                </select>
+                                            </div>
+                                            <div class="field">
+                                                    <input type="date" class="myDate" class="form-control" name="dateNaissanceStudent" id="dateStudent" required>
+                                                    <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 10px;"><small id="errorDateStudent"></small></span>
+                                            </div>
                                         </div>
-                                        <div class="field btn">
-                                            <div class="btn-layer"></div>
-                                            <input type="submit" value="Signup">
+                                        <div class="field-group">
+                                            <div class="field">
+                                                <input type="text" placeholder="CIN" name="cin" id="cin" style="margin-left : 12px;" required>
+                                                <span  class="info-message" style="color: red;margin-top: 7px;margin-left: 15px;"><small id="errorCin"></small></span>
+                                            </div>
+                                            <div class="field">
+                                                <input type="file" id="profilePhotoStudent" name="profil_pictureStudent" style="display: none;" accept="image/*">
+                                                <button class="btn" type="button" style="color: white; margin-left: 10px;" onclick="document.getElementById('profilePhotoStudent').click();">Ajouter photo</button>
+                                            </div>
+                                        </div>
+                                        <div class="btn-container">
+                                            <div class="field btn">
+                                                <input type="submit" value="Continuer">
+                                            </div>
+                                        </div>
+                                        <div class="signup-link">
+                                            Vous avez déja un compte ? <a href="{{ path('login') }}">Connecter</a>
                                         </div>
                                     </form>
                                 </div>
@@ -77,38 +134,35 @@
                     </div>
                 </section>
                 <section class="sign-up-form">
-                        <h2 class="title" style="margin-top : 120px;">Compte entreprise</h2>
-                        <div class="form-group">
-                            <label>Nom d'entreprise :</label>
-                            <input type="text" class="form-control" th:field="*{nom}" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Spécialisation :</label>
-                            <input type="text" class="form-control" th:field="*{specialisation}">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Pays :</label>
-                            <input type="text" class="form-control" th:field="*{pays}" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Site Web :</label>
-                            <input type="text" class="form-control" th:field="*{website}">
-                        </div>
-                        <div class="form-group">
-                            <label>Nom d'utilisateur :</label>
-                            <input type="text"class="form-control" th:field="*{username}" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email :</label>
-                            <input type="email" class="form-control" th:field="*{email}" required>
-                        </div>
-                        <small class="text-danger" th:text="${errorEmailEntr}" th:if="${errorEmailEntr}"></small>
-                        <div class="form-group">
-                            <label>Mot de passe :</label>
-                            <input type="password" id="pass" class="form-control" th:field="*{password}" required>
-                        </div>
-                        <button type="submit" class="btn btn-outline-primary mt-2">Créer</button>
-                    
+                        <h2 class="title" style="margin-top : 100px;">Compte entreprise</h2>
+                        <form action="{{ path('addEntreprise') }}" method="post" id="entrepriseForm">
+                            <div class="form-group">
+                                <label>Nom d'entreprise :</label>
+                                <input type="text" class="form-control hm" name="nomEntreprise" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Pays :</label>
+                                <input type="text" class="form-control hm" name="pays" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Localisation :</label>
+                                <input type="text" class="form-control hm" name="local" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Site Web :</label>
+                                <input type="text" class="form-control hm" name="website" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email :</label>
+                                <input type="email" class="form-control hm" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Mot de passe :</label>
+                                <input type="password" id="pass" class="form-control hm" name="password" required>
+                                <span style="color: red;"><small id="pwdError"></small></span>
+                            </div>
+                            <button type="submit" class="btn" style="color : white; margin-top : 20px;">Créer Compte</button>
+                        </form>
                 </section>
         </div>
     </div>
@@ -117,15 +171,15 @@
             <div class="content">
                 <h3>Vous êtes une entreprise ?</h3>
                 <p>Cliquez sur le bouton ci-dessous pour créer un nouveau compte !</p>
-                <button class="btn transparent" style="color : white;" id="sign-up-btn">Entreprise</button>
+                <button class="btn transparent" style="color : white;" id="sign-up-btn">Créer Compte</button>
             </div>
             <img src="/images/Profiling_Monochromatic.png" class="image" alt="">
         </div>
         <div class="panel right-panel">
             <div class="content">
-                <h3>Vous êtes un talent ?</h3>
+                <h3>Vous êtes un enseignant ou un étudiant ?</h3>
                 <p>Cliquez sur le bouton ci-dessous pour créer un nouveau compte !</p>
-                <button class="btn transparent" style="color : white;" id="sign-in-btn">Talent</button>
+                <button class="btn transparent" style="color : white;" id="sign-in-btn">Créer Compte</button>
             </div>
             <img src="/images/im.png" class="image" alt="">
         </div>
@@ -138,8 +192,7 @@
          const loginForm = document.querySelector("form.login");
          const loginBtn = document.querySelector("label.login");
          const signupBtn = document.querySelector("label.signup");
-         const signupLink = document.querySelector("form .signup-link a");
-         signupBtn.onclick = (()=>{
+        signupBtn.onclick = (()=>{
            loginForm.style.marginLeft = "-50%";
            loginText.style.marginLeft = "-50%";
          });
@@ -147,10 +200,21 @@
            loginForm.style.marginLeft = "0%";
            loginText.style.marginLeft = "0%";
          });
-         signupLink.onclick = (()=>{
-           signupBtn.click();
-           return false;
-         });
+
+         document.getElementById('entrepriseForm').addEventListener('submit', function(event)  {
+            var password = document.querySelector('#pass').value;
+            var pwdError = document.getElementById('pwdError');
+
+            var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+            if (!regex.test(password)) {
+                event.preventDefault();
+                pwdError.textContent = 'MAJ/min/chiffre/caractère spécial';
+            } else {
+                pwdError.textContent = '';
+            }
+            });
+
 </script>
 
 <script src="/js/register.js"></script>

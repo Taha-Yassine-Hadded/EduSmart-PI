@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css_yassine/dashboard.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <nav>
+        <div class="logo-name">
+            <div class="logo-image">
+               <img src="/images/logo.png" alt="">
+            </div>
+
+            <span class="logo_name">EduSmart</span>
+        </div>
+
+        <div class="menu-items">
+            <ul class="nav-links">
+                <li><a href="#">
+					<i class="uil uil-tachometer-fast-alt"></i>
+                    <span class="link-name">Dahsboard</span>
+                </a></li>
+                <li><a href="{{ path('showDashboard') }}">
+                    <i class="uil uil-user" style="color : #b5391d;"></i>
+                    <span class="link-name" style="color : #b5391d;">Utilisateurs</span>
+                </a></li>
+				<li><a href="#">
+                    <i class="uil uil-clock-eight"></i>
+                    <span class="link-name">Evénements</span>
+                </a></li>
+				<li><a href="#">
+                    <i class="uil uil-chart"></i>
+                    <span class="link-name">Analytique</span>
+                </a></li>
+				<li><a href="{{ path('changePasswordAdmin') }}">
+                    <i class="uil uil-key-skeleton"></i>
+                    <span class="link-name">Mot de passe</span>
+                </a></li>
+				<li><a href="{{ path('Home') }}">
+                    <i class="uil uil-estate"></i>
+                    <span class="link-name">Accueil</span>
+                </a></li>
+            </ul>
+            
+            <ul class="logout-mode">
+                <li><a href="#" id="logoutLink">
+                    <i class="uil uil-signout"></i>
+                    <span class="link-name">Se déconnecter</span>
+                    <form id="logoutForm" action="{{ path('logout') }}" method="post" style="display: none;">
+                    </form>
+                </a></li>
+                <li class="mode">
+                    <a href="#">
+                        <i class="uil uil-moon"></i>
+                    <span class="link-name">Mode sombre</span>
+                </a>
+
+                <div class="mode-toggle">
+                  <span class="switch"></span>
+                </div>
+            </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="dashboard">
+        <div class="top">
+            <i class="uil uil-bars sidebar-toggle"></i>
+
+            <div class="search-box">
+                <i class="uil uil-search"></i>
+                <input type="text" placeholder="Chercher ici...">
+            </div>
+            
+            <img src="/images/profile.png" alt="">
+        </div>
+
+        <div class="dash-content">
+            <div class="overview">
+                <div class="title">
+                    <i class="uil uil-calculator-alt"></i>
+                    <span class="text">Chiffres</span>
+                </div>
+
+                <div class="boxes">
+                    <div class="box box1">
+                        <i class="uil uil-bag"></i>
+                        <span class="text">Enseignant</span>
+                        <span class="number">{{ teacherCount }}</span>
+                    </div>
+                    <div class="box box2">
+                        <i class="uil uil-user"></i>
+                        <span class="text">Etudiant</span>
+                        <span class="number">{{ studentCount }}</span>
+                    </div>
+                    <div class="box box2">
+                        <i class="uil uil-award"></i>
+                        <span class="text">Club RH</span>
+                        <span class="number">{{ clubCount }}</span>
+                    </div>
+                    <div class="box box3">
+                        <i class="uil uil-building"></i>
+                        <span class="text">Entreprise</span>
+                        <span class="number">{{ entrepriseCount }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity">
+                <div class="title">
+                    <i class="uil uil-list-ol"></i>
+                    <span class="text">Liste des enseignants</span>
+                </div>
+                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="{{ path('newTeacher') }}">
+                    <i class="uil uil-plus"></i> Ajouter
+                </a>
+                {% if teachers is empty %}
+                <p class="h5 my-alert alert text-center border-light border-3">Aucun enseignant pour le moment !</p>
+                {% else %}
+                    <table class="table my-table">
+                        <thead>
+                            <tr>
+                                <th>Nom & Prénom</th>
+                                <th>Email</th>
+                                <th>CIN</th>
+                                <th>Genre</th>
+                                <th>Date Naissance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for teacher in teachers %}
+                                <tr>
+                                    <td>{{ teacher.nom }} {{teacher.prenom}}</td>
+                                    <td>{{ teacher.email }}</td>
+                                    <td>{{ teacher.cin }}</td>
+                                    <td>{{ teacher.genre }}</td>
+                                    <td>{{ teacher.dateNaissance|date("d/m/Y") }}</td>
+                                    <td>
+                                        <a class="btn btn-primary m-1 p-1 text-white" href="{{ path('visitProfile', {'id':teacher.id} )}}" >
+                                            <i class="uil uil-eye"></i>
+                                        </a>
+                                        {% if teacher.getIsEnabled() %}
+                                        <a class="btn btn-warning m-1 p-1 text-white" href="{{ path('blockUser',{'id':teacher.id}) }}" >
+                                            <i class="uil uil-ban"></i>
+                                        </a>
+                                        {% else %}
+                                        <a class="btn btn-success m-1 p-1 text-white" href="{{ path('unblockUser',{'id':teacher.id}) }}" >
+                                            <i class="uil uil-unlock"></i>
+                                        </a>
+                                        {% endif %}
+                                        <a class="btn btn-info m-1 p-1 text-white" href="{{ path('editTeacher',{'id':teacher.id}) }}" >
+                                            <i class="uil uil-edit-alt"></i>
+                                        </a>
+                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':teacher.id}) }}" onclick="return confirmDelete()">
+                                            <i class="uil uil-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+            <div class="activity">
+                <div class="title">
+                    <i class="uil uil-list-ol"></i>
+                    <span class="text">Liste des étudiants</span>
+                </div>
+
+                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="{{ path('newStudent') }}">
+                    <i class="uil uil-plus"></i> Ajouter
+                </a>
+                {% if students is empty %}
+                <p class="h5 my-alert alert text-center border-light border-3">Aucun étudiant pour le moment !</p>
+                {% else %}
+                    <table class="table my-table">
+                        <thead>
+                            <tr>
+                                <th>Nom & Prénom</th>
+                                <th>Email</th>
+                                <th>Niveau</th>
+                                <th>Classe</th>
+                                <th>CIN</th>
+                                <th>Genre</th>
+                                <th>Date Naissance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                                <tr>
+                                    <td>{{ student.nom }} {{student.prenom}}</td>
+                                    <td>{{ student.email }}</td>
+                                    <td>{{ student.niveau }}</td>
+                                    <td>{{ student.classe }}</td>
+                                    <td>{{ student.cin }}</td>
+                                    <td>{{ student.genre }}</td>
+                                    <td>{{ student.dateNaissance|date("d/m/Y") }}</td>
+                                    <td>
+                                        <a class="btn btn-primary m-1 p-1 text-white" href="{{ path('visitProfile', {'id':student.id} )}}" >
+                                            <i class="uil uil-eye"></i>
+                                        </a>
+                                        <a class="btn btn-secondary m-1 p-1 text-white" href="{{ path('toRH',{'id':student.id}) }}" >
+                                            <i class="uil uil-award"></i>
+                                        </a>
+                                        {% if student.getIsEnabled() %}
+                                        <a class="btn btn-warning m-1 p-1 text-white" href="{{ path('blockUser',{'id':student.id}) }}" >
+                                            <i class="uil uil-ban"></i>
+                                        </a>
+                                        {% else %}
+                                        <a class="btn btn-success m-1 p-1 text-white" href="{{ path('unblockUser',{'id':student.id}) }}" >
+                                            <i class="uil uil-unlock"></i>
+                                        </a>
+                                        {% endif %}
+                                        <a class="btn btn-info m-1 p-1 text-white" href="{{ path('editStudent',{'id':student.id}) }}" >
+                                            <i class="uil uil-edit-alt"></i>
+                                        </a>
+                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':student.id}) }}" onclick="return confirmDelete()">
+                                            <i class="uil uil-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+            <div class="activity">
+                <div class="title">
+                    <i class="uil uil-list-ol"></i>
+                    <span class="text">Liste des clubs RH</span>
+                </div>
+                {% if clubs is empty %}
+                <p class="h5 my-alert alert text-center border-light border-3">Aucun club RH pour le moment !</p>
+                {% else %}
+                    <table class="table my-table">
+                        <thead>
+                            <tr>
+                                <th>Nom & Prénom</th>
+                                <th>Email</th>
+                                <th>Niveau</th>
+                                <th>Classe</th>
+                                <th>CIN</th>
+                                <th>Genre</th>
+                                <th>Date Naissance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for club in clubs %}
+                                <tr>
+                                    <td>{{ club.nom }} {{club.prenom}}</td>
+                                    <td>{{ club.email }}</td>
+                                    <td>{{ club.niveau }}</td>
+                                    <td>{{ club.classe }}</td>
+                                    <td>{{ club.cin }}</td>
+                                    <td>{{ club.genre }}</td>
+                                    <td>{{ club.dateNaissance|date("d/m/Y") }}</td>
+                                    <td>
+                                        <a class="btn btn-primary m-1 p-1 text-white" href="{{ path('visitProfile', {'id':club.id} )}}" >
+                                            <i class="uil uil-eye"></i>
+                                        </a>
+                                        <a class="btn btn-secondary m-1 p-1 text-white" href="{{ path('toStudent',{'id':club.id}) }}" >
+                                            <i class="uil uil-book-reader"></i>
+                                        </a>
+                                        {% if club.getIsEnabled() %}
+                                        <a class="btn btn-warning m-1 p-1 text-white" href="{{ path('blockUser',{'id':club.id}) }}" >
+                                            <i class="uil uil-ban"></i>
+                                        </a>
+                                        {% else %}
+                                        <a class="btn btn-success m-1 p-1 text-white" href="{{ path('unblockUser',{'id':club.id}) }}" >
+                                            <i class="uil uil-unlock"></i>
+                                        </a>
+                                        {% endif %}
+                                        <a class="btn btn-info m-1 p-1 text-white" href="{{ path('editClub',{'id':club.id}) }}" >
+                                            <i class="uil uil-edit-alt"></i>
+                                        </a>
+                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':club.id}) }}" onclick="return confirmDelete()">
+                                            <i class="uil uil-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+            <div class="activity">
+                <div class="title">
+                    <i class="uil uil-list-ol"></i>
+                    <span class="text">Liste des entreprises</span>
+                </div>
+
+                <a class="btn btn-success m-2 p-1 pe-2 text-white" href="{{ path('newEntreprise') }}">
+                    <i class="uil uil-plus"></i> Ajouter
+                </a>
+                {% if entreprises is empty %}
+                <p class="h5 my-alert alert text-center border-light border-3">Aucune entreprise pour le moment !</p>
+                {% else %}
+                    <table class="table my-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Pays</th>
+                                <th>Localisation</th>
+                                <th>Site Web</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entreprise in entreprises %}
+                                <tr>
+                                    <td>{{ entreprise.nom }}</td>
+                                    <td>{{ entreprise.email }}</td>
+                                    <td>{{ entreprise.pays }}</td>
+                                    <td>{{ entreprise.localisation }}</td>
+                                    <td>{{ entreprise.website }}</td>
+                                    <td>
+                                        <a class="btn btn-primary m-1 p-1 text-white" href="{{ path('visitProfile', {'id':entreprise.id} )}}" >
+                                            <i class="uil uil-eye"></i>
+                                        </a>
+                                        {% if entreprise.getIsEnabled() %}
+                                        <a class="btn btn-warning m-1 p-1 text-white" href="{{ path('blockUser',{'id':entreprise.id}) }}" >
+                                            <i class="uil uil-ban"></i>
+                                        </a>
+                                        {% else %}
+                                        <a class="btn btn-success m-1 p-1 text-white" href="{{ path('unblockUser',{'id':entreprise.id}) }}" >
+                                            <i class="uil uil-unlock"></i>
+                                        </a>
+                                        {% endif %}
+                                        <a class="btn btn-info m-1 p-1 text-white" href="{{ path('editEntreprise',{'id':entreprise.id}) }}" >
+                                            <i class="uil uil-edit-alt"></i>
+                                        </a>
+                                        <a class="btn btn-danger m-1 p-1" href="{{ path('deleteUser',{'id':entreprise.id}) }}" onclick="return confirmDelete()">
+                                            <i class="uil uil-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+
+        </div>
+    </section>
+
+    <script src="/js/dashboard.js"></script>
+
+    <script>
+        function confirmDelete() {
+
+            var confirmAction = confirm("êtes-vous sure de supprimer cet utilisateur ?");
+
+            return confirmAction;
+        }
+
+        document.getElementById('logoutLink').addEventListener('click', function(event) {
+            event.preventDefault(); // Stop the link from causing a page navigate
+            document.getElementById('logoutForm').submit(); // Submit the invisible form
+        });
+
+    </script> 
+</body>
+</html>

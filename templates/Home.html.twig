@@ -1,17 +1,23 @@
 {% extends "base.html.twig" %}
 {% block body %}
-
-
 <div class="container" style="margin-top: 100px;">
     <h1>Bienvenue a Esprit EduSmart</h1>
     <div class="buttons">
         {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        <a href="{{ path('login') }}" class="btn btn-danger">Connexion</a>
-        <a href="{{ path('signUp') }}" class="btn btn-outline-danger">Créer Compte</a>
+          <a href="{{ path('login') }}" class="btn btn-danger">Connexion</a>
+          <a href="{{ path('signUp') }}" class="btn btn-outline-danger">Créer Compte</a>
         {% else %}
-        <form action="{{ path('logout') }}" method="post">
-        <button type="submit" class="btn btn-danger">Déconnecter</button>
-        </form>
+          <form action="{{ path('logout') }}" method="post">
+          <button type="submit" class="btn btn-danger">Déconnecter</button>
+          </form>
+          {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('showDashboard') }}" class="btn btn-outline-danger mt-2">Dashboard</a>
+          {% endif %}
+          {% if is_granted('ROLE_TEACHER') or is_granted('ROLE_STUDENT') or is_granted('ROLE_CLUB') or is_granted('ROLE_ENTREPRISE') %}
+            <a href="{{ path('myProfile') }}" class="btn btn-danger mt-2">
+            <i class="fa fa-eye"></i> Profil
+            </a>
+          {% endif %}
         {% endif %}
     </div>
 </div>

@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: #9f1c00;">
+<nav class="navbar fixed-top navbar-expand-lg" style="background-color: #9f1c00;">
     <div class="container">
         <a class="navbar-brand text-white" href="/">EduSmart</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -15,11 +15,11 @@
                             <ul class="dropdown-menu" style="margin-left: 1280px;">
                                 <li>
                                     {% if is_granted('ROLE_TEACHER') or is_granted('ROLE_STUDENT') or is_granted('ROLE_ENTREPRISE') or is_granted('ROLE_CLUB') %}
-                                    <a class="dropdown-item" href="#"><span><i class="fa-regular fa-user" style="color: #9f1c00;"></i></span><span>&nbsp;Profil</span></a>
+                                    <a class="dropdown-item" href="{{path ('myProfile')}}"><span><i class="fa-regular fa-user" style="color: #9f1c00;"></i></span><span>&nbsp;Profil</span></a>
                                     {% endif %}
                                 </li>
                                 {% if is_granted('ROLE_ADMIN') %}
-                                <li><a class="dropdown-item" href="#" sec:authorize="hasAuthority('ADMIN')"><span><i class="fa-solid fa-list-check" style="color: #9f1c00;"></i></span><span>&nbsp;Gérer</span></a></li>
+                                <li><a class="dropdown-item" href="/admin/users" sec:authorize="hasAuthority('ADMIN')"><span><i class="fa-solid fa-list-check" style="color: #9f1c00;"></i></span><span>&nbsp;Dashboard</span></a></li>
                                 {% endif %}
                                 <form action="{{ path('logout') }}" method="post">
                                 <li><button type="submit" class="dropdown-item"><span><i class="fa-solid fa-right-from-bracket" style="color: #9f1c00;"></i></span><span>&nbsp;Déconnecter</span></button></li>

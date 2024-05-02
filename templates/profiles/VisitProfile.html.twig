@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Profile details        
+        </title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+        <link href="/css_yassine/myProfile.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <style>
+        .hm:focus {
+            outline: none;
+            border-color: rgb(251, 251, 251);
+            box-shadow: 0 0 0 0.15rem rgba(167, 1, 1, 0.5);
+        }
+        </style>
+    </head>
+    <body>
+        {% include '/nav.html.twig' %}
+        <div class="container" style="margin-top: 125px;">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-7">
+                    <div class="card p-3 py-4 shadow">
+                        {% if (user.getRole().value == 'CLUB') or (user.getRole().value == 'TEACHER') or (user.getRole().value == 'STUDENT') %}
+                            <div class="text-center">
+                                {% if user.getProfilPicture() is not null %}
+                                    <img
+                                class="rounded-circle border border-danger border-4" src="{{ path('get_profile_picture', {'nomFile': user.getProfilPicture()}) }}" style="width: 150px; max-width: 150px;height: 150px; max-height: 150px;" alt="errorLoading">
+                                    {% else %}
+                                    <img class="rounded-circle border border-danger border-4" src="{{ asset('/images/profile.png') }}" style="width: 150px; max-width: 150px;height: 150px; max-height: 150px;" alt="errorDefault">
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        {% if user.getRole().value == 'ENTREPRISE' %}
+                            <div class="text-center">
+                                <div class="btn-container">
+                                    <div class="field btn">
+                                        <img class="rounded-circle border border-danger border-4" src="{{ asset('/images/default-entr.jpg') }}" style="width: 150px; max-width: 150px;height: 150px; max-height: 150px;" alt="errorDefault">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="text-center mt-3">
+                                {% if user.getRole().value == 'ENTREPRISE' %}
+                                <span class="bg-secondary p-1 px-4 rounded text-white">
+                                    Entreprise
+                                </span>                                     
+                                {% elseif user.getRole().value == 'TEACHER' %}
+                                <span class="bg-danger p-1 px-4 rounded text-white">
+                                    Enseignant
+                                </span>                                      
+                                {% elseif user.getRole().value == 'STUDENT' %}
+                                <span class="bg-secondary-subtle p-1 px-4 rounded text-black">
+                                    Etudiant
+                                </span>                                     
+                                {% elseif user.getRole().value == 'CLUB' %}
+                                <span class="bg-dark p-1 px-4 rounded text-white">
+                                    Club RH
+                                </span>                                         
+                                {% endif %}
+                            <br>
+                            <span class="header text-danger">
+                                <span class="h3 mt-2">
+                                    {{ user.getNom() }}
+                                </span>
+                                {% if user.getRole().value != 'ENTREPRISE' %}
+                                <span>
+                                    &nbsp;                                               
+                                </span>
+                                <span class="h3 mt-2 mb-2">
+                                    {{ user.getPrenom() }}
+                                </span>
+                            </span>
+                            <br>
+                                <div style="display: inline-block; margin-top: 10px; margin-bottom: 10px;">
+                                        {% if user.getRole().value == 'STUDENT' or user.getRole().value == 'CLUB' %}
+                                        <span>
+                                            <i class="fa-solid fa-chart-line" style="color: #fd0d0d;"></i>
+                                        </span>
+                                        <span style="padding-right : 10px;padding-left : 5px; border-right : solid 2px black;">
+                                            Niveau :                                                                                 
+                                                                                                
+                                            {{ user.getNiveau() }}
+                                        </span>
+                                        <span style="padding-left : 10px;">
+                                            <i class="fa-solid fa-person-shelter" style="color: #fd0d0d;"></i>
+                                        </span>
+                                        <span>
+                                            &nbsp;
+                                            {{ user.getClasse() }}
+                                        </span>
+                                        <br>
+                                        {% endif %}
+                                    <div class="pt-2">
+                                        <span>
+                                            <i class="fa-solid fa-cake-candles fa-lg" style="color: #fd0d0d;"></i>
+                                        </span>
+                                        <span style="padding-right : 10px;padding-left : 5px; border-right : solid 2px black;">
+                                            Date Naissance :                                                                                    
+                                            {{ user.getDateNaissance()|date('d-m-Y') }}
+                                        </span>
+                                        {% if user.getGenre() == 'male' %}
+                                            <span style="padding-left : 10px;">
+                                                <i class="fa-solid fa-mars fa-lg" style="color: #fd0d0d;"></i>
+                                            </span>
+                                            <span>
+                                                &nbsp;Homme                                     
+                                                                                                        
+                                            </span>
+                                        {% endif %}
+                                        {% if user.getGenre() == 'female' %}
+                                            <span style="padding-left : 10px;">
+                                                <i class="fa-solid fa-venus fa-lg" style="color: #fd0d0d;"></i>
+                                            </span>
+                                            <span>
+                                                &nbsp;Femme                                           
+                                                                                                        
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="pt-2">
+                                        <span>
+                                            <i class="fa-solid fa-envelope fa-lg" style="color: #fd0d0d;"></i>
+                                        </span>
+                                        <span style="padding-left : 5px;">
+                                            Email :                                                 
+                                            {{ user.getEmail() }}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% else %}
+                            </span>
+                            <br>
+                            <div style="display: inline-block; margin-top: 10px; margin-bottom: 10px;">
+                                <span>
+                                    <i class="fa-solid fa-earth-americas" style="color: #fd0d0d;"></i>
+                                </span>
+                                <span style="padding-right : 10px;padding-left : 5px; border-right : solid 2px black;">
+                                    Pays :                                                                                    
+                                                                                        
+                                    {{ user.getPays() }}
+                                </span>
+                                <span style="padding-left : 10px;">
+                                    <i class="fa-solid fa-location-dot" style="color: #fd0d0d;"></i>
+                                </span>
+                                <span>
+                                    Localisation :
+                                                                                            
+                                    {{ user.getLocalisation() }}
+                                </span>
+                                <div class="pt-2">
+                                    <span>
+                                        <i class="fa-solid fa-globe" style="color: #fd0d0d;"></i>
+                                    </span>
+                                    <span style="padding-left : 5px;">
+                                        Site web :                                         
+                                                                                                    
+                                        {{ user.getWebsite() }}
+                                    </span>
+                                </div>
+                                <div class="pt-2">
+                                    <span>
+                                        <i class="fa-solid fa-envelope fa-lg" style="color: #fd0d0d;"></i>
+                                    </span>
+                                    <span style="padding-left : 5px;">
+                                        Email :                                         
+                                                                                                    
+                                        {{ user.getEmail() }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <br>
+                        <div style="display: inline-block; margin-top: 10px; margin-bottom: 10px;">
+                            <span>
+                                Suivi par : &nbsp;
+                                {{ user.getFollowers()|length }}
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-users" style="padding-right : 10px;padding-left : 5px;color: #fd0d0d; border-right : solid 2px red;"></i>
+                            </span>
+                            <span>
+                                &nbsp; Suivre : &nbsp;
+                                {{ user.getFollowing()|length }}
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-users" style="padding-right : 10px;padding-left : 5px;color: #fd0d0d;"></i>
+                            </span>
+                        </div>
+                        <div class="follow-unfollow-button" id="followUnfollowButton">
+                            {% if not is_granted('ROLE_ADMIN') %}
+                                {% if me == 'true' %}
+                                    <button id="followButton" class="btn btn-danger"><i class="fa-solid fa-user-plus" style="color: #ffffff;"></i> Suivre</button>
+                                {% else %}
+                                    {% if following == 'false' %}
+                                        <a href="{{path ('followUser',{'id': user.getId()})}}" id="followButton" class="btn btn-danger"><i class="fa-solid fa-user-plus" style="color: #ffffff;"></i> Suivre</a>
+                                    {% else %}
+                                    <a href="{{path ('unfollowUser',{'id': user.getId()})}}" id="unfollowButton" class="btn btn-outline-danger" onclick="unfollowUser('{{ user.getId() }}')">Ne plus suivre</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script>
+        Pusher.logToConsole = true;
+        var pusher = new Pusher('{{ pusher_key }}', {
+            cluster: '{{ pusher_cluster }}'
+        });
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('new-follow', function(data) {
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+            if (Notification.permission === "granted") {
+                new Notification('Actualité', {
+                    body: data.message
+                });
+            }
+        });
+    </script>  
+    </body>
+</html>
