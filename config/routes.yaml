@@ -29,6 +29,7 @@ search_offres:
     controller: App\Controller\OffreController::search
     methods: [GET, POST]
 
+
 stage_stage:
     path: /stage
     controller: App\Controller\stageController::stage

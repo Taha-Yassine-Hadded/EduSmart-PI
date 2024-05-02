@@ -211,14 +211,14 @@ class Events
     }
 
     /**
-     * @return Collection<int, user>
+     * @return Collection<int, User>
      */
     public function getParticipants(): Collection
     {
         return $this->participants;
     }
 
-    public function addParticipant(user $participant): static
+    public function addParticipant(User $participant): static
     {
         if (!$this->participants->contains($participant)) {
             $this->participants->add($participant);
@@ -227,7 +227,7 @@ class Events
         return $this;
     }
 
-    public function removeParticipant(user $participant): static
+    public function removeParticipant(User $participant): static
     {
         $this->participants->removeElement($participant);
 
