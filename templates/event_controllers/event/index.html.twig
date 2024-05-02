@@ -25,7 +25,6 @@
                                       
                     <td>{{ event.getEventName() }}</td>
                     <div class="fb-share-button" data-href="{{ path('event_show', {'id': event.getId()}) }}" data-layout="button" data-size="large">
-                        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ path('event_show', {'id': event.getId()}) }}" class="fb-xfbml-parse-ignore">Share</a>
                       </div>
                       
                     <td>{{ event.getDescription() }}</td>

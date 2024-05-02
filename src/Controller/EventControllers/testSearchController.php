@@ -4,6 +4,7 @@
 namespace App\Controller\EventControllers;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use TeamTNT\TNTSearch\TNTSearch;
@@ -62,40 +63,47 @@ class testSearchController extends AbstractController
         );
 }
  /**
-     * @Route("/search", name="app_search")
-     */
-    public function search()
-    {
-        $tnt = new TNTSearch;
+ * @Route("/search", name="app_search")
+ */
+public function search(Request $request)
+{
+    // Get the search term from the request query parameters
+    $searchTerm = $request->query->get('searchTerm');
 
-        $configuration = $this->getTNTSearchConfiguration();
-        $tnt->loadConfig($configuration);
-        
-        
-        $tnt->selectIndex('artists.index');
-        
-        $maxResults = 20;
-        
-        
-        $results = $tnt->search("st ", $maxResults);
-        $entityManager = $this->getDoctrine()->getManager();
-        $events = $entityManager->getRepository(Events::class);
-        
-        
-        $rows = [];
-        
-        foreach($results["ids"] as $id){
-            // You can optimize this by using the FIELD function of MySQL if you are using mysql
-            // more info at: https://ourcodeworld.com/articles/read/1162/how-to-order-a-doctrine-2-query-result-by-a-specific-order-of-an-array-using-mysql-in-symfony-5
-            $event = $events->find($id);
-            
+    $tnt = new TNTSearch;
+
+    $configuration = $this->getTNTSearchConfiguration();
+    $tnt->loadConfig($configuration);
+    
+    
+    $tnt->selectIndex('artists.index');
+    $tnt->fuzziness(true);
+    $maxResults = 20;
+    
+    
+    $results = $tnt->search($searchTerm, $maxResults);
+    $entityManager = $this->getDoctrine()->getManager();
+    $events = $entityManager->getRepository(Events::class);
+    
+    
+    $rows = [];
+    
+    foreach($results["ids"] as $id){
+        // You can optimize this by using the FIELD function of MySQL if you are using mysql
+        // more info at: https://ourcodeworld.com/articles/read/1162/how-to-order-a-doctrine-2-query-result-by-a-specific-order-of-an-array-using-mysql-in-symfony-5
+        $event = $events->find($id);
+        if ($event){
             $rows[] = [
                 'id' => $event->getId(),
                 'name' => $event->getEventName()
             ];
+        } else {
+            // It's up to you whether to return an empty response or an error message here
+            return new JsonResponse([]);
         }
-        
-        
-        return new JsonResponse($rows);
-    } 
+    }
+    
+    
+    return new JsonResponse($rows);
+}
 }
