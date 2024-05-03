@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CoursController!{% endblock %}
+
+{% block body %}
+    <!-- Courses Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Les Cours</h6>
+                <h1 class="mb-5">Nos Cours</h1>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="section-title">
+                    <h2>Search Bar</h2>
+                    <input type="text" id="searchInput" placeholder="Search " oninput="search()">
+                </div> 
+               {% for a in list %}
+    <div class="col-lg-4 col-md-6 wow fadeInUp single-course-item" data-wow-delay="0.3s"> <!-- Ajout de la classe single-course-item -->
+        <div class="course-item bg-light">
+            <div class="position-relative overflow-hidden">
+                <img class="img-fluid" src="img/course-3.jpg" alt="">
+                <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
+                    <a href="{{ path('download_pdf', {'id': a.id}) }}" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;" download>Télécharger PDF</a>
+                    <a href="{{  path('affiche', {'id': a.id}) }}" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Evaluation</a>
+                </div>
+            </div>
+            <div class="text-center p-4 pb-0">
+                <h3 class="mb-0">{{ a.NomModule }}</h3>
+                <h5 class="mb-4 course-name">{{ a.NomCours }}</h5> <!-- Ajout de la classe course-name -->
+            </div>
+            <div class="d-flex border-top">
+                <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>{{ a.teacher.nom }}</small>
+                <small class="flex-fill text-center py-2"><i class="fa fa-niveau text-primary me-2"></i>{{ a.Niveau }}</small>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- Courses End -->
+<script>
+    function search() {
+        // Récupère la valeur de la recherche
+        let input = document.getElementById("searchInput");
+        let filter = input.value.toUpperCase();
+
+        // Récupère tous les noms de cours à filtrer
+        let names = document.querySelectorAll(".course-name"); // Utilisation de la classe course-name
+
+        // Parcours tous les noms et masque les éléments dont le nom ne correspond pas à la recherche
+        names.forEach(name => {
+            let text = name.textContent || name.innerText;
+            let item = name.closest(".single-course-item");
+            if (text.toUpperCase().indexOf(filter) > -1) {
+                item.style.display = "";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+</script>
+{% endblock %}
