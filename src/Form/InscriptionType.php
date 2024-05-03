@@ -8,7 +8,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 class InscriptionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -30,6 +31,10 @@ class InscriptionType extends AbstractType
                 ],
             ])
             ->add('email')
+            // Ajoutez le champ selected_price
+            ->add('selected_price', HiddenType::class, [
+                'mapped' => false, // Ne pas mapper ce champ à l'entité
+            ]);
             
             
         ;

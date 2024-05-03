@@ -9,15 +9,22 @@
         <div class="list-group">
             {% for publication in publications %}
                 {% if publication.contenu %}
-                    <div class="list-group-item list-group-item-action">
+                    <div class="list-group-item list-group-item-action mb-3">
+                        {% if username %}
+                            <div class="publication-owner">Propriétaire de la publication : {{ username }}</div>
+                        {% endif %}
                         <div class="publication-content mb-1">{{ publication.contenu }}</div>
                         <div class="d-flex w-100 justify-content-between">
                             <div class="btn-group">
+                             {% if is_granted('ROLE_CLUB') %}
                                 <a href="{{ path('app_publication_edit', {'id': publication.id}) }}" class="btn btn-sm btn-primary" style="background-color: midnightblue;"><i class="fas fa-edit"></i> </a>
+                            {% endif %}
                                 <form id="publication-form-{{ publication.id }}" class="publication-form" action="{{ path('app_publication_delete', {'id': publication.id}) }}" method="post" style="display: inline;">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ publication.id) }}">
+                                {% if is_granted('ROLE_CLUB') %}
                                     <button type="submit" class="btn btn-sm btn-danger" style="background-color: maroon;"><i class="fas fa-trash"></i> </button>
+                                {% endif %}
                                 </form>
                             </div>
                             <small>{{ publication.date ? publication.date|date('Y-m-d') : '' }}</small>
@@ -29,7 +36,7 @@
             {% endfor %}
         </div>
     </div>
-
+{% if is_granted('ROLE_CLUB') %}
     <a href="{{ path('app_publication_new') }}" class="btn btn-primary btn-block mt-4">Nouvelle publication</a>
-
+{% endif %}
 {% endblock %}

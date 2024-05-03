@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Publication{% endblock %}
+{% block title %}Nouvelle Publication{% endblock %}
 
 {% block body %}
 <div class="container py-4">
@@ -11,6 +11,9 @@
                     <h5 class="mb-0 text-white">Ajouter une nouvelle publication</h5>
                 </div>
                 <div class="card-body">
+                    {% if username %}
+                        <div class="publication-owner">Propriétaire de la publication : {{ username }}</div>
+                    {% endif %}
                     <form method="post" action="{{ path('app_publication_new') }}" enctype="multipart/form-data">
                         {{ form_start(form) }}
                         <div class="form-group">

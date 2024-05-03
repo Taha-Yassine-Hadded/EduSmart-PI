@@ -3,9 +3,26 @@ app_inscription_new:
     controller: 'App\Controller\ActivitesController\InscrireController::new'
     methods: ['GET', 'POST']
 
-checkout_payment:
-    path: /checkout/payment
-    controller: App\Controller\ActivitesController\CheckoutController::payment
+app_checkout:
+    path: /inscrire/checkout/  
+    controller: 'App\Controller\ActivitesController\InscrireController::checkout'  
+    methods: [ 'POST']
+download_receipt:
+    path: /inscrire/download-receipt
+    controller: 'App\Controller\ActivitesController\InscrireController::downloadReceipt'
+    methods: ['GET', 'POST']  # Assurez-vous que vous utilisez la méthode GET car vous récupérez les données par le biais des paramètres de requête GET
+
+
+app_activites_esprit:
+    path: /activites/esprit
+    controller: App\Controller\ActivitesController\ActivitesEspritController::index
+    methods: ['GET']
+# Assurez-vous que la route generate_pdf est correctement définie dans votre fichier de routes
+#generate_pdf:
+    #path: /generate-pdf
+    #controller: 'App\Controller\ActivitesController\InscrireController::generatePdf'
+    #methods: ['POST']
+
 
 
 
