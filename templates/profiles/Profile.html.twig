@@ -17,12 +17,23 @@
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
         <link href="/css_yassine/myProfile.css" rel="stylesheet">
         <link rel="stylesheet" href="/css_yassine/dashboard.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <style>
         .hm:focus {
             outline: none;
             border-color: rgb(251, 251, 251);
             box-shadow: 0 0 0 0.15rem rgba(167, 1, 1, 0.5);
         }
+        .myList {
+            color : black;
+        }
+        .myList:hover {
+            color : red;  
+        }
+        .text-link:hover {
+            border-bottom : 2px solid red;
+        }
+
     </style>
     </head>
     <body>
@@ -59,11 +70,11 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="{{ path('user_notifications') }}">
                             <i class="uil uil-bell"></i>
                             <span class="link-name">
                                 Notifications
-                                                                                                                            
+                                <span class="badge text-bg-danger">{{unseenNotifications}}</span>                                                                               
                                                                                             
                                                             
                             </span>
@@ -107,9 +118,6 @@
                             <i class="uil uil-moon"></i>
                             <span class="link-name">
                                 Mode sombre
-                                                                                                                            
-                                                                                            
-                                                            
                             </span>
                         </a>
                         <div class="mode-toggle">
@@ -125,21 +133,24 @@
             </div>
             <div class="dash-content">
                 <div class="overview">
-                    <div class="title">
+                    <div class="title" style="margin-top : 10px;margin-bottom : 20px;">
                         <i class="uil uil-user"></i>
                         <span class="text">
                             Informations du profil                
                         </span>
                     </div>
+                <div class="title" style="margin-top : 10px;margin-bottom : 10px;">
+                        <span><a href="{{ path('visitProfile', {'id' : user.getId()} )}}" class="text" style="margin-left : 0px;"><span><i class="uil uil-eye bg-secondary"></i></span></span><small class="ms-2">Mode visiteur</small></span></a></span>
+                </div>
                     <div class="hedhiya">
-                        <div class="container" style="margin-top: 50px;">
+                        <div class="container" style="margin-top: 20px;">
                             <div class="row d-flex justify-content-center">
                                 <div class="col-md-7">
                                     <div class="card p-3 py-4 shadow">
                                         {% if is_granted('ROLE_CLUB') or is_granted('ROLE_TEACHER') or is_granted('ROLE_STUDENT') %}
                                             <div id ="meHaaha" style="margin-left : 260px;">
                                                 {% if user.getProfilPicture() is not null %}
-                                                    <button type="button" style="margin-left : 160px;border: none; background-color: white; cursor: pointer; vertical-align: top;">
+                                                    <button type="button" class="noth" id="oldButton" style="margin-left : 160px;border: none; background-color: white; cursor: pointer; vertical-align: top;">
                                                         <a href="{{ path ('profile_delete_picture') }}">
                                                             <i class="fa fa-times-circle" style="color: red; font-size: 20px;"></i>
                                                         </a>
@@ -152,7 +163,7 @@
                                                     <div class="btn-container">
                                                         <div class="field btn">
                                                             <input type="file" id="profilePhoto" name="profil_picture" style="display: none;" accept="image/*" hidden>
-                                                            <button type="button" class="mouraba3" style="color: white; margin-left: 10px;" onclick="document.getElementById('profilePhoto').click();">
+                                                            <button type="button" class="mouraba3" style="color: white;" onclick="document.getElementById('profilePhoto').click();">
                                                                 <div class="hov rounded-circle border border-danger border-4">
                                                                     {% if user.getProfilPicture() is not null %}
                                                                         <img
@@ -177,17 +188,23 @@
                                         </div>
                                         {% endif %}
                                         <div class="text-center mt-3">
-                                            <span class="bg-secondary p-1 px-4 rounded text-white">
                                                 {% if is_granted('ROLE_ENTREPRISE')%}
-                                                    Entreprise
+                                                    <span class="bg-secondary p-1 px-4 rounded text-white">
+                                                        Entreprise
+                                                    </span>
                                                 {% elseif is_granted('ROLE_TEACHER')%}
-                                                    Enseignant
+                                                    <span class="bg-danger p-1 px-4 rounded text-white">
+                                                        Enseignant
+                                                    </span>
                                                 {% elseif is_granted('ROLE_STUDENT')%}
-                                                    Etudiant
+                                                    <span class="bg-secondary-subtle p-1 px-4 rounded text-black">
+                                                        Etudiant
+                                                    </span>
                                                 {% elseif is_granted('ROLE_CLUB')%}
-                                                    Club RH
+                                                    <span class="bg-dark p-1 px-4 rounded text-white">
+                                                        Club RH
+                                                    </span>
                                                 {% endif %}
-                                            </span>
                                             <br>
                                             <span class="header text-danger">
                                                 <span class="h3 mt-2 mb-2">
@@ -215,11 +232,12 @@
                                                     <i class="fa-solid fa-person-shelter" style="color: #fd0d0d;"></i>
                                                 </span>
                                                 <span>
+                                                    Classe :
                                                     &nbsp;{{ user.getClasse() }}                                     
                                                 </span>
                                                 {% endif %}
                                                 <br>
-                                                <div class="pt-2">
+                                                <div>
                                                     <span>
                                                         <i class="fa-solid fa-cake-candles fa-lg" style="color: #fd0d0d;"></i>
                                                     </span>
@@ -254,7 +272,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                        {% else %}
+                                            {% else %}
                                             </span>
                                             <br>
                                             <div style="display: inline-block; margin-top: 10px; margin-bottom: 10px;">
@@ -292,6 +310,81 @@
                                                     </div>
                                             </div>
                                         {% endif %}
+                                        <br>
+                                            <div style="display: inline-block; margin-top: 10px; margin-bottom: 10px;">
+                                                <span class="followersList">
+                                                    <a class="myList" data-bs-toggle="offcanvas" href="#followersOffcanvas" role="button" aria-controls="followersOffcanvas">
+                                                        <span class="text-link">
+                                                            Suivi par : &nbsp;
+                                                            {{ user.getFollowers()|length }}
+                                                        </span>
+                                                        <span>
+                                                            <i class="fa-solid fa-users" style="padding-right : 10px; padding-left : 5px; border-right: solid 2px black;"></i>
+                                                        </span>
+                                                    </a>
+
+                                                    <div class="offcanvas offcanvas-start" tabindex="-1" id="followersOffcanvas" aria-labelledby="followersOffcanvasLabel">
+                                                        <div class="offcanvas-header">
+                                                            <h4 class="offcanvas-title text-danger" id="followersOffcanvasLabel">Utilisateurs qui vous suivent</h4>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                            <select class="form-select p-2" id="followerFilter" aria-label="Default select example">
+                                                                <option selected>Tous</option>
+                                                                <option value="TEACHER">Enseignant</option>
+                                                                <option value="STUDENT">Etudiant</option>
+                                                                <option value="CLUB">Club RH</option>
+                                                                <option value="ENTREPRISE">Entreprise</option>
+                                                            </select>
+                                                            <ul id="followerList" style="list-style-type: none; padding-top: 30px; padding-left: 0px;">
+                                                                {% for follower in user.getFollowers() %}
+                                                                <li data-role="{{ follower.getRole().value }}">
+                                                                    <a class="myList" href="{{ path('visitProfile', {'id': follower.getId()}) }}">
+                                                                        <p class="text-link">{{ follower.getPrenom() }} {{ follower.getNom() }}</p>
+                                                                    </a>
+                                                                </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                                <span class="followingList">
+                                                    <a class="myList" data-bs-toggle="offcanvas" href="#followingOffcanvas" role="button" aria-controls="followingOffcanvas">
+                                                        <span class="text-link">
+                                                            &nbsp; Suivre : &nbsp;
+                                                            {{ user.getFollowing()|length }}
+                                                        </span>
+                                                        <span>
+                                                            <i class="fa-solid fa-users" style="padding-right : 10px; padding-left : 5px;"></i>
+                                                        </span>
+                                                    </a>
+
+                                                    <div class="offcanvas offcanvas-start" tabindex="-1" id="followingOffcanvas" aria-labelledby="followingOffcanvasLabel">
+                                                        <div class="offcanvas-header">
+                                                            <h4 class="offcanvas-title text-danger" id="followingOffcanvasLabel">Utilisateurs que vous suivez</h4>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                            <select class="form-select p-2" id="followingFilter" aria-label="Default select example">
+                                                                <option selected>Tous</option>
+                                                                <option value="TEACHER">Enseignant</option>
+                                                                <option value="STUDENT">Etudiant</option>
+                                                                <option value="CLUB">Club RH</option>
+                                                                <option value="ENTREPRISE">Entreprise</option>
+                                                            </select>
+                                                            <ul id="followingList" style="list-style-type: none; padding-top: 30px; padding-left: 0px;">
+                                                                {% for following in user.getFollowing() %}
+                                                                <li data-role="{{ following.getRole().value }}">
+                                                                    <a class="myList" href="{{ path('visitProfile', {'id': following.getId()}) }}">
+                                                                        <p class="text-link">{{ following.getPrenom() }} {{ following.getNom() }}</p>
+                                                                    </a>
+                                                                </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -301,10 +394,42 @@
                 </div>
             </div>
         </section>
-
-        <script src="/js/dashboard.js"></script>
         
         <script>
+        
+        document.getElementById('logoutLink').addEventListener('click', function(event) {
+            event.preventDefault(); // Stop the link from causing a page navigate
+            document.getElementById('logoutForm').submit(); // Submit the invisible form
+        });
+
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const followerFilter = document.getElementById('followerFilter');
+            const followingFilter = document.getElementById('followingFilter');
+        
+            followerFilter.addEventListener('change', function() {
+                filterList('followerList', this.value);
+            });
+        
+            followingFilter.addEventListener('change', function() {
+                filterList('followingList', this.value);
+            });
+        
+            function filterList(listId, role) {
+                const list = document.getElementById(listId);
+                const items = list.querySelectorAll('li');
+        
+                items.forEach(item => {
+                    if (role === 'Tous' || item.getAttribute('data-role') === role) {
+                        item.style.display = ''; // Show
+                    } else {
+                        item.style.display = 'none'; // Hide
+                    }
+                });
+            }
+        });
+
+
         document.getElementById('profilePhoto').addEventListener('change', function() {
             var file = this.files[0];
             if (file) {
@@ -337,6 +462,7 @@
 
                             // Append where it needs to go
                             const container = document.getElementById('meHaaha');
+                            //document.getElementById('oldButton').classList.add('d-none');
                             container.appendChild(deleteButton);
                         }
                     } else {
@@ -349,10 +475,7 @@
             }
         });         
 
-        document.getElementById('logoutLink').addEventListener('click', function(event) {
-            event.preventDefault(); // Stop the link from causing a page navigate
-            document.getElementById('logoutForm').submit(); // Submit the invisible form
-        });
         </script>
+        <script src="/js/dashboard.js"></script>
     </body>
 </html>

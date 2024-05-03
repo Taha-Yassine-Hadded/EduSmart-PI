@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Candidature {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('public/maram.css/styles.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center font-weight-bold text-color-9F1C00 mt-4 mb-4">Candidature</h1>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="background-color: #781C10; color: white;">Date</th>
+                    <th style="background-color: #781C10; color: white;">Status</th>
+                    <th style="background-color: #781C10; color: white;">Compétences</th>
+                    <th style="background-color: #781C10; color: white;">Cv</th>
+                    <th style="background-color: #781C10; color: white;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidature in candidatures %}
+                    <tr>
+                        <td>{{ candidature.date ? candidature.date|date('Y-m-d') : '' }}</td>
+                        <td>{{ candidature.status }}</td>
+                        <td>{{ candidature.competences }}</td>
+                        <td>{{ candidature.cv }}</td>
+                        <td>
+                            <a href="{{ path('app_candidature_show', {'id': candidature.id}) }}" class="btn btn-outline-primary rounded-pill me-3"><i class="fas fa-eye"></i> Show</a>
+                            <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}" class="btn btn-outline-secondary rounded-pill me-3"><i class="fas fa-edit"></i> Edit</a>
+                            <a href="{{ path('app_candidature_delete', {'id': candidature.id}) }}" class="btn btn-danger rounded-pill"><i class="fas fa-trash-alt"></i> Delete</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">No records found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_offre_list') }}" class="btn btn-outline-primary rounded-pill">Offre List</a>
+    </div>
+{% endblock %}

@@ -1,14 +1,36 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
-event_show_route:
-      path: /event
-      controller: App\Controller\EventControllers\EventController::index
-feeds:
-    path: /feed
-    controller: App\Controller\EventControllers\FeedController::index
+candidature_show:
+    path: /candidature/{id}
+    controller: App\Controller\CandidatureController::show
     methods: GET
-add_reaction:
-      path: /feed/{id}/reaction
-      controller: App\Controller\EventControllers\FeedController::add
-      methods: ['GET', 'POST']
+
+app_offre_list:
+    path: /list
+    controller: App\Controller\OffreController::list
+    methods: [GET, POST]
+
+app_accepter_candidature:
+    path: /accepter/{id}
+    controller: App\Controller\CandidatureController::accepterCandidature
+
+app_refuser_candidature:
+    path: /refuser/{id}
+    controller: App\Controller\CandidatureController::refuserCandidature
+    methods: ['POST']
+
+candidature_download_cv:
+    path: /download-pdf/{id}
+    controller: App\Controller\CandidatureController::downloadPdf
+
+search_offres:
+    path: /search
+    controller: App\Controller\OffreController::search
+    methods: [GET, POST]
+
+
+stage_stage:
+    path: /stage
+    controller: App\Controller\stageController::stage
+    methods: GET

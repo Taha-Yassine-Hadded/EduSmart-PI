@@ -21,6 +21,27 @@ class FollowNotificationRepository extends ServiceEntityRepository
         parent::__construct($registry, FollowNotification::class);
     }
 
+    public function findByUserOrderedByDateDesc($user)
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('n.createdAt', 'DESC') // Order by createdAt in descending order
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countUnseenNotifications($user): int
+    {
+        return $this->createQueryBuilder('n')
+            ->select('count(n.id)')
+            ->where('n.user = :user')
+            ->andWhere('n.seen = false')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return FollowNotification[] Returns an array of FollowNotification objects
 //     */

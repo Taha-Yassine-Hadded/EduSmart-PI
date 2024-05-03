@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Offres{% endblock %}
+
+{% block body %}
+    <h1>Offres</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Compétences</th>
+                <th>Nbr</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for offre in offres %}
+            <tr>
+                <td>{{ offre.titre }}</td>
+                <td>{{ offre.description }}</td>
+                <td>{{ offre.competences }}</td>
+                <td>{{ offre.nbr }}</td>
+                <td>{{ offre.date ? offre.date|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_stage_show', {'id': offre.id}) }}" class="btn btn-outline-primary">Show</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Statistiques des candidatures</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Offre</th>
+                <th>Nombre de candidatures</th>
+                <th>Pourcentage</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for statistique in statistiques %}
+            <tr>
+                <td>{{ statistique.offre }}</td>
+                <td>{{ statistique.nbCandidatures }}</td>
+                <td>{{ statistique.pourcentage }}%</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

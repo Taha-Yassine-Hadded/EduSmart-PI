@@ -2,10 +2,12 @@
 
 namespace App\Controller\UserController;
 
+use App\Entity\FollowNotification;
+use App\Repository\FollowNotificationRepository;
 use App\Service\UserService\UserService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Pusher\Pusher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -14,9 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mime\MimeTypes;
-use Symfony\Component\Notifier\Message\NullMessage;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Uid\Uuid;
 
@@ -30,76 +30,114 @@ class ProfilController extends AbstractController
     }
 
     #[Route('/',name:'myProfile')]
-    public function myProfile(Security $security, UserService $userService) {
-        $email = $security->getUser()->getUserIdentifier();
-        $user = $userService->getUserByEmail($email);
-        return $this->render('/profiles/Profile.html.twig', ['user' => $user]);
+    public function myProfile(Security $security, UserService $userService, FollowNotificationRepository $notificationRepository) {
+        $user = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
+
+        if (!$user) {
+            return $this->redirectToRoute('login');
+        }
+
+        $unseenCount = $notificationRepository->countUnseenNotifications($user);
+
+        return $this->render('/profiles/Profile.html.twig', [
+            'user' => $user,
+            'unseenNotifications' => $unseenCount
+        ]);
     }
 
     #[Route('/user/{id}',name:'visitProfile')]
     public function visitProfile(Security $security, UserService $userService, $id) {
+
             $userToVisit = $userService->getUserById($id);
             $userLoggedIn = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
-            if ($userLoggedIn->getFollowing() != null && $userLoggedIn->getFollowing()->contains($userToVisit)) {
-                $infos = ['user' => $userToVisit, 'following' => 'true'];
-            } else {
-                $infos = ['user' => $userToVisit, 'following' => 'false'];
-                
+
+            if (!$userLoggedIn) {
+                return $this->redirectToRoute('login');
             }
+
+
+            if ($userLoggedIn->getFollowing() != null && $userLoggedIn->getFollowing()->contains($userToVisit)) {
+                if($userLoggedIn == $userToVisit) {
+                    $infos = ['pusher_key' => $_ENV['PUSHER_KEY'], 'pusher_cluster' => $_ENV['PUSHER_CLUSTER'], 'user' => $userToVisit, 'following' => 'true', 'me' => 'true'];
+                } else {
+                    $infos = ['pusher_key' => $_ENV['PUSHER_KEY'], 'pusher_cluster' => $_ENV['PUSHER_CLUSTER'], 'user' => $userToVisit, 'following' => 'true', 'me' => 'false'];
+                }
+            } else {
+                if($userLoggedIn == $userToVisit) {
+                    $infos = ['pusher_key' => $_ENV['PUSHER_KEY'], 'pusher_cluster' => $_ENV['PUSHER_CLUSTER'], 'user' => $userToVisit, 'following' => 'false', 'me' => 'true'];
+                } else {
+                    $infos = ['pusher_key' => $_ENV['PUSHER_KEY'], 'pusher_cluster' => $_ENV['PUSHER_CLUSTER'], 'user' => $userToVisit, 'following' => 'false', 'me' => 'false'];
+                }
+            }
+
+            
+
             return $this->render(
-                '/profiles/VisitProfile.html.twig',
-                $infos
-            );
+                    '/profiles/VisitProfile.html.twig',
+                    $infos
+                );
 
     }
 
-    #[Route('/follow-user/{id}',name:'followUser')]
-    public function followUser(Security $security, UserService $userService, $id){
-
+    #[Route('/follow-user/{id}', name: 'followUser')]
+    public function followUser(Security $security, UserService $userService, EntityManagerInterface $entityManager, Pusher $pusher, $id) : Response {
         $userToFollow = $userService->getUserById($id);
         $userLoggedIn = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
 
-        if($userLoggedIn->getFollowing() != null && $userToFollow->getFollowers() != null) {
-            $userLoggedIn->addFollowing($userToFollow);
-            $userToFollow->addFollower($userLoggedIn);
-        } elseif ($userLoggedIn->getFollowing() == null && $userToFollow->getFollowers() != null) {
-            $following = new ArrayCollection();
-            $following->add($userToFollow);
-            $userLoggedIn->setFollowing($following);
-            $userToFollow->addFollower($userLoggedIn);
-        } elseif ($userLoggedIn->getFollowing() != null && $userToFollow->getFollowers() == null) {
-            $followers = new ArrayCollection();
-            $followers->add($userLoggedIn);
-            $userLoggedIn->addFollowing($userToFollow);
-            $userToFollow->setFollowers($followers);
-        } else {
-            $followers = new ArrayCollection();
-            $followers->add($userLoggedIn);
-            $following = new ArrayCollection();
-            $following->add($userToFollow);
-            $userLoggedIn->setFollowing($following);
-            $userToFollow->setFollowers($followers);
+        if (!$userLoggedIn) {
+            return $this->redirectToRoute('login');
         }
+
+        $userLoggedIn->addFollowing($userToFollow);
+        $userToFollow->addFollower($userLoggedIn);
+
+        // Create a new notification for the user being followed
+        $notification = new FollowNotification();
+        $notification->setUser($userToFollow); // the user who receives the notification
+        $notification->setFollower($userLoggedIn);
+        $notification->setContent($userLoggedIn->getPrenom() . ' ' . $userLoggedIn->getNom() . ' a commencé à vous suivre !');
+
+        // Persist the new notification along with user follow relations
+        $entityManager->persist($userLoggedIn);
+        $entityManager->persist($userToFollow);
+        $entityManager->persist($notification);
+        $entityManager->flush();
+
+        $data = [
+            'message' => 'Bonne nouvelle ' . $userToFollow->getNom() . ' : ' . $notification->getContent(),
+            'from' => $userLoggedIn->getPrenom() . ' ' . $userLoggedIn->getNom(),
+            'to' => $id
+        ];
+
+        $pusher->trigger('my-channel', 'new-follow', $data);
+
         return $this->redirectToRoute('visitProfile', ['id' => $id]);
-    }
-/*
-    #[Route('/unfollow-user/{id}',name:'unfollowUser')]
-    public function unfollowUser(,$id){
-
-        $student = $this->userService->getUserById($id);
-
-        $form = $this->createForm(StudentType::class, $student, ['include_password' => false]);
-        $form->handleRequest($request);
-        if ( $form->isSubmitted() && $form->isValid()) {
-
-            $this->userService->addClub($student);
             
-            return $this->redirectToRoute('showDashboard');
-        }
-
-        return $this->render('formStudent.html.twig', ['f' => $form->createView(), 'is_edit' => true]);
     }
-*/
+
+    #[Route('/unfollow-user/{id}', name: 'unfollowUser')]
+    public function unfollowUser(Security $security, UserService $userService, EntityManagerInterface $entityManager, $id): Response {
+
+        $userToUnfollow = $userService->getUserById($id);
+        $userLoggedIn = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
+
+        if (!$userLoggedIn) {
+            return $this->redirectToRoute('login');
+        }
+    
+        if ($userLoggedIn->getFollowing()->contains($userToUnfollow)) {
+            $userLoggedIn->removeFollowing($userToUnfollow);
+            $userToUnfollow->removeFollower($userLoggedIn);
+    
+            $entityManager->persist($userLoggedIn);
+            $entityManager->persist($userToUnfollow);
+            $entityManager->flush();
+        }
+    
+        return $this->redirectToRoute('visitProfile', ['id' => $id]);
+    
+    }
+    
     /**
      * @Route("/getProfilePicture/{nomFile}", name="get_profile_picture")
      */
@@ -160,9 +198,16 @@ class ProfilController extends AbstractController
 
 
     #[Route('/changePasswordUser',name:'changePasswordUser')]
-    public function changePasswordUser(Security $security, UserService $userService) {
+    public function changePasswordUser(Security $security, UserService $userService, FollowNotificationRepository $notificationRepository) {
         $user = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
-        return $this->render('/profiles/ProfileChangePassword.html.twig', ['user' => $user]);
+
+        if (!$user) {
+            return $this->redirectToRoute('login');
+        }
+
+        $unseenCount = $notificationRepository->countUnseenNotifications($user);
+
+        return $this->render('/profiles/ProfileChangePassword.html.twig', ['user' => $user, 'unseenNotifications' => $unseenCount]);
     
     }
 
@@ -170,6 +215,11 @@ class ProfilController extends AbstractController
     public function savePasswordUser(Request $request,Security $security, UserService $userService) {
 
         $user = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
+
+        if (!$user) {
+            return $this->redirectToRoute('login');
+        }
+
         $password = $request->request->get('password');
         $confirmPassword = $request->request->get('confirmPassword');
 
@@ -189,10 +239,45 @@ class ProfilController extends AbstractController
     public function deleteProfilePicture(Security $security, UserService $userService)
     {
         $user = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
+        
+        if (!$user) {
+            return $this->redirectToRoute('login');
+        }
+
         $user->setProfilPicture(null);
         $this->em->persist($user);
         $this->em->flush();
 
             return $this->redirectToRoute('myProfile');
     }
+
+    #[Route('/notifications', name: 'user_notifications')]
+    public function notifications(UserService $userService, FollowNotificationRepository $notificationRepository, Security $security, EntityManagerInterface $entityManager): Response
+    {
+        $user = $userService->getUserByEmail($security->getUser()->getUserIdentifier());
+        if (!$user) {
+            return $this->redirectToRoute('login');
+        }
+
+        // Retrieve all notifications
+        $notifications = $notificationRepository->findByUserOrderedByDateDesc($user);
+
+        // Render the page with current notification statuses
+        $response = $this->render('profiles/Notifications.html.twig', [
+            'notifications' => $notifications,
+            'user' => $user
+        ]);
+
+        // After rendering, mark notifications as seen
+        foreach ($notifications as $notification) {
+            if (!$notification->isSeen()) {
+                $notification->setSeen(true);
+            }
+        }
+        $entityManager->flush();
+
+        return $response;
+    }
+
+
 }

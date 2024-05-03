@@ -1,14 +1,30 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container d-flex justify-content-around align-items-start flex-row">
-    <div class="col-3 " >
-        <h2 class="text-center mt-5 mb-3">Events</h2>
-        <div id="eventParticipationContainer" class="container d-flex gap-2 flex-column">
+<div style="width: 100%;" class="d-flex justify-content-center align-items-center"> 
+<div class="input1-container">
+  <input placeholder="Search something..." class="input1" name="text"  type="text" id="searchInput" onkeyup="handleKeyUp(event)">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <rect fill="white"></rect> <path d="M7.25007 2.38782C8.54878 2.0992 10.1243 2 12 2C13.8757 2 15.4512 2.0992 16.7499 2.38782C18.06 2.67897 19.1488 3.176 19.9864 4.01358C20.824 4.85116 21.321 5.94002 21.6122 7.25007C21.9008 8.54878 22 10.1243 22 12C22 13.8757 21.9008 15.4512 21.6122 16.7499C21.321 18.06 20.824 19.1488 19.9864 19.9864C19.1488 20.824 18.06 21.321 16.7499 21.6122C15.4512 21.9008 13.8757 22 12 22C10.1243 22 8.54878 21.9008 7.25007 21.6122C5.94002 21.321 4.85116 20.824 4.01358 19.9864C3.176 19.1488 2.67897 18.06 2.38782 16.7499C2.0992 15.4512 2 13.8757 2 12C2 10.1243 2.0992 8.54878 2.38782 7.25007C2.67897 5.94002 3.176 4.85116 4.01358 4.01358C4.85116 3.176 5.94002 2.67897 7.25007 2.38782ZM9 11.5C9 10.1193 10.1193 9 11.5 9C12.8807 9 14 10.1193 14 11.5C14 12.8807 12.8807 14 11.5 14C10.1193 14 9 12.8807 9 11.5ZM11.5 7C9.01472 7 7 9.01472 7 11.5C7 13.9853 9.01472 16 11.5 16C12.3805 16 13.202 15.7471 13.8957 15.31L15.2929 16.7071C15.6834 17.0976 16.3166 17.0976 16.7071 16.7071C17.0976 16.3166 17.0976 15.6834 16.7071 15.2929L15.31 13.8957C15.7471 13.202 16 12.3805 16 11.5C16 9.01472 13.9853 7 11.5 7Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
+</div>
+</div>
+<!--<div style="width: 100%;" class="d-flex justify-content-center align-items-center"> 
+  <input type="text" id="searchInput" onkeyup="handleKeyUp(event)">
+   <button onclick="searchTNT()">search</button></div>
+</div>-->
+<div class="container-fluid d-flex justify-content-around align-items-start flex-row">
+    <div class="col-3 d-flex justify-content-start align-items-center "  >
+        <div id="eventParticipationContainer" class="container d-flex gap-2 flex-column flex-column">
+          <h2 class="text-center mt-3 mb-3">events</h2>
         {% for event in events %}
             {% if user in event.getParticipants() %}
-            <div id="event_{{ event.getId() }}" class=" d-flex justify-content-start align-items-center flex-row gap-3">{{event.getEventName()}} 
-                <button class="bin-button" onclick="removeParticipant('{{ event.getId() }}', '{{ user.getId() }}', '{{ event.getId() }}')">
+            <div id="event_{{ event.getId() }}" class="d-flex justify-content-around align-items-center flex-row gap-4 mb-3">
+              <div class="d-flex justify-content-center align-items-center gap-1">
+                <img src="{{ asset('uploads/' ~ event.getEventPhoto()) }}" alt="" style="border-radius: 50%;" width="40">
+                <p style="margin:0; width: 150px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><b>{{event.getEventName()}}</b></p>
+              </div>
+            
+              <div class=" d-flex justify-content-center align-items-center gap-2 " > 
+                <button class="bin-button" onclick="removeParticipant('{{ event.getId() }}', '{{ user.getId() }}', '{{ event.getId() }}')" >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -56,10 +72,11 @@
                       ></path>
                     </svg>
                 </button>
+
                 </a>
               
-                <div class="btn-conteiner">
-                    <a href="{{ path('event_show_one' , {'id':event.getId()}) }}" class="btn-content">
+                <div class="btn-conteiner" >
+                    <a  href="{{ path('event_show_one' , {'id':event.getId()}) }}" class="btn-content">
                       <span class="icon-arrow">
                         <svg
                           xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -77,47 +94,53 @@
                             id="arrow"
                           >
                             <path
-                              fill="#9ee5fa"
+                              fill="#ffffff"
                               d="M40.1543933,3.89485454 L43.9763149,0.139296592 C44.1708311,-0.0518420739 44.4826329,-0.0518571125 44.6771675,0.139262789 L65.6916134,20.7848311 C66.0855801,21.1718824 66.0911863,21.8050225 65.704135,22.1989893 C65.7000188,22.2031791 65.6958657,22.2073326 65.6916762,22.2114492 L44.677098,42.8607841 C44.4825957,43.0519059 44.1708242,43.0519358 43.9762853,42.8608513 L40.1545186,39.1069479 C39.9575152,38.9134427 39.9546793,38.5968729 40.1481845,38.3998695 C40.1502893,38.3977268 40.1524132,38.395603 40.1545562,38.3934985 L56.9937789,21.8567812 C57.1908028,21.6632968 57.193672,21.3467273 57.0001876,21.1497035 C56.9980647,21.1475418 56.9959223,21.1453995 56.9937605,21.1432767 L40.1545208,4.60825197 C39.9574869,4.41477773 39.9546013,4.09820839 40.1480756,3.90117456 C40.1501626,3.89904911 40.1522686,3.89694235 40.1543933,3.89485454 Z"
                               id="arrow-icon-one"
                             ></path>
                             <path
-                              fill="#9ee5fa"
+                              fill="#ffffff"
                               d="M20.1543933,3.89485454 L23.9763149,0.139296592 C24.1708311,-0.0518420739 24.4826329,-0.0518571125 24.6771675,0.139262789 L45.6916134,20.7848311 C46.0855801,21.1718824 46.0911863,21.8050225 45.704135,22.1989893 C45.7000188,22.2031791 45.6958657,22.2073326 45.6916762,22.2114492 L24.677098,42.8607841 C24.4825957,43.0519059 24.1708242,43.0519358 23.9762853,42.8608513 L20.1545186,39.1069479 C19.9575152,38.9134427 19.9546793,38.5968729 20.1481845,38.3998695 C20.1502893,38.3977268 20.1524132,38.395603 20.1545562,38.3934985 L36.9937789,21.8567812 C37.1908028,21.6632968 37.193672,21.3467273 37.0001876,21.1497035 C36.9980647,21.1475418 36.9959223,21.1453995 36.9937605,21.1432767 L20.1545208,4.60825197 C19.9574869,4.41477773 19.9546013,4.09820839 20.1480756,3.90117456 C20.1501626,3.89904911 20.1522686,3.89694235 20.1543933,3.89485454 Z"
                               id="arrow-icon-two"
                             ></path>
                             <path
-                              fill="#9ee5fa"
+                              fill="#ffffff"
                               d="M0.154393339,3.89485454 L3.97631488,0.139296592 C4.17083111,-0.0518420739 4.48263286,-0.0518571125 4.67716753,0.139262789 L25.6916134,20.7848311 C26.0855801,21.1718824 26.0911863,21.8050225 25.704135,22.1989893 C25.7000188,22.2031791 25.6958657,22.2073326 25.6916762,22.2114492 L4.67709797,42.8607841 C4.48259567,43.0519059 4.17082418,43.0519358 3.97628526,42.8608513 L0.154518591,39.1069479 C-0.0424848215,38.9134427 -0.0453206733,38.5968729 0.148184538,38.3998695 C0.150289256,38.3977268 0.152413239,38.395603 0.154556228,38.3934985 L16.9937789,21.8567812 C17.1908028,21.6632968 17.193672,21.3467273 17.0001876,21.1497035 C16.9980647,21.1475418 16.9959223,21.1453995 16.9937605,21.1432767 L0.15452076,4.60825197 C-0.0425130651,4.41477773 -0.0453986756,4.09820839 0.148075568,3.90117456 C0.150162624,3.89904911 0.152268631,3.89694235 0.154393339,3.89485454 Z"
                               id="arrow-icon-three"
                             ></path>
                           </g>
                         </svg>
                       </span>
+                                          <div class="img-popup"><img src="{{ asset('uploads/' ~ event.getEventPhoto()) }}" alt="" width="100px" style="border-radius: 30%;"></div>  
                     </a>
-                </div>   
+                </div>
+              </div>
+               
+                
             </div>
+            
             {% endif %}
        
         {% endfor %}
     </div>
     </div>
-   <div class="container col-4 d-flex justify-content-center align-items-center flex-column">
-        <h2 class="text-center mt-5 mb-3">Feed</h2>
+   <div class="container col-5 d-flex justify-content-start align-items-center flex-column layout-feed" >
+        <h2 class="text-center mt-3 mb-3">Feed</h2>
         {% for event in events %}
-        <div id="{{event.getEventName()}}" class="facebook-post mb-4" >
+        <div id="{{event.getId()}}" class="facebook-post mb-4" >
             <div class="post-header">
-                <div class="user-profile-image"></div>
+                <img src="{{ asset('uploads/' ~ event.getEventPhoto()) }}" alt="" width="30" style="border-radius: 50%; margin-right:5px">
                 <div class="user-info">
-                    <span>{{ event.getEventName() }}</span>
-                    <span>......</span>
+                    <span style="margin-bottom: 2px;"><b>{{ event.getEventName() }}</b></span>
+                    <span>{{ event.getCreatedAt()|date('Y-m-d') }}</span>
                 </div>
                 <img class="icon" src="{{ asset('assets/ellipsis.svg') }}" alt="">
             </div>
-            <div style="height: 200px;max-height:300px;">{{ event.getDescription() }}</div>
+            <hr class="facebook-separator">
+            <div style="height: fit-content;max-height:300px; margin: 2rem 0 ;">{{ event.getDescription() }}</div>
             
             <div   class="d-flex justify-content-end pe-2">
-                <button id="join_{{ event.getId }}" {% if user in event.getParticipants() %}disabled="true" {% endif %} class="ui-btn {% if user in event.getParticipants() %}disabled-button{% endif %}" onclick="addParticipant(this,'{{ event.getId() }}', '{{ user.getId() }}', '{{ event.getEventName() }}')">
+                <button id="join_{{ event.getId }}" {% if user in event.getParticipants() %}disabled="true" {% endif %} class="ui-btn {% if user in event.getParticipants() %}disabled-button{% endif %}" onclick="addParticipant(this,'{{ event.getId() }}', '{{ user.getId() }}', '{{ event.getEventName() }}','{{ event.getEventPhoto() }}','{{ user.getNom() }}')">
                 <span> 
                   join
                 </span>
@@ -147,7 +170,7 @@
               {% endfor %}
               <p style="color: black; position: absolute; left: {{distinctReactions|length * 20}}px; top: 0; margin-left: 5px;margin-bottom:3px font-size:15px;">(<span id="counter_{{ event.getId() }}">{{ event.getEventReactions()|length }}</span>)</p>
           </div>
-          
+          <hr class="facebook-separator">
             <div class="post-interactions">
                 <button>
                     {% set hasLiked = false %}
@@ -191,11 +214,8 @@
  
             </div>
             <div class="container p-0 comment-form" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease;">
-                <form action="{{ path('add_comment', {'id': event.getId()}) }}" method="post" class="d-flex mb-4">
-                  <div class="InputContainer">
-                    <input placeholder="Search.." id="input" class="input" name="comment_text" type="text">
-                  </div>
-                </form>
+                <div style="max-height: 200px; overflow-y: scroll; overflow-x: hidden; scrollbar-width: none; /* Hide the scrollbar in Firefox */
+                -ms-overflow-style: none;">
                 {% for comment in event.getEventComments() %}
                 <div class="comment mt-3">
                     <div class="row">
@@ -221,25 +241,139 @@
                 <hr class="mt-1"> 
               
                {% endfor %}
+              </div>
+               <form action="{{ path('add_comment', {'id': event.getId()}) }}" method="post" class="d-flex mb-4">
+                <div class="InputContainer">
+                  <input required placeholder="Search.." id="input" class="input" name="comment_text" type="text">
+                </div>
+              </form>
             </div>
         </div>
       
         {% endfor %}
     </div>
-    <div id="chatContainer" class="col-3" > 
+    <div id="chatContainer" class="col-3 gap-4 layout-feed" > 
+      <h2 class="text-center mt-3 mb-3">Chat Rooms</h2>
       {% for event in events %}
       {% if user in event.getParticipants() %}
-      <div id="chat_{{ event.getId() }}" class="row">
-        <div id="chat{{event.getId()}}" class="contqiner" ></div>
-        <input id="send{{event.getId()}}"  type="text" >
-        <button type="button" class="sendBtn" data-send-id="{{event.getId()}}">{{event.getId()}}</button>
+    <!-- 
+    
+   
+    <div id="chat_{{ event.getId() }}" class="row">
+        <div id="chat{{event.getId()}}" class="container" ></div>
+        <div class="messageBox" >
+        <div class="fileUploadWrapper">
+          <label for="file">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 337 337">
+              <circle
+                stroke-width="20"
+                stroke="#6c6c6c"
+                fill="none"
+                r="158.5"
+                cy="168.5"
+                cx="168.5"
+              ></circle>
+              <path
+                stroke-linecap="round"
+                stroke-width="25"
+                stroke="#6c6c6c"
+                d="M167.759 79V259"
+              ></path>
+              <path
+                stroke-linecap="round"
+                stroke-width="25"
+                stroke="#6c6c6c"
+                d="M79 167.138H259"
+              ></path>
+            </svg>
+            <span class="tooltip">Add an image</span>
+          </label>
+          <input type="file" id="file" name="file" />
+        </div>
+        <input required="" placeholder="Message..." type="text" class="messageInput" id="send{{event.getId()}}" />
+        <button id="sendButton" class="sendBtn" data-send-id="{{event.getId()}}">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 664 663">
+            <path
+              fill="none"
+              d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
+            ></path>
+            <path
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke-width="33.67"
+              stroke="#6c6c6c"
+              d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
+            ></path>
+          </svg>
+        </button>
+      </div> 
+     
+    </div>-->
+      <div id="chat_{{ event.getId() }}" class="chat-wrapper">
+        <header class="chat-header">
+            <h2>{{ event.getEventName()}}</h2>
+            <span class="status online" onclick="collapseChat(this)" style="cursor: pointer;" ><img src="{{ asset('assets/collapse.png') }}" style="cursor: pointer;" width="25" alt=""></span>
+          </header>
+        <div class="chat-window">
+          <main class="chat-history" id="chat{{event.getId()}}">
+           
+          </main>
+          <form class="chat-input-form" id="chatForm">
+            <div class="messageBox" >
+              <div class="fileUploadWrapper">
+                <label for="file">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 337 337">
+                    <circle
+                      stroke-width="20"
+                      stroke="#6c6c6c"
+                      fill="none"
+                      r="158.5"
+                      cy="168.5"
+                      cx="168.5"
+                    ></circle>
+                    <path
+                      stroke-linecap="round"
+                      stroke-width="25"
+                      stroke="#6c6c6c"
+                      d="M167.759 79V259"
+                    ></path>
+                    <path
+                      stroke-linecap="round"
+                      stroke-width="25"
+                      stroke="#6c6c6c"
+                      d="M79 167.138H259"
+                    ></path>
+                  </svg>
+                  <span class="tooltip">Add an image</span>
+                </label>
+                <input type="file" id="file" name="file" />
+              </div>
+              <input required="" placeholder="Message..." type="text" class="messageInput" id="send{{event.getId()}}" />
+              <button id="sendButton" class="sendBtn" data-send-id="{{event.getId()}}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 664 663">
+                  <path
+                    fill="none"
+                    d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
+                  ></path>
+                  <path
+                    stroke-linejoin="round"
+                    stroke-linecap="round"
+                    stroke-width="33.67"
+                    stroke="#6c6c6c"
+                    d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
       {% endif %}
        {% endfor %} 
     </div>
 </div>
     <script src="{{asset('js/share.js')}}"></script>
-    <script src="{{asset('js/feed.js')}}"></script>
+   
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v11.0" nonce="C8UzOqqF"></script>
        <script>
         // Add event listeners to toggle comment form visibility
@@ -261,8 +395,8 @@
     });
 
     function addMessage(name, message, chatId) {
-        const messageHTML = "<div class='message'><strong>" + name + ":</strong> " + message + "</div>";
-        document.getElementById(`chat${chatId}`).innerHTML += messageHTML;
+        const messageHTML = "<div class='message self-start'><strong>" + name + ":</strong> " + message + "</div>";
+        document.getElementById(`chat${chatId}`).insertAdjacentHTML("afterbegin", messageHTML);
     }
 
     socket.addEventListener("message", function(e) {
@@ -282,21 +416,20 @@
             chatId: chatId,
             senderName: "{{ user.getNom() }}" 
         };
-        document.getElementById(`chat${chatId}`).innerHTML += message.message
+        document.getElementById(`chat${chatId}`).insertAdjacentHTML("afterbegin","<div class='message self-end'>" + message.message + "</div>")
         socket.send(JSON.stringify(message));
         messageInput.value = ''; 
     }
     
     document.querySelectorAll(".sendBtn").forEach(button => {
         button.addEventListener("click", function(e) {
-            const sender = e.target.dataset.sendId;
-            
+            const sender = this.dataset.sendId;
+            console.log("Sender:", sender);
             sendMessage(sender);
         });
     });
 </script>
-
-
+ <script src="{{asset('js/feed.js')}}"></script>
 
 
 {% endblock %}

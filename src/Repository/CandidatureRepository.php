@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Candidature;
+use App\Entity\Offre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,7 +21,28 @@ class CandidatureRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Candidature::class);
     }
+    public function findByOffre(Offre $offre)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.offre= :offre')
+            ->setParameter('offre', $offre)
+            ->getQuery()
+            ->getResult();
+    }
 
+    public function getStatistiquesCandidaturesByOffre($offreId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT c.user as etudiant, COUNT(c) as nbCandidatures
+            FROM App\Entity\Candidature c
+            WHERE c.offre = :offreId
+            GROUP BY c.user'
+        )->setParameter('offreId', $offreId);
+
+        return $query->getResult();
+    }
 //    /**
 //     * @return Candidature[] Returns an array of Candidature objects
 //     */

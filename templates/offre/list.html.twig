@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les Offres Disponibles {% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('public/maram.css/styles.css') }}">
+{% endblock %}
+{% block body %}
+    <h1 class="text-center font-weight-bold text-color-9F1C00 mt-4 mb-4">Les Offres Disponibles</h1>
+
+     <form id="search-form" action="{{ path('search_offres') }}" method="post">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control rounded-pill" id="search-term" name="search" placeholder="Rechercher par titre ou description">
+            </div>
+        </form>
+
+    <div id="search-results">
+        {% if offres is not empty %}
+            <div class="row">
+                {% for offre in offres %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title rounded-pill bg-primary text-white p-2 text-center">{{ offre.titre }}</h5>
+                        <p class="card-text rounded-pill bg-light p-2 text-center">{{ offre.description }}</p>
+                        <p class="card-text rounded-pill bg-light p-2 text-center">Compétences: {{ offre.competences }}</p>
+                        <p class="card-text rounded-pill bg-light p-2 text-center">Nbr: {{ offre.nbr }}</p>
+                        <p class="card-text rounded-pill bg-light p-2 text-center">Date: {{ offre.date ? offre.date|date('Y-m-d') : '' }}</p>
+                        <div class="d-flex justify-content-center">
+                        <a href="{{ path('app_candidature_new', {'offre_id': offre.id}) }}" class="btn btn-outline-primary rounded-pill ">Ajouter Candidature</a>
+                    </div>
+                    </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucun résultat trouvé.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function search() {
+            let searchTerm = document.getElementById('search-term').value.toUpperCase();
+            let cards = document.querySelectorAll('#search-results .card');
+            cards.forEach(card => {
+                let title = card.querySelector('.card-title').textContent.toUpperCase();
+                let description = card.querySelector('.card-text').textContent.toUpperCase();
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        document.getElementById('search-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            search();
+        });
+        document.getElementById('search-term').addEventListener('input', search);
+    </script> 
+
+{% endblock %}

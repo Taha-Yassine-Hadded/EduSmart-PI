@@ -1,0 +1,108 @@
+/* Style général */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+.text-color-9F1C00 {
+    color: #9F1C00;
+}
+
+/* Style du tableau */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+/* Style des boutons */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-bottom: 10px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn.btn-outline-primary {
+    background-color: transparent;
+    color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.btn.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn.btn-outline-secondary {
+    background-color: transparent;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.btn.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn.btn-outline-danger {
+    background-color: transparent;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.btn.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+
+.progress-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #f1f1f1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-circle span {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    z-index: 1;
+}
+
+.progress-circle .progress-circle-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #007bff;
+    clip-path: circle(50% at 50% 50%);
+    transform: rotate(90deg);
+    transform-origin: center;
+}
+
+[data-percentage='100'] .progress-circle-inner {
+    clip-path: circle(0% at 50% 50%);
+}
+
