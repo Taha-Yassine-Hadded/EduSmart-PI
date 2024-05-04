@@ -1,0 +1,331 @@
+.drawer {
+    position: fixed;
+    top: 30px;
+    left: -500px;
+    width: 300px;
+    height: 100%;
+    background-color: #fcfcfc;
+    transition: left 0.3s ease;
+}
+
+.drawer.open {
+    left: 0;
+    top: 117px;
+}
+
+.drawer.open .navbar {
+    display: block;
+}
+.background-image {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+
+.navbarr ul {
+    list-style-type: none;
+    padding: 0;
+    font-family: 'Tauri', sans-serif;
+}
+
+.navbarr ul li {
+    padding-top: 30px;
+    padding-left: 20px;
+    cursor: pointer;
+    font-family: 'Tauri', sans-serif;
+}
+
+/* Style pour le texte de la navbar */
+.navbarr a {
+    color: #070000; /* Couleur du texte */
+    font-weight: normal; /* Poids de la police */
+    text-decoration: none; /* Suppression du soulignement par défaut */
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;/* Position relative pour les pseudo-éléments */
+    margin-right: 150px;
+    font-family: 'Tauri', sans-serif;
+
+}
+.navbarr img {
+    padding-top: 15px;
+}
+
+
+/* Style pour le pseudo-élément avant au survol */
+.navbarr a:hover::before,
+    /* Style pour le pseudo-élément après au survol */
+.navbarr a:hover::after {
+    opacity: 1; /* Opacité à 1 au survol */
+    height: 40px;
+    width: 200px;
+    padding-left: 50px;
+    background-color: #961d1d; /* Couleur du fond */
+
+}
+
+/* Style pour le pseudo-élément avant */
+.navbarr a::before {
+    content: ''; /* Contenu vide */
+    position: absolute; /* Position absolue */
+    top: 0; /* Position à partir du haut */
+    left: 0; /* Position à partir de la gauche */
+    width: 100%; /* Largeur à 100% */
+    height: 100%; /* Hauteur à 100% */
+    opacity: 0; /* Opacité initiale à 0 */
+    transition: opacity 0.3s ease; /* Transition de l'opacité */
+    z-index: -1; /* Pour placer le pseudo-élément en arrière du texte */
+    font-family: 'Tauri', sans-serif;
+}
+
+/* Style pour le pseudo-élément après */
+.navbarr a::after {
+    content: ''; /* Contenu vide */
+    position: absolute; /* Position absolue */
+    top: 0; /* Position à partir du haut */
+    left: 2px; /* Position à partir de la gauche */
+    width: calc(100% - 40px); /* Largeur égale à la largeur du texte - marge */
+    height: 100%; /* Hauteur à 100% */
+    background-color: #961d1d; /* Couleur du fond */
+    opacity: 0; /* Opacité initiale à 0 */
+    transition: opacity 0.3s ease; /* Transition de l'opacité */
+    z-index: -1; /* Pour placer le pseudo-élément en arrière du texte */
+    font-family: 'Tauri', sans-serif;
+    border-radius: 10px;
+}
+
+/* Style pour le texte de la navbar au survol */
+.navbarr a:hover {
+    color: #ffffff; /* Couleur du texte au survol */
+    font-weight: bold; /* Texte en gras au survol */
+}
+
+/* Style pour le conteneur principal */
+.main-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 50px; /* Pour décaler le contenu en dessous du drawer */
+}
+
+/* Style pour les conteneurs de tâches */
+.list-container {
+    width: 380px; /* Réduire la largeur des listes */
+    height: 400px;
+    padding: 5px; /* Réduire le rembourrage à l'intérieur des listes */
+    margin-right: 5px; /* Réduire la marge entre les listes */
+    background-color: rgba(252, 252, 252, 0.8);
+    border: 2px solid #a11919;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    transition: margin-left 0.5s ease;
+}
+
+
+.list-container.compact {
+    margin-left: 250px; /* Ajustez la valeur selon l'espace que vous souhaitez */
+    transition: margin-left 0.7s ease; /* Ajoutez une transition pour une animation fluide */
+}
+
+.list-header {
+    position: sticky; /* Pour fixer le titre en haut */
+    top: 0; /* Pour le fixer au haut */
+    margin-left: 129px;
+    background-color: rgba(255, 255, 255, 0); /* Arrière-plan blanc pour le titre */
+    z-index: 1; /* Pour s'assurer que le titre est au-dessus de la barre de défilement */
+}
+
+.task-list {
+    overflow-y: auto; /* Pour activer la barre de défilement verticale uniquement pour la liste des tâches */
+    height: calc(100% - 40px); /* Hauteur moins la hauteur du titre */
+}
+
+/* Style pour les titres des tâches */
+.list-container h2 {
+    margin-bottom: 10px;
+    padding-top: 10px;
+    font-family: 'Tauri', sans-serif;
+    padding-left: 20px;
+}
+.draggable-item {
+    background-color: #ffffff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #961d1d;
+    border-radius: 5px;
+    cursor: grab;
+}
+
+.draggable-item:hover {
+    background-color: #ffffff;
+}
+
+
+/* Style pour le bouton d'ouverture du drawer */
+.open-drawer {
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    cursor: pointer;
+}
+
+.open-drawer img {
+    width: 30px;
+    height: 30px;
+}
+/* Style pour le champ de texte */
+.textfield {
+    width: 80%; /* Largeur du champ de texte */
+    padding: 5px; /* Rembourrage intérieur */
+    margin-bottom: 10px; /* Marge en bas */
+    border: 1px solid #ccc; /* Bordure */
+    border-radius: 3px; /* Bordure arrondie */
+    box-sizing: border-box; /* Inclure la bordure dans la largeur et la hauteur */
+}
+
+/* Style pour le bouton "Enregistrer" */
+.save-button {
+    background-color: #ab2a2a; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    padding: 10px 20px; /* Rembourrage intérieur */
+    border: none; /* Pas de bordure */
+    border-radius: 3px; /* Bordure arrondie */
+    cursor: pointer; /* Curseur pointeur */
+}
+.close-icon {
+    position: absolute;
+    top: 10px; /* Ajustez cette valeur selon votre mise en page */
+    right: 10px; /* Ajustez cette valeur selon votre mise en page */
+    cursor: pointer;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrer les éléments horizontalement */
+}
+
+.delete-image, .add-image {
+    margin-bottom: 10px; /* Espacement entre les deux images */
+}
+
+/* Style pour le champ de texte */
+.textfield {
+    font-family: 'Tauri', sans-serif;
+    width: 80%; /* Largeur du champ de texte */
+    padding: 5px; /* Rembourrage intérieur */
+    margin-bottom: 10px; /* Marge en bas */
+    border: 1px solid #ccc; /* Bordure */
+    border-radius: 3px; /* Bordure arrondie */
+    box-sizing: border-box; /* Inclure la bordure dans la largeur et la hauteur */
+}
+
+/* Style pour le bouton "Enregistrer" */
+.save-button {
+    background-color: #a11919; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    padding: 10px 20px; /* Rembourrage intérieur */
+    border: none; /* Pas de bordure */
+    border-radius: 3px; /* Bordure arrondie */
+    cursor: pointer; /* Curseur pointeur */
+    font-family: 'Tauri', sans-serif;
+
+}
+
+.alert-message {
+    padding-bottom: 20px;
+    width: 510px;
+    height: 50px;
+    font-family: 'Tauri', sans-serif;
+    background-color: #f2f2f2; /* Couleur de fond */
+    border: 1px solid #a82020; /* Bordure */
+    border-radius: 5px; /* Bordure arrondie */
+    position: fixed; /* Fixe la position */
+    top: 10px; /* Positionne le message en haut */
+    left: 50%; /* Centre le message horizontalement */
+    transform: translateX(-50%); /* Centre le message horizontalement */
+    z-index: 9999; /* Assure que le message est au-dessus de tout */
+    animation: slideIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 4.5s forwards;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+
+.alert-message.show {
+    opacity: 1;
+}
+
+.alert-message img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+
+}
+
+.alert-text {
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+.scroll-container-wrapper {
+    display: flex; /* Utiliser Flexbox pour aligner les éléments */
+}
+
+.horizontal-scroll-container {
+    flex: 1; /* Faites en sorte que le conteneur de défilement occupe tout l'espace disponible */
+    overflow-x: auto; /* Autorisez le défilement horizontal */
+    white-space: nowrap; /* Empêchez le saut de ligne */
+    margin-right: 10px; /* Ajoutez un espacement entre le conteneur de défilement et le bouton */
+}
+
+.scroll-content {
+    display: inline-block; /* Permettez le défilement horizontal */
+}
+
+.item {
+    display: inline-block; /* Alignez les éléments sur une ligne */
+    width: 150px; /* Fixez la largeur de chaque élément */
+    height: 100px; /* Ajoutez une hauteur pour les éléments */
+    background-color: #ccc; /* Ajoutez une couleur de fond pour les éléments */
+    margin-right: 10px; /* Ajoutez un espacement entre les éléments */
+}
+
+.import-button button {
+    background-color: #a11919; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    padding: 5px 30px; /* Rembourrage intérieur */
+    border: none; /* Pas de bordure */
+    border-radius: 3px; /* Bordure arrondie */
+    cursor: pointer; /* Curseur pointeur */
+    font-family: 'Tauri', sans-serif;
+
+}
+
+
+
+
+

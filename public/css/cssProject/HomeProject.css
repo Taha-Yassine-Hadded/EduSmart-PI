@@ -1,0 +1,113 @@
+.parent-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.center-container {
+    width: 80%;
+    max-width: 800px;
+    background-color: #f2f2f2;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid #ddd; /* Ajouter une bordure */
+}
+
+.fixed-elements {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.icon {
+    cursor: pointer;
+    width: 25px;
+    height: auto;
+}
+
+.center-container select {
+    width: 220px;
+    padding: 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 5px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #f2f2f2;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 12l-7-7 1.5-1.5L10 9 15.5 3 17 4.5z" fill="%23555555"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+    background-size: 20px;
+    font-family: 'Tauri', sans-serif;
+    line-height: 1.8;
+    border: 1px solid #ccc; /* Ajouter une bordure */
+    transition: border-color 0.3s ease; /* Ajouter une transition */
+}
+
+.center-container select:hover {
+    background-color: #e0e0e0;
+    border-color: #999; /* Changer la couleur de la bordure au survol */
+}
+
+.project-container {
+    background-color: #EEC4C4;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 2px solid #ddd;
+    border-color:rgb(185, 3, 3) ;
+    margin-right: 20px;
+}
+
+.scroll-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Animation CSS pour les éléments */
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.icon:hover {
+    animation: rotate 1s infinite linear;
+}
+
+
+/* Typographie Créative */
+.project-container p {
+    font-family: 'Tauri', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: #000000;
+}
+
+/* Effets de Transparence */
+.fixed-elements {
+    background-color: rgb(185, 3, 3);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Dégradés */
+.parent-container {
+    background: whitesmoke;
+}
+
+/* Effets de Survol Avancés */
+.center-container select:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+    padding: 20px;
+}

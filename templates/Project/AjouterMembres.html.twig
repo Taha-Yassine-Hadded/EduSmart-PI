@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Tauri&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/cssProject/AjouterMembre.css">
+    <title>Ajouter un membre</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="member-form">
+        <h2>Ajouter un membre</h2>
+        <div class="form-group">
+            <input type="text" id="email" name="email" placeholder="Adresse mail">
+        </div>
+        <button id="addMemberBtn">Ajouter</button>
+    </div>
+
+    <div class="members-list">
+        <h2>Liste des membres</h2>
+        <ul id="membersUl">
+            <li>
+                <!-- Liste des membres affichée ici -->
+
+            </li>
+        </ul>
+    </div>
+
+    <button id="finishBtn">Terminer</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#addMemberBtn').click(function() {
+            var email = $('#email').val();
+
+            // Envoie de la requête AJAX au contrôleur
+            $.ajax({
+                url: "{{ path('ajouter_membre') }}",
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    email: email
+                },
+                success: function(response) {
+                    if (response.exists) {
+                        $('#membersUl').append('<li>' + response.email + '</li>');
+                    } else {
+                        alert("L'email n'existe pas !");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert("Une erreur s'est produite lors de l'ajout du membre.");
+                }
+            });
+        });
+
+        $('#finishBtn').click(function() {
+            window.location.href = "{{ path('home_teacher') }}";
+        });});
+</script>
+
+
+</body>
+</html>
