@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement réussi !{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body p-5">
+                        <h1 class="card-title text-center mb-4">Félicitations !</h1>
+                        <p class="text-center">Votre paiement a été effectué avec succès. Nous sommes ravis de vous accueillir parmi nous.</p>
+                        <div class="text-center">
+                            <a href="{{ path('app_activites_esprit') }}" class="btn btn-primary">Retour </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

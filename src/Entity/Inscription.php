@@ -29,11 +29,17 @@ class Inscription
     #[ORM\Column(length: 255)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $num_tel = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
+
+    
+
+    
+
 
     public function getId(): ?int
     {
@@ -122,5 +128,9 @@ class Inscription
         $this->email = $email;
 
         return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->prenom . ' ' . $this->nom;
     }
 }

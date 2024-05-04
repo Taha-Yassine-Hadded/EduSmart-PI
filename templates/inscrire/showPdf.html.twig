@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Reçu de pré-inscription</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            margin: 0 auto;
+            display: block;
+            width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .quote {
+            margin-top: 30px;
+            font-style: italic;
+            text-align: center;
+            color: #555;
+        }
+
+        .insurance-name {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 style="text-align: center;">Reçu de pré-inscription</h2>
+       
+        <p>Cher client,</p>
+
+        <p>
+            Vous trouverez ci-dessous les détails de votre pré-inscription :
+        </p>
+
+        <table>
+            <tr>
+                <th>Nom</th>
+                <td>{{ nom }}</td>
+            </tr>
+            <tr>
+                <th>Prénom</th>
+                <td>{{ prenom }}</td>
+            </tr>
+            <tr>
+                <th>Adresse e-mail</th>
+                <td>{{ email }}</td>
+            </tr>
+            <tr>
+                <th>Numéro de téléphone</th>
+                <td>{{ num_tel }}</td>
+            </tr>
+        </table>
+
+        <p class="quote">Merci pour votre pré-inscription !</p>
+
+        <p class="insurance-name">Votre organisation</p>
+
+        <p>Merci pour votre confiance.</p>
+    </div>
+</body>
+</html>
