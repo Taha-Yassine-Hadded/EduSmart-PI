@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Tauri&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-..." crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/cssProject/ModifierProjet.css">
+    <title>Modifier Projet</title>
+</head>
+<body>
+<div class="success-message" id="success-message" style="display: none;">
+    <img class="success-icon" src="/images/Project/checked.png" alt="Success icon">
+    <span id="success-text"></span>
+</div>
+
+<div class="red-container">
+    <h2>Données du projet :</h2>
+    <div class="project-details">
+        <p>
+            <img class="icon1" src="/images/Project/888_edit.jpg" alt="Edit icon" onclick="toggleForm('form1')"> <strong>Nom du projet :</strong> {{ project.nom }}
+        <div id="form1" class="form-container">
+            <input type="text" id="new-nom" placeholder="Nouveau nom du projet">
+            <button onclick="updateData('nom')">Confirmer</button>
+        </div>
+        </p>
+        <p>
+            <img class="icon2" src="/images/Project/888_edit.jpg" alt="Edit icon" onclick="toggleForm('form2')"> <strong>Description du projet :</strong> {{ project.description }}
+        <div id="form2" class="form-container">
+            <input type="text" id="new-description" placeholder="Nouvelle description du projet">
+            <button onclick="updateData('description')">Confirmer</button>
+        </div>
+        </p>
+        <p>
+            <img class="icon3" src="/images/Project/888_edit.jpg" alt="Edit icon" onclick="toggleForm('form3')"> <strong>Classe :</strong> {{ project.classe }}
+        <div id="form3" class="form-container">
+            <input type="text" id="new-classe" placeholder="Nouvelle classe">
+            <button onclick="updateData('classe')">Confirmer</button>
+        </div>
+        </p>
+        <p>
+            <img class="icon4" src="/images/Project/888_edit.jpg" alt="Edit icon" onclick="toggleForm('form4')"> <strong>Matière :</strong> {{ project.matiere }}
+        <div id="form4" class="form-container">
+            <input type="text" id="new-matiere" placeholder="Nouvelle matière">
+            <button onclick="updateData('matiere')">Confirmer</button>
+        </div>
+            <img class="icon5" src="/images/Project/group.png" alt="Edit icon" onclick="getProjectMembers('{{ id }}')"> <strong>Gérer les membres <br> </strong>
+        <br>
+        </p>
+
+        <div id="members-container"></div>
+
+
+    </div>
+</div>
+
+<script>
+    function toggleForm(formId) {
+        var form = document.getElementById(formId);
+        form.classList.toggle('show');
+    }
+
+    function hideForm(formId) {
+        var form = document.getElementById(formId);
+        form.classList.remove('show');
+    }
+    function updateData(type) {
+        var id = "{{ id }}";
+        var newValue = document.getElementById("new-" + type).value;
+
+        var data = {
+            id: id,
+            type: type,
+            newValue: newValue
+        };
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/update-project-data", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Hide all forms
+                    hideAllForms();
+
+                    // Show success message
+                    var successMessage = document.getElementById("success-message");
+                    successMessage.style.display = "block";
+
+                    // Optional: Display success text
+                    document.getElementById("success-text").innerText = "Projet mis à jour avec succès.";
+
+                    // Hide the message after 3 seconds
+                    setTimeout(function() {
+                        successMessage.style.display = "none";
+                    }, 9000);
+
+                    // Optionnel : Rafraîchir la page après la mise à jour
+                    location.reload();
+                } else {
+                    console.error(xhr.statusText);
+                }
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    }
+
+    function hideAllForms() {
+        var forms = document.querySelectorAll('.form-container');
+        forms.forEach(function(form) {
+            form.classList.remove('show');
+        });
+    }
+    function getProjectMembers(projectId) {
+        var blurBackground = document.createElement("div");
+        blurBackground.classList.add("blur-background");
+
+        var membersContainer = document.createElement("div");
+        membersContainer.classList.add("members-container");
+        blurBackground.appendChild(membersContainer);
+
+        document.body.appendChild(blurBackground); // Ajoutez le fond flou à la page
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/get-project-members/" + projectId, true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var members = JSON.parse(xhr.responseText);
+                    var membersContainer = document.querySelector(".members-container");
+                    if (membersContainer) {
+                        members.forEach(function(member) {
+                            var memberElement = document.createElement("div");
+                            memberElement.id = "member_" + member.id;
+
+                            // Créez l'image de suppression
+                            var deleteImage = document.createElement("img");
+                            deleteImage.src = "/images/Project/delete.png"; // Chemin de l'image de suppression
+                            deleteImage.classList.add("icon-image");
+                            deleteImage.addEventListener("click", function() {
+                                var memberId = member.id; // Récupérez l'ID du membre à partir des données du membre
+                                deleteMember(memberId); // Appelez la fonction pour supprimer le membre
+                            });
+                            memberElement.appendChild(deleteImage);
+
+
+                            // Créez le texte pour les adresses e-mail des membres
+                            var emailText = document.createElement("span");
+                            emailText.textContent = member.emails.join(", ");
+                            memberElement.appendChild(emailText);
+
+                            // Ajoutez l'élément du membre à la liste
+                            membersContainer.appendChild(memberElement);
+                        });
+
+                        var addMemberText = document.createElement("p");
+                        addMemberText.textContent = "Voulez-vous ajouter un nouveau membre ?";
+                        addMemberText.style.textDecoration = "underline";
+                        addMemberText.style.marginTop = "20px";
+                        addMemberText.style.fontFamily = "'Tauri', serif";
+                        addMemberText.style.color = "#9F1C00";
+                        addMemberText.style.cursor = "pointer";
+                        membersContainer.appendChild(addMemberText); // Ajout du texte dans le conteneur des membres
+
+                        var addMemberForm = document.createElement("form");
+                        addMemberForm.style.display = "none";
+
+                        var emailInput = document.createElement("input");
+                        emailInput.type = "text"; // Correction : définir le type de champ d'entrée
+                        emailInput.id = "new-member-email"; // Ajout de l'ID pour le champ d'entrée
+                        emailInput.placeholder = "Adresse e-mail du nouveau membre";
+                        emailInput.style.marginRight = "10px";
+                        emailInput.style.width = "80%";
+                        emailInput.style.padding = "10px";
+                        emailInput.style.marginRight = "10px";
+                        emailInput.style.borderRadius = "5px";
+                        emailInput.style.border = "1px solid #ccc";
+                        addMemberForm.appendChild(emailInput);
+
+                        var addButton = document.createElement("button");
+                        addButton.textContent = "Ajouter";
+                        addButton.style.backgroundColor = "#9F1C00";
+                        addButton.style.color = "white";
+                        addButton.style.padding = "10px 20px";
+                        addButton.style.border = "none";
+                        addButton.style.borderRadius = "5px";
+                        addButton.style.cursor = "pointer";
+                        addButton.style.marginTop = "20px";
+                        addButton.style.marginBottom = "10px";
+                        addButton.style.fontFamily = "'Tauri', serif";
+                        addButton.style.transition = "background-color 0.3s ease";
+                        addButton.addEventListener("click", addProjectMember); // Ajoutez un gestionnaire d'événements au bouton Ajouter
+                        addMemberForm.appendChild(addButton);
+
+                        addMemberText.onclick = function() {
+                            if (addMemberForm.style.display === "none") {
+                                addMemberForm.style.display = "block";
+                            } else {
+                                addMemberForm.style.display = "none";
+                            }
+                        };
+                        membersContainer.appendChild(addMemberForm);
+
+                        var finishButton = document.createElement("button");
+                        finishButton.textContent = "Terminer";
+                        finishButton.style.backgroundColor = "#9F1C00";
+                        finishButton.style.color = "white";
+                        finishButton.style.padding = "10px 20px";
+                        finishButton.style.border = "none";
+                        finishButton.style.borderRadius = "5px";
+                        finishButton.style.cursor = "pointer";
+                        finishButton.style.marginTop = "20px";
+                        finishButton.style.marginBottom = "10px";
+                        finishButton.style.fontFamily = "'Tauri', serif";
+                        finishButton.style.transition = "background-color 0.3s ease";
+                        finishButton.onclick = function() {
+                            blurBackground.remove();
+                        };
+                        membersContainer.appendChild(finishButton);
+
+                    } else {
+                        console.error("Element '.members-container' non trouvé dans le DOM.");
+                    }
+                } else {
+                    console.error("Erreur de requête AJAX: " + xhr.status);
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function addProjectMember() {
+        var projectId = "{{ project.id }}"; // Récupérez l'ID du projet depuis la variable Twig
+        var email = document.getElementById("new-member-email").value; // Correction ici : utilisez le bon ID
+
+        // Envoie de la requête AJAX pour ajouter le membre
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/add-project-member/" + projectId, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        // Affichez un message de succès ou effectuez toute autre action nécessaire
+                        alert(response.message);
+                        // Vous pouvez également mettre à jour l'affichage des membres si nécessaire
+                    } else {
+                        // Affichez un message d'erreur si nécessaire
+                        alert(response.error);
+                    }
+                } else {
+                    console.error(xhr.statusText);
+                    alert("Une erreur s'est produite lors de l'ajout du membre.");
+                }
+            }
+        };
+        xhr.send(JSON.stringify({ email: email }));
+    }
+    function deleteMember(memberId) {
+        if (confirm("Êtes-vous sûr de vouloir supprimer ce membre ?")) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "/delete-project-member/" + memberId, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Suppression réussie, supprimez visuellement l'élément du conteneur des membres
+                        var memberElement = document.getElementById("member_" + memberId); // ID unique de l'élément du membre
+                        if (memberElement) {
+                            memberElement.remove(); // Supprimez l'élément du DOM
+                        }
+                        alert("Membre supprimé avec succès.");
+                    } else {
+                        console.error(xhr.statusText);
+                        alert("Une erreur s'est produite lors de la suppression du membre.");
+                    }
+                }
+            };
+            xhr.send();
+        }
+    }
+
+
+</script>
+
+</body>
+</html>

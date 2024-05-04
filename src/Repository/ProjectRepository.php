@@ -20,6 +20,24 @@ class ProjectRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Project::class);
     }
+    public function findAllClasses(): array
+    {
+        $result = $this->createQueryBuilder('p')
+            ->select('p.classe') // Sélectionnez uniquement la colonne 'classe'
+            ->distinct(true) // Assurez-vous de sélectionner des classes distinctes
+            ->getQuery()
+            ->getResult();
+
+        // Convertir les résultats en un tableau de chaînes
+        $classes = [];
+        foreach ($result as $row) {
+            $classes[] = $row['classe'];
+        }
+
+        return $classes;
+    }
+
+
 
 //    /**
 //     * @return Project[] Returns an array of Project objects
@@ -29,7 +47,7 @@ class ProjectRepository extends ServiceEntityRepository
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')
 //            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
+//            ->orderBy('p.id', 'ASC')A
 //            ->setMaxResults(10)
 //            ->getQuery()
 //            ->getResult()

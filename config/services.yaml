@@ -5,8 +5,10 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 # config/services.yaml
 parameters:
+    dossier_fichiers: 'C:/Users/raahm/Desktop'
     cours_directory: '%kernel.project_dir%/public/uploads/cours'
     candidature_directory: '%kernel.project_dir%/public/uploads'
+
 
 services:
     # default configuration for services in *this* file
@@ -44,3 +46,7 @@ services:
     App\Security\AccessDeniedListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 20 }
+    Symfony\Component\Mailer\Mailer:
+        public: true
+        arguments:
+            $transport: !service { class: Symfony\Component\Mailer\Transport\Smtp\SmtpTransport, arguments: [ '%env(MAILER_DSN)%' ] }

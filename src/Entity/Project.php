@@ -15,7 +15,6 @@ class Project
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
@@ -40,6 +39,28 @@ class Project
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: File::class)]
     private Collection $files;
 
+
+    #[ORM\Column(length: 255)]
+    private ?string $classe;
+
+
+    #[ORM\Column(length: 255)]
+    private ?string $matiere;
+
+    // Les getters et setters pour les nouvelles propriétés
+    public function getClasse(): ?string
+    {
+        return $this->classe;
+    }
+
+    public function setClasse(?string $classe): self
+    {
+        $this->classe = $classe;
+
+        return $this;
+    }
+
+
     public function __construct()
     {
         $this->projectMembers = new ArrayCollection();
@@ -52,6 +73,17 @@ class Project
         return $this->id;
     }
 
+    public function getMatiere(): ?string
+    {
+        return $this->matiere;
+    }
+
+    public function setMatiere(?string $matiere): self
+    {
+        $this->matiere = $matiere;
+
+        return $this;
+    }
     public function getNom(): ?string
     {
         return $this->nom;
