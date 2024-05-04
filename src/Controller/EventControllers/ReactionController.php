@@ -11,12 +11,5 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
 class ReactionController extends AbstractController
 {
-    #[Route('/test', name: 'feeds',methods: 'GET')]
-    public function index(): Response
-    {
-       
-              
-         return $this->render('event_controllers/reaction/add.html.twig', [
-        ]);
-    }
+    
 }

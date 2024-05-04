@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+{% extends 'base.html.twig' %}
+{% block title %}Home{% endblock %}
+{% block body %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Tauri&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/cssProject/HomeProject.css">
 
     <title>Home Teacher</title>
-</head>
-<body>
+
 <div class="parent-container">
     <div class="center-container main-container">
         <div class="fixed-elements">
@@ -24,7 +22,7 @@
             </form>
             <div class="space-large"></div>
             <!-- Icône -->
-            <img src="/images/Project/106230_add_icon.png" alt="Ajouter" class="icon" onclick="redirectToAddPage()" width="25" height="25"  >
+            <img src="images/Project/106230_add_icon.png" alt="Ajouter" class="icona" onclick="redirectToAddPage()" width="25" height="25"  >
         </div>
         <div class="scroll-container">
             <ul>
@@ -33,10 +31,10 @@
                         <div class="project-container" data-id="{{ project.id }}"> <!-- Ajout de la classe du conteneur de projet -->
 
                             <a href="/modifier-projet/{{ project.id }}">
-                                <img src="/images/Project/edit.png" alt="Modifier" class="icon" width="25" height="25">
+                                <img src="/images/Project/edit.png" alt="Modifier" class="icona" width="25" height="25">
                             </a>
 
-                            <img src="/images/Project/delete.png" alt="Supprimer" class="icon" width="25" height="25" onclick="onDelete(this)">
+                            <img src="/images/Project/delete.png" alt="Supprimer" class="icona" width="25" height="25" onclick="onDelete(this)">
 
                             <p>Nom : {{ project.nom }}</p> <!-- Afficher le nom du projet -->
                             <p>{{ project.description }}</p> <!-- Afficher la description du projet -->
@@ -83,5 +81,4 @@
     }
 </script>
 
-</body>
-</html>
+{% endblock %}

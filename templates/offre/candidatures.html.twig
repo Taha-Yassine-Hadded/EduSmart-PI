@@ -1,0 +1,19 @@
+{# templates/offre/candidatures.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Candidatures pour l'offre {{ offre.titre }}{% endblock %}
+
+{% block body %}
+    <h1>Candidatures pour l'offre "{{ offre.titre }}"</h1>
+
+    {% if candidatures is not empty %}
+        <ul>
+            {% for candidature in candidatures %}
+                <li>{{ candidature.nom }} - {{ candidature.email }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucune candidature pour cette offre pour le moment.</p>
+    {% endif %}
+{% endblock %}

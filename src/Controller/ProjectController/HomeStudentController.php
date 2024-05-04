@@ -56,6 +56,7 @@ class HomeStudentController extends AbstractController
         $projectNames = $this->projectService->getProjectNamesForUserId($userid);
 
 
+
         return $this->render('/Project/student/HomeStudent.html.twig', [
             'projectNames' => $projectNames,
             'taches' => [], // Initialiser avec une liste vide, car aucune tâche n'est sélectionnée par défaut
@@ -73,8 +74,10 @@ class HomeStudentController extends AbstractController
         $userid = $this->userId;
 
         $taches = $this->tacheService->getTachesByUserIdAndProjectId($userid, $projectId);
+
         $projectNames = $this->projectService->getProjectNamesForUserId($userid);
         $fichiers = $this->fichierService->getFichiersByProjectId($projectId);
+
         $etatEnumValues = EtatEnum::getValidStates();
         foreach ($taches as $tache) {
             $tache->isLate = $tache->getDedline() <= new \DateTime();
@@ -84,6 +87,7 @@ class HomeStudentController extends AbstractController
             'taches' => $taches,
             'etatEnumValues' => $etatEnumValues,
             'fichiers' => $fichiers,
+
 
         ]);
     }
