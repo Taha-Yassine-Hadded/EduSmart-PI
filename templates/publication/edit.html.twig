@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Publication{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0 text-white">Modifier Publication</h5>
+                </div>
+                <div class="card-body">
+                    {{ include('publication/_form.html.twig', {'button_label': 'Update'}) }}
+                    <a href="{{ path('app_publication_index') }}" class="btn btn-secondary mt-3">Back to List</a>
+                    {{ include('publication/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

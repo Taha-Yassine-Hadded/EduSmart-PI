@@ -8,13 +8,39 @@ parameters:
     dossier_fichiers: 'C:/Users/raahm/Desktop'
     cours_directory: '%kernel.project_dir%/public/uploads/cours'
     candidature_directory: '%kernel.project_dir%/public/uploads'
+    STRIPE_SECRETKEY: '%env(STRIPE_SECRETKEY)%'
+    STRIPE_PUBLIC_KEY: 'pk_test_51OoxMpDJtdMxFS8HiWjQlL3RBj0PJBqNHa9zuZPMtWrZgt7Baid3G3qm3vyzd6FV8dXSlpC9uhQyUbGuELQctQmB00ZQWHmbp4'
 
 
 services:
+    # Ajoutez votre contrôleur en tant que service
+    App\Controller\ActivitesController\InscrireController:
+        autowire: true
+        autoconfigure: true
+        public: true
+        arguments:
+            $entityManager: '@doctrine.orm.default_entity_manager'
+        tags: ['controller.service_arguments']
+    
+    # Déclaration du service PdfService
+    App\Service\ActivitesServices\PdfService:
+        autowire: true
+        autoconfigure: true
+
+    
+    App\Service\ActivitesServices\StripeClientFactory:
+        arguments:
+            $apiKey: '%stripe_api_key%' 
+        autowire: true
+        autoconfigure: true
+    # Déclaration du service Stripe\StripeClient
+    Stripe\StripeClient:
+        factory: ['@App\Service\ActivitesServices\StripeClientFactory', 'create']
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    
 
 
     pusher:
