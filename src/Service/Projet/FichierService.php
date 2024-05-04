@@ -4,10 +4,14 @@ namespace App\Service\Projet;
 
 use App\Entity\Fichier;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Connection;
+
+
 
 class FichierService
 {
     private $entityManager;
+
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -44,4 +48,6 @@ class FichierService
         }
         return $fichiers;
     }
+
+
 }

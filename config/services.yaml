@@ -8,8 +8,10 @@ parameters:
     dossier_fichiers: 'C:/Users/raahm/Desktop'
     cours_directory: '%kernel.project_dir%/public/uploads/cours'
     candidature_directory: '%kernel.project_dir%/public/uploads'
+
     STRIPE_SECRETKEY: '%env(STRIPE_SECRETKEY)%'
     STRIPE_PUBLIC_KEY: 'pk_test_51OoxMpDJtdMxFS8HiWjQlL3RBj0PJBqNHa9zuZPMtWrZgt7Baid3G3qm3vyzd6FV8dXSlpC9uhQyUbGuELQctQmB00ZQWHmbp4'
+
 
 
 services:
