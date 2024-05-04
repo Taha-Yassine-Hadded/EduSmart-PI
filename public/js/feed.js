@@ -60,7 +60,7 @@ function addParticipant(button,eventId,userId,eventName,eventPhoto,userName) {
         const newDiv = document.createElement('div');
         newDiv.setAttribute('id', eventId); 
         newDiv.innerHTML = `
-            <div id="event_${ eventId }" class=" d-flex justify-content-around align-items-center flex-row gap-4">
+            <div id="event_${ eventId }" class=" d-flex justify-content-around align-items-center flex-row gap-4 mb-3">
             <div class="d-flex justify-content-center align-items-center gap-1">
             <img src="../uploads/${eventPhoto}" alt="" style="border-radius: 50%;" width="40">
             <p style="margin:0; width: 150px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><b>${eventName}</b></p>
@@ -161,9 +161,9 @@ function addParticipant(button,eventId,userId,eventName,eventPhoto,userName) {
         `;
         eventContainer.appendChild(newDiv);
         chatContainer.innerHTML+=`<div id="chat_${eventId}" class="chat-wrapper">
-        <header class="chat-header">
+        <header onclick="collapseChat(this)" style="cursor: pointer;" class="chat-header">
             <h2>${eventName}</h2>
-            <span class="status online" onclick="collapseChat(this  )"><img src="../assets/collapse.png" width="25" alt=""></span>
+            <span class="status online" ><img src="../uploads/${eventPhoto}" width="25" alt=""></span>
           </header>
         <div class="chat-window">
           <main class="chat-history" id="chat${eventId}">
@@ -263,9 +263,9 @@ function addReaction(eventId,reactionType){
         const counterReaction = document.getElementById(`counter_${eventId}`)
         if(img.getAttribute('src') ===`assets/reactions/${reactionType}.png` )
         {
-            img.setAttribute('src',"assets/reactions/like.png")
+            img.setAttribute('src',"assets/reactions/thumbs-up-stroke-rounded.svg")
             spann.textContent = "like"
-            spann.style.color = '#77A7FF'
+            spann.style.color = '#9B9B9B'
         }
         else{
         if (reactionType === 'like') {
@@ -372,7 +372,7 @@ button.addEventListener("click", clickHandler);
 }
 
 function collapseChat(span) {
-  const commentForm = span.parentElement.nextElementSibling;
+  const commentForm = span.nextElementSibling;
   commentForm.classList.toggle('chat-window--expanded');
 }
 

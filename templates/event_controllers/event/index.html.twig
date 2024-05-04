@@ -15,7 +15,6 @@
             <table class="table table-bordered">
                 <tr>
                     <th>Name</th>
-                    <th>reaction</th>
                     <th>Description</th>
                     <th>Event Date </th>
                     <th width="240px">Action</th>
@@ -24,11 +23,10 @@
                 <tr>
                                       
                     <td>{{ event.getEventName() }}</td>
-                    <div class="fb-share-button" data-href="{{ path('event_show', {'id': event.getId()}) }}" data-layout="button" data-size="large">
                       </div>
                       
                     <td>{{ event.getDescription() }}</td>
-                    <td>date</td>
+                    <td>{{ event.getCreatedAt()|date('Y-m-d') }}}</td>
                     <td>
                         <form method="post" action="{{ path('event_delete', {'id': event.getId()}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
                             <a
