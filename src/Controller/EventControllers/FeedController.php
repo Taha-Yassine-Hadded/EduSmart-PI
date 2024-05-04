@@ -29,12 +29,11 @@ class FeedController extends AbstractController
         }
     }
 
-    #[Route('/feed', name: 'feeds',methods: 'GET')]
+    #[Route('/feed', name: 'feeds',methods: 'GET' )]
     public function index(EventsRepository $eventReporsitory): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        // If the port is not 8000 or 8001, set user to null
         if ($this->userId === null) {
             throw new \RuntimeException('User not defined for this port');
         }

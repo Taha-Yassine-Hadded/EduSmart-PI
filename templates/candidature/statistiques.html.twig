@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques des candidatures{% endblock %}
+
+{% block body %}
+    <h1>Statistiques des candidatures pour l'offre "{{ offre.titre }}"</h1>
+    <ul>
+        {% for statistique in statistiques %}
+            <li>{{ statistique.offre }}: {{ statistique.nbCandidatures }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

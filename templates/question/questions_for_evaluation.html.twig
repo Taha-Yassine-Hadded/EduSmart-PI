@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello QuestionController!{% endblock %}
+
+{% block body %}
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-4">
+                <h1>
+                   <a href="{{ path('app_question_add',{'id': evaluationid})}}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">
+               Ajouter Question
+                <i class="fa fa-arrow-right ms-3"></i>
+                </a>
+                </h1>
+                 {% if questions is not empty %}
+                    {% for a in questions %}
+                        <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="service-item text-center pt-3">
+                                <div class="p-4">
+                                    <i class="fa fa-3x fa-question-circle text-primary mb-4"></i>
+                                    <h6 class="mb-3">{{ a.valeur }}</h6>
+                                     <div class="d-flex justify-content-center mb-4">
+                            <a href="{{ path('app_questionEModifier', {'id': a.id}) }}" class="btn btn-sm btn-primary px-3 me-2" style="border-radius: 30px;">Modifier</a>
+                            <a href="{{ path('app_questionEdelete', {'id': a.id}) }}" class="btn btn-sm btn-primary px-3 me-2" style="border-radius: 30px;">Supprimer</a>
+                            <a href="{{ path('app_option_for_evaluation', {'questionId': a.id}) }}" class="btn btn-sm btn-primary px-3" style="border-radius: 30px;">Option</a>
+                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <p>Aucune question disponible.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
