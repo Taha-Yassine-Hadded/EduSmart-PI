@@ -2,7 +2,7 @@
 
 {% block body %}
 <div style="width: 100%;" class="d-flex justify-content-center align-items-center"> 
-<div class="input1-container">
+<div class="input1-container ">
   <input placeholder="Search something..." class="input1" name="text"  type="text" id="searchInput" onkeyup="handleKeyUp(event)">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <rect fill="white"></rect> <path d="M7.25007 2.38782C8.54878 2.0992 10.1243 2 12 2C13.8757 2 15.4512 2.0992 16.7499 2.38782C18.06 2.67897 19.1488 3.176 19.9864 4.01358C20.824 4.85116 21.321 5.94002 21.6122 7.25007C21.9008 8.54878 22 10.1243 22 12C22 13.8757 21.9008 15.4512 21.6122 16.7499C21.321 18.06 20.824 19.1488 19.9864 19.9864C19.1488 20.824 18.06 21.321 16.7499 21.6122C15.4512 21.9008 13.8757 22 12 22C10.1243 22 8.54878 21.9008 7.25007 21.6122C5.94002 21.321 4.85116 20.824 4.01358 19.9864C3.176 19.1488 2.67897 18.06 2.38782 16.7499C2.0992 15.4512 2 13.8757 2 12C2 10.1243 2.0992 8.54878 2.38782 7.25007C2.67897 5.94002 3.176 4.85116 4.01358 4.01358C4.85116 3.176 5.94002 2.67897 7.25007 2.38782ZM9 11.5C9 10.1193 10.1193 9 11.5 9C12.8807 9 14 10.1193 14 11.5C14 12.8807 12.8807 14 11.5 14C10.1193 14 9 12.8807 9 11.5ZM11.5 7C9.01472 7 7 9.01472 7 11.5C7 13.9853 9.01472 16 11.5 16C12.3805 16 13.202 15.7471 13.8957 15.31L15.2929 16.7071C15.6834 17.0976 16.3166 17.0976 16.7071 16.7071C17.0976 16.3166 17.0976 15.6834 16.7071 15.2929L15.31 13.8957C15.7471 13.202 16 12.3805 16 11.5C16 9.01472 13.9853 7 11.5 7Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
 </div>
@@ -14,7 +14,6 @@
 <div class="container-fluid d-flex justify-content-around align-items-start flex-row">
     <div class="col-3 d-flex justify-content-start align-items-center "  >
         <div id="eventParticipationContainer" class="container d-flex gap-2 flex-column flex-column">
-          <h2 class="text-center mt-3 mb-3">events</h2>
         {% for event in events %}
             {% if user in event.getParticipants() %}
             <div id="event_{{ event.getId() }}" class="d-flex justify-content-around align-items-center flex-row gap-4 mb-3">
@@ -125,7 +124,7 @@
     </div>
     </div>
    <div class="container col-5 d-flex justify-content-start align-items-center flex-column layout-feed" >
-        <h2 class="text-center mt-3 mb-3">Feed</h2>
+       
         {% for event in events %}
         <div id="{{event.getId()}}" class="facebook-post mb-4" >
             <div class="post-header">
@@ -196,8 +195,8 @@
                     <div style="display: inline-block;" id="div_reaction_{{ event.getId }}"  onclick="addLikeReaction('{{ event.getId() }}','like')" style="color: #77A7FF;
                     text-align: center;
                     font-size: 18px;">
-                    <img data-reaction-type="{{ "like"}}" id="mainReaction_{{ event.getId() }}" src="{{ asset('assets/reactions/like.png') }}" alt="like" width="25px">
-                    <p style="display: inline-block;margin-bottom:0; color:#77A7FF;" id="span_{{ event.getId() }}">like</p>
+                    <img data-reaction-type="{{ "like"}}" id="mainReaction_{{ event.getId() }}" src="{{ asset('assets/reactions/thumbs-up-stroke-rounded.svg') }}" alt="like" width="25px">
+                    <p style="display: inline-block;margin-bottom:0; color:#9B9B9B;" id="span_{{ event.getId() }}">like</p>
                   </div>                    
                   {% endif %}
                     <span>
@@ -209,8 +208,16 @@
                         <img onclick="addReaction('{{ event.getId() }}','angry')" src="{{ asset('assets/reactions/angry.png') }}">
                     </span>
                 </button>
-                <button class="toggle-comment-form">comment</button>
-                <button><a class="facebook-btn" href="{{ path('event_show', {'id': event.getId()}) }}">Share</a></button>
+                <button class="toggle-comment-form">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#9b9b9b" fill="none">
+                    <path d="M22 11.5667C22 16.8499 17.5222 21.1334 12 21.1334C11.3507 21.1343 10.7032 21.0742 10.0654 20.9545C9.60633 20.8682 9.37678 20.8251 9.21653 20.8496C9.05627 20.8741 8.82918 20.9948 8.37499 21.2364C7.09014 21.9197 5.59195 22.161 4.15111 21.893C4.69874 21.2194 5.07275 20.4112 5.23778 19.5448C5.33778 19.0148 5.09 18.5 4.71889 18.1231C3.03333 16.4115 2 14.1051 2 11.5667C2 6.28357 6.47778 2 12 2C17.5222 2 22 6.28357 22 11.5667Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                    <path d="M11.9955 12H12.0045M15.991 12H16M8 12H8.00897" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                  <p style="margin:0;color: #9B9B9B;display:inline-block;" >comment</p></button>
+                <button ><svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#9b9b9b" fill="none">
+                  <path d="M20.3927 8.03168L18.6457 6.51461C17.3871 5.42153 16.8937 4.83352 16.2121 5.04139C15.3622 5.30059 15.642 6.93609 15.642 7.48824C14.3206 7.48824 12.9468 7.38661 11.6443 7.59836C7.34453 8.29742 6 11.3566 6 14.6525C7.21697 13.9065 8.43274 13.0746 9.8954 12.7289C11.7212 12.2973 13.7603 12.5032 15.642 12.5032C15.642 13.0554 15.3622 14.6909 16.2121 14.9501C16.9844 15.1856 17.3871 14.5699 18.6457 13.4769L20.3927 11.9598C21.4642 11.0293 22 10.564 22 9.99574C22 9.4275 21.4642 8.96223 20.3927 8.03168Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M10.5676 3C6.70735 3.00694 4.68594 3.10152 3.39411 4.39073C2 5.78202 2 8.02125 2 12.4997C2 16.9782 2 19.2174 3.3941 20.6087C4.78821 22 7.03198 22 11.5195 22C16.0071 22 18.2509 22 19.645 20.6087C20.6156 19.64 20.9104 18.2603 21 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg><a class="facebook-btn" href="{{ path('event_show', {'id': event.getId()}) }}"> <p  style="margin:0;color: #9B9B9B; display:inline-block;"> Share</p></a></button>
  
             </div>
             <div class="container p-0 comment-form" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease;">
@@ -253,7 +260,7 @@
         {% endfor %}
     </div>
     <div id="chatContainer" class="col-3 gap-4 layout-feed" > 
-      <h2 class="text-center mt-3 mb-3">Chat Rooms</h2>
+    
       {% for event in events %}
       {% if user in event.getParticipants() %}
     <!-- 
@@ -310,16 +317,16 @@
      
     </div>-->
       <div id="chat_{{ event.getId() }}" class="chat-wrapper">
-        <header class="chat-header">
+        <header onclick="collapseChat(this)" style="cursor: pointer;" class="chat-header">
             <h2>{{ event.getEventName()}}</h2>
-            <span class="status online" onclick="collapseChat(this)" style="cursor: pointer;" ><img src="{{ asset('assets/collapse.png') }}" style="cursor: pointer;" width="25" alt=""></span>
+            <span class="status online"  style="cursor: pointer;" ><img src="{{ asset('uploads/' ~ event.getEventPhoto()) }}" style="cursor: pointer;" width="25" alt=""></span>
           </header>
         <div class="chat-window">
-          <main class="chat-history" id="chat{{event.getId()}}">
+          <main class="chat-history mt-1" id="chat{{event.getId()}}">
            
           </main>
-          <form class="chat-input-form" id="chatForm">
-            <div class="messageBox" >
+          
+            <div class="messageBox mt-1" >
               <div class="fileUploadWrapper">
                 <label for="file">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 337 337">
@@ -346,10 +353,9 @@
                   </svg>
                   <span class="tooltip">Add an image</span>
                 </label>
-                <input type="file" id="file" name="file" />
               </div>
-              <input required="" placeholder="Message..." type="text" class="messageInput" id="send{{event.getId()}}" />
-              <button id="sendButton" class="sendBtn" data-send-id="{{event.getId()}}">
+              <input  placeholder="Message..." type="text" class="messageInput" id="send{{event.getId()}}" />
+              <button  id="sendButton" class="sendBtn" data-send-id="{{event.getId()}}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 664 663">
                   <path
                     fill="none"
@@ -365,7 +371,7 @@
                 </svg>
               </button>
             </div>
-          </form>
+         
         </div>
       </div>
       {% endif %}
@@ -387,6 +393,8 @@
                 }
             });
         });
+       
+
     </script>
     <script type="text/javascript">
     const socket = new WebSocket("ws://localhost:3001");
