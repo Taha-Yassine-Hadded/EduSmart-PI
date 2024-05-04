@@ -15,7 +15,7 @@ class Tache
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'taches')]
-    #[ORM\Column (name: 'idMember')]
+    #[ORM\JoinColumn(name: 'idMember', referencedColumnName: 'id')]
     private ?ProjectMembers $member = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -94,4 +94,31 @@ class Tache
 
         return $this;
     }
+    public function dedlineToString(): ?string
+    {
+        // Vérifie si la date de délai est définie
+        if ($this->dedline instanceof \DateTimeInterface) {
+            // Formate la date selon le format souhaité (par exemple : 'Y-m-d H:i:s')
+            return $this->dedline->format('Y-m-d H:i:s');
+        }
+
+        return null; // Retourne null si la date de délai n'est pas définie
+    }
+    public function updateDeadline($tacheId, $newDeadline)
+    {
+        $tache = $this->entityManager->getRepository(Tache::class)->find($tacheId);
+
+        if (!$tache) {
+            throw new \Exception('Tâche non trouvée');
+        }
+
+        $newDeadlineDate = new \DateTime($newDeadline);
+        $tache->setDeadline($newDeadlineDate);
+
+        // Enregistrer les modifications dans la base de données
+        $this->entityManager->flush();
+
+        return $tache;
+    }
+
 }

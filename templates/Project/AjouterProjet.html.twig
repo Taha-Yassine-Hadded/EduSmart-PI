@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter Projet</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Tauri&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/cssProject/AjouterProjet.css">
+
+    <style>
+        /* styles.css */
+
+        .custom-alert {
+            background-color: rgba(255, 255, 255, 0.58); /* Rouge */
+            border-color: #6a1a21;
+            color: #070000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            top: 17px; /* Positionner l'alerte en haut */
+            left: 50%; /* Centrer horizontalement */
+            transform: translateX(-50%); /* Centrer horizontalement */
+            font-size: 16px;
+            text-align: center;
+            display: none; /* Cacher l'alerte par défaut */
+            position: fixed; /* Position fixe pour rester en haut même en faisant défiler la page */
+            z-index: 9999; /* Pour être sûr que l'alerte soit au-dessus du reste du contenu */
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+    {{ form_start(form, {'attr': {'class': 'project-form'}}) }}
+    <h2>Ajouter un Projet</h2>
+    <div class="form-group">
+        {{ form_row(form.nom, {'attr': {'placeholder': 'Nom du projet'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(form.classe, {'attr': {'placeholder': 'Classe'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(form.matiere, {'attr': {'placeholder': 'Matière'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(form.description, {'attr': {'placeholder': 'Description'}}) }}
+    </div>
+    <button type="submit">Ajouter</button>
+    {{ form_end(form) }}
+
+    {% if not matiereExists %}
+        <div id="custom-alert" class="custom-alert">
+            <img src="/images/Project/al.gif" style="vertical-align: middle; margin-right: 10px;">
+            <h4 style="display: inline;">La matière spécifiée n'existe pas.</h4>
+        </div>
+    {% endif %}
+</div>
+
+<a href="#" onclick="goBack()">
+    <img src="/images/Project/back-arrow.png" alt="Back" width="30" height="24">
+</a>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+
+    // Afficher l'alerte pendant 3 secondes après le chargement de la page
+    window.onload = function() {
+        var alertDiv = document.getElementById('custom-alert');
+        if (alertDiv) {
+            alertDiv.style.display = 'block';
+            setTimeout(function() {
+                alertDiv.style.display = 'none';
+            }, 3000); // 3 secondes
+        }
+    };
+</script>
+</body>
+</html>

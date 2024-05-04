@@ -34,7 +34,6 @@ class FeedController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        // If the port is not 8000 or 8001, set user to null
         if ($this->userId === null) {
             throw new \RuntimeException('User not defined for this port');
         }

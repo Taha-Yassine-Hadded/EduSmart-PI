@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>eLEARNING - eLearning HTML Template</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Tauri&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #bbb2b2; /* Couleur de fond bleue */
+            margin: 0; /* Supprime les marges par défaut */
+            padding: 0; /* Supprime le rembourrage par défaut */
+        }
+
+        .background-image {
+            position: absolute;
+            top: 360px;
+            right: 400px;
+            height: 50%;
+            font-size: 90px;
+            z-index: -1;
+        }
+
+        h1 {
+            font-family: 'Rowdies', sans-serif;
+            font-size: 40px;
+            color: #070000;
+            margin-top: 60px;
+            margin-left: 450px;
+        }
+
+        .hello {
+            text-align: center;
+            padding: 0 20px;
+            background-color: rgba(255, 255, 255, 0);
+            margin: 20px; /* Ajouter une marge autour du contenu */
+        }
+
+        p {
+            font-size: 19px;
+            line-height: 1.4;
+            color: #413d3d;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            margin-left: 50px;
+            padding: 10px 20px;
+            font-family: 'Rowdies', sans-serif;
+
+        }
+    </style>
+</head>
+
+{% include 'navS.html.twig' %}
+
+<body>
+<img src="/images/Project/Capture8-.png" alt="Background Image" class="background-image">
+<div>
+    <h1>Bienvenue sur Esprit Edu-smart !</h1>
+    <div class="hello">
+        <p>
+            Votre plateforme d'étude en ligne dynamique et enrichissante.
+            <br> Nous sommes convaincus que l'éducation est essentielle pour réussir,
+            <br> c'est pourquoi nous vous offrons les outils et ressources nécessaires
+            <br> pour atteindre vos objectifs académiques.
+        </p>
+    </div>
+</div>
+</body>
+
+</html>

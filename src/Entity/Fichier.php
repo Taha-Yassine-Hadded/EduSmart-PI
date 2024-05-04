@@ -24,9 +24,8 @@ class Fichier
     private ?string $path = null;
 
     #[ORM\ManyToOne(inversedBy: 'fichiers')]
-    #[ORM\Column (name: 'idMember')]
+    #[ORM\JoinColumn(name: 'idMember', referencedColumnName: 'id')]
     private ?ProjectMembers $member = null;
-
     public function getId(): ?int
     {
         return $this->id;
