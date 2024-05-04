@@ -71,4 +71,9 @@ class ProjectService
     {
         return $this->entityManager->getRepository(Project::class)->find($id);
     }
+    public function getAllProjectsForTeacher(int $teacherId): array
+    {
+        return $this->entityManager->getRepository(Project::class)->findBy(['teacher' => $teacherId]);
+    }
+
 }

@@ -9,9 +9,19 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use App\Entity\User;
 
 class HomeTeacherController extends AbstractController
 {
+    private $userId;
+    public function __construct(Security $security)
+    {
+        $this->userId = $security->getUser()->getId();
+        if (!$this->userId) {
+            throw new \RuntimeException('User not authenticated');
+        }
+    }
     #[Route("/home-teacher" ,name: "home_teacher")]
     public function index(Request $request, ProjectServiceService $projectService, ProjectRepository $projectRepository): Response
     {
@@ -19,15 +29,16 @@ class HomeTeacherController extends AbstractController
         $projects = [];
         $classes = $projectRepository->findAllClasses(); // Récupérer toutes les classes
         if ($selectedClass) {
-            $projects = $projectRepository->findBy(['classe' => $selectedClass]);
+            $projects = $projectRepository->findBy(['classe' => $selectedClass , 'teacher'=>$this->userId]);
         } else {
-            $projects = $projectService->getAll(); // Récupérer tous les projets si aucune classe n'est sélectionnée
+            $projects = $projectService->getAllProjectsForTeacher($this->userId); // Récupérer les projets de l'enseignant
         }
         return $this->render('/Project/HomeTeacher.html.twig', [
             'projects' => $projects, // Passer les projets à la vue
             'classes' => $classes, // Passer les classes à la vue
         ]);
     }
+
     #[Route("/delete-project/{id}", name: "delete_project", methods: ["POST"])]
     public function deleteProject(int $id, ProjectServiceService $projectService): Response
     {

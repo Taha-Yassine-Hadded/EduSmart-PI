@@ -8,6 +8,8 @@ use App\Service\Projet\FichierService;
 use App\Entity\EtatEnum;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,56 +19,66 @@ use App\Service\Projet\ProjectMembersService;
 use App\Entity\ProjectMembers;
 use App\Entity\Fichier;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Notifier\Notification\Notification;
+use App\Entity\User;
+use Symfony\Component\Security\Core\Security;
 
 class HomeStudentController extends AbstractController
 {
+    private $userId;
     private $projectService;
     private $tacheService;
     private $entityManager;
     private $fichierService;
     private $projectMembersService;
+    // private $projectMembersUserService;
 
 
-    public function __construct(EntityManagerInterface $entityManager,ProjectService $projectService, TacheService $tacheService , ProjectMembersService $projectMembersService , FichierService $fichierService)
+    public function __construct(Security $security,EntityManagerInterface $entityManager,ProjectService $projectService, TacheService $tacheService , ProjectMembersService $projectMembersService , FichierService $fichierService  /* ,ProjectMembersUserService $projectMembersUserService*/)
     {
+        $this->userId = $security->getUser()->getId();
+        if (!$this->userId) {
+            throw new \RuntimeException('User not authenticated');
+        }
         $this->projectService = $projectService;
         $this->fichierService = $fichierService;
         $this->tacheService = $tacheService;
         $this->entityManager = $entityManager;
         $this->projectMembersService = $projectMembersService;
-
-
     }
 
     #[Route('/home-student', name: 'home-student')]
     public function showProjects(): Response
     {
-        $userId = 2; // Remplacez ceci par l'ID de l'utilisateur dont vous voulez récupérer les projets
+        $userid = $this->userId; // Remplacez ceci par l'ID de l'utilisateur dont vous voulez récupérer les projets
 
         // Récupérer les noms de projet pour affichage
-        $projectNames = $this->projectService->getProjectNamesForUserId($userId);
+        $projectNames = $this->projectService->getProjectNamesForUserId($userid);
 
 
         return $this->render('/Project/student/HomeStudent.html.twig', [
             'projectNames' => $projectNames,
             'taches' => [], // Initialiser avec une liste vide, car aucune tâche n'est sélectionnée par défaut
+            'fichiers' => [],
+            'etatEnumValues' => [],
+
 
         ]);
+
     }
 
     #[Route('/home-student/{projectId}', name: 'home-student-project')]
-    public function index(Request $request, $projectId): Response
+    public function index(Request $request, $projectId ,SessionInterface $session): Response
     {
-        $userId = 2;
+        $userid = $this->userId;
 
-        $taches = $this->tacheService->getTachesByUserIdAndProjectId($userId, $projectId);
-        $projectNames = $this->projectService->getProjectNamesForUserId($userId);
+        $taches = $this->tacheService->getTachesByUserIdAndProjectId($userid, $projectId);
+        $projectNames = $this->projectService->getProjectNamesForUserId($userid);
         $fichiers = $this->fichierService->getFichiersByProjectId($projectId);
-
-
-        // Utiliser la méthode getValidStates() de l'énumération EtatEnum pour obtenir les valeurs valides
         $etatEnumValues = EtatEnum::getValidStates();
-
+        foreach ($taches as $tache) {
+            $tache->isLate = $tache->getDedline() <= new \DateTime();
+        }
         return $this->render('/Project/student/HomeStudent.html.twig', [
             'projectNames' => $projectNames,
             'taches' => $taches,
@@ -158,10 +170,10 @@ class HomeStudentController extends AbstractController
     {
         try {
             // Récupérer l'ID de l'utilisateur actuel
-            $userId = 2;
+            $userid = $this->userId;
             dump($projectId);
             // Récupérer l'ID du membre pour l'utilisateur actuel et le projet spécifié
-            $memberId = $projectMembersService->findIdMemberByUserIdAndProjectId($userId, $projectId);
+            $memberId = $projectMembersService->findIdMemberByUserIdAndProjectId($userid, $projectId);
 
             // Récupérer les données du formulaire
             $requestData = json_decode($request->getContent(), true);
@@ -205,8 +217,8 @@ class HomeStudentController extends AbstractController
     #[Route('/import-fichier', name: 'import_fichier')]
     public function importFichier(Request $request, ProjectMembersService $projectMembersService): Response
     {
-        // Récupérer l'ID de l'utilisateur (vous pouvez remplacer 2 par la méthode appropriée pour récupérer l'ID de l'utilisateur)
-        $userId = 2;
+        // Récupérer l'ID de l'utilisateur (vous pouvez remplacer 1 par la méthode appropriée pour récupérer l'ID de l'utilisateur)
+        $userId = $this->userId;
 
         // Récupérer l'ID du projet à partir des données de la requête
         $projectId = $request->request->get('projectId');
@@ -261,6 +273,53 @@ class HomeStudentController extends AbstractController
 
         // Rediriger l'utilisateur vers une autre page ou retourner un message de confirmation
         return new Response('Le fichier a été importé avec succès', Response::HTTP_OK);
+    }
+    #[Route('/download/{id}', name: 'download_fichier_by_id')]
+    public function telechargerFichier(Request $request, FichierService $fichierService): Response
+    {
+        try {
+            // Récupérer l'ID du fichier à télécharger à partir des paramètres de la route
+            $fichierId = $request->attributes->get('id');
+            echo $fichierId;
+
+            // Vérifier si l'ID du fichier est fourni dans la requête
+            if (!$fichierId) {
+                throw new \Exception('L\'ID du fichier n\'a pas été fourni.');
+            }
+
+            // Récupérer l'objet Fichier à partir de son ID
+            $fichier = $fichierService->getFichierById($fichierId);
+
+            // Vérifier si le fichier a été trouvé
+            if (!$fichier) {
+                throw new \Exception('Le fichier demandé n\'a pas été trouvé.');
+            }
+
+            // Obtenez le chemin du fichier
+            $pathFichier = $fichier->getPath();
+            echo $pathFichier;
+
+            // Vérifiez si le fichier existe
+            ///if (!file_exists("C:\Users\raahm\Desktop\\" . $pathFichier)){
+            //throw new \Exception('Le fichier n\'existe pas.');
+            // }
+
+            // Récupérer le contenu du fichier
+            $fileContent = file_get_contents("C:\Users\\raahm\Desktop\\" . $pathFichier);
+
+
+            // Créer une réponse avec le contenu du fichier
+            $response = new Response($fileContent);
+
+            // Définir les en-têtes pour indiquer que le contenu est un téléchargement
+            $response->headers->set('Content-Type', 'application/octet-stream');
+            $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($pathFichier) . '"');
+
+            return $response;
+        } catch (\Exception $e) {
+            // En cas d'erreur, renvoyer une réponse avec le message d'erreur
+            return new Response('Erreur lors du téléchargement du fichier : ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

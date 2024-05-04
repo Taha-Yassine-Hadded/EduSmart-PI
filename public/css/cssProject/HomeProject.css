@@ -9,7 +9,6 @@
     max-width: 800px;
     background-color: #f2f2f2;
     border-radius: 20px;
-    padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border: 2px solid #ddd; /* Ajouter une bordure */
 }
@@ -97,17 +96,18 @@ html, body {
 /* Effets de Transparence */
 .fixed-elements {
     background-color: rgb(185, 3, 3);
-    padding: 10px;
+    padding: 20px;
     border-radius: 10px;
 }
 
 /* Dégradés */
 .parent-container {
-    background: linear-gradient(150deg,#E3CDCD, #AF1010);
+    background: whitesmoke;
 }
 
 /* Effets de Survol Avancés */
 .center-container select:hover {
     background-color: #e0e0e0;
     transform: scale(1.05);
+    padding: 20px;
 }

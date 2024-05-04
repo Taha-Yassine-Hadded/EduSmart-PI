@@ -41,3 +41,7 @@ services:
     App\Security\AccessDeniedListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 20 }
+    Symfony\Component\Mailer\Mailer:
+        public: true
+        arguments:
+            $transport: !service { class: Symfony\Component\Mailer\Transport\Smtp\SmtpTransport, arguments: [ '%env(MAILER_DSN)%' ] }

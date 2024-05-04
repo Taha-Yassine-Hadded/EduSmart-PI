@@ -1,6 +1,4 @@
-
 <!DOCTYPE html>
-
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -11,6 +9,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Tauri&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/cssProject/HomeStudent.css">
     <style>
+        /* Ajoutez ces styles CSS pour personnaliser le style de la bulle de discussion */
+        #alert-message {
+            position: absolute;
+            border-color: #6a1a21;
+            background-color: rgba(234, 227, 227, 0.98); /* Couleur de fond vive */
+            color: rgb(107, 12, 12); /* Texte en blanc pour contraster */
+            padding: 30px;
+            margin: 20px;
+            border-radius: 10px; /* Coins arrondis */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            z-index: 1000; /* Assurez-vous que la bulle de discussion est au-dessus de tout autre contenu */
+            display: none; /* Par défaut, la bulle de discussion est cachée */
+            font-family: "Tauri", sans-serif;
+        }
+
+
+        .horizontal-scroll-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            border-color: #6a1a21;
+        }
+
+        .scroll-content {
+            display: inline-block;
+            border-color: #6a1a21;
+            background: white;
+            border-radius: 20px ;
+            height:100px;
+            padding-top: 20px;
+            padding-bottom: 0;
+            padding-right: 10px;
+            padding-left: 10px;
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+
+        .file-container {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
         .overlay {
             position: fixed;
             top: 0;
@@ -92,134 +131,146 @@
             outline: none; /* Supprimer la mise en évidence par défaut */
             border-color: #a11919; /* Changement de couleur de la bordure lorsqu'il est en focus */
         }
-
-
     </style>
-
-
 </head>
-
 {% include 'navS.html.twig' %}
 <body>
-<img src="/images/Project/bg.png" alt="Background Image" class="background-image">
+<img src="/images/Project/bg.jpg" alt="Background Image" class="background-image">
 <div>
-<div class="main-container">
-    <div class="list-container">
-        <div class="list-header">
-            <h2> À faire</h2>
-        </div>
-        <div class="task-list" id="todo-list" ondrop="drop(event, 'todo-list')" ondragover="allowDrop(event)">
-            {% for tache in taches %}
-                {% if tache.etat.toString == "À faire"%}
-                    <div class="draggable-item" draggable="true" id="tache-{{ tache.id }}" ondragstart="drag(event)" data-etat="{{ tache.etat.toString }}">
-                        <img src="/images/Project/edit.png" alt="Éditer" onclick="editTask({{ tache.id }}, '{{ tache.description }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
-                        <p>{{ tache.description }}</p>
-                        <img src="/images/Project/edit.png" alt="Éditer Date" onclick="editTaskDeadline({{ tache.id }}, '{{ tache.dedlineToString() }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
-                        <p>{{ tache.dedlineToString()  }}</p>
-                        <input type="checkbox" id="tache-checkbox-{{ tache.id }}" data-tache-id="{{ tache.id }}" />
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
+    <div class="main-container">
+        <div class="list-container">
+            <div class="list-header">
+                <h2> À faire</h2>
+            </div>
+            <div class="task-list" id="todo-list" ondrop="drop(event, 'todo-list')" ondragover="allowDrop(event)">
+                {% for tache in taches %}
+                    {% if tache.etat.toString == "À faire"%}
+                        <div class="draggable-item" draggable="true" id="tache-{{ tache.id }}" ondragstart="drag(event)" data-etat="{{ tache.etat.toString }}">
+                            <img src="/images/Project/edit.png" alt="Éditer" onclick="editTask({{ tache.id }}, '{{ tache.description }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
+                            <p>{{ tache.description }}</p>
+                            <img src="/images/Project/edit.png" alt="Éditer Date" onclick="editTaskDeadline({{ tache.id }}, '{{ tache.dedlineToString() }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
+                            <p>{{ tache.dedlineToString()  }}</p>
+                            <div style="display: inline-block;">
+                                <input type="checkbox" id="tache-checkbox-{{ tache.id }}" data-tache-id="{{ tache.id }}" />
+                            </div>
+                            <div style="display: inline-block;">
+                                {% if tache.isLate %}
+                                    <!-- Affichez l'icône d'alerte uniquement si la tâche est en retard -->
+                                    <img src="/images/Project/expire.gif" alt="Alerte" onclick="showAlert('{{ tache.description }}')" style="cursor: pointer; margin-left: 290px;" height="40" width="40">
+                                {% endif %}
+                            </div></div>
+                    {% endif %}
 
-    <div class="list-container">
-        <div class="list-header">
-            <h2>En cours</h2>
+                {% endfor %}
+            </div>
         </div>
-        <div class="task-list" id="inprogress-list" ondrop="drop(event, 'inprogress-list')" ondragover="allowDrop(event)">
-            {% for tache in taches %}
-                {% if tache.etat.toString == "En cours"%}
-                    <div class="draggable-item" draggable="true" id="tache-{{ tache.id }}" ondragstart="drag(event)" data-etat="{{ tache.etat.toString }}">
-                        <img src="/images/Project/edit.png" alt="Éditer" onclick="editTask({{ tache.id }}, '{{ tache.description }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
-                        <p>{{ tache.description }}</p>
-                        <img src="/images/Project/edit.png" alt="Éditer Date" onclick="editTaskDeadline({{ tache.id }}, '{{ tache.dedlineToString() }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
-                        <p>{{ tache.dedlineToString()  }}</p>
-                        <input type="checkbox" id="tache-checkbox-{{ tache.id }}" data-tache-id="{{ tache.id }}" />
-                    </div>
-                {% endif %}
-            {% endfor %}
+        <div class="list-container">
+            <div class="list-header">
+                <h2>En cours</h2>
+            </div>
+            <div class="task-list" id="inprogress-list" ondrop="drop(event, 'inprogress-list')" ondragover="allowDrop(event)">
+                {% for tache in taches %}
+                    {% if tache.etat.toString == "En cours"%}
+                        <div class="draggable-item" draggable="true" id="tache-{{ tache.id }}" ondragstart="drag(event)" data-etat="{{ tache.etat.toString }}">
+                            <img src="/images/Project/edit.png" alt="Éditer" onclick="editTask({{ tache.id }}, '{{ tache.description }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
+                            <p>{{ tache.description }}</p>
+                            <img src="/images/Project/edit.png" alt="Éditer Date" onclick="editTaskDeadline({{ tache.id }}, '{{ tache.dedlineToString() }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
+                            <p>{{ tache.dedlineToString()  }}</p>
+                            <div style="display: inline-block;">
+                                <input type="checkbox" id="tache-checkbox-{{ tache.id }}" data-tache-id="{{ tache.id }}" />
+                            </div>
+                            <div style="display: inline-block;">
+                                {% if tache.isLate %}
+                                    <!-- Affichez l'icône d'alerte uniquement si la tâche est en retard -->
+                                    <img src="/images/Project/expire.gif" alt="Alerte" onclick="showAlert('{{ tache.description }}')" style="cursor: pointer; margin-left: 290px;" height="40" width="40">
+                                {% endif %}
+                            </div></div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
-    <div class="list-container">
-        <div class="list-header">
-            <h2>Terminée</h2>
-        </div>
-        <div class="task-list" id="done-list" ondrop="drop(event, 'done-list')" ondragover="allowDrop(event)">
-            {% for tache in taches %}
-                {% if tache.etat.toString == "Terminée" %}
-                    <div class="draggable-item" draggable="true" id="tache-{{ tache.id }}" ondragstart="drag(event)" data-etat="{{ tache.etat.toString }}">
-                        <img src="/images/Project/edit.png" alt="Éditer" onclick="editTask({{ tache.id }}, '{{ tache.description }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
-                        <p>{{ tache.description }}</p>
-                        <img src="/images/Project/edit.png" alt="Éditer Date" onclick="editTaskDeadline({{ tache.id }}, '{{ tache.dedlineToString() }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
-                        <p>{{ tache.dedlineToString() }}</p>
-                        <input type="checkbox" id="tache-checkbox-{{ tache.id }}" data-tache-id="{{ tache.id }}" />
+        <div class="list-container">
+            <div class="list-header">
+                <h2>Terminée</h2>
+            </div>
+            <div class="task-list" id="done-list" ondrop="drop(event, 'done-list')" ondragover="allowDrop(event)">
+                {% for tache in taches %}
+                    {% if tache.etat.toString == "Terminée" %}
+                        <div class="draggable-item" draggable="true" id="tache-{{ tache.id }}" ondragstart="drag(event)" data-etat="{{ tache.etat.toString }}">
+                            <img src="/images/Project/edit.png" alt="Éditer" onclick="editTask({{ tache.id }}, '{{ tache.description }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
+                            <p>{{ tache.description }}</p>
+                            <img src="/images/Project/edit.png" alt="Éditer Date" onclick="editTaskDeadline({{ tache.id }}, '{{ tache.dedlineToString() }}')" style="cursor: pointer; float: left; margin-right: 5px;" height="20" width="20">
+                            <p>{{ tache.dedlineToString() }}</p>
+                            <div style="display: inline-block ; ">
+                                <input type="checkbox" id="tache-checkbox-{{ tache.id }}" data-tache-id="{{ tache.id }}" />
+                            </div>
+                            <div style="display: inline-block;">
+                                {% if tache.isLate %}
+                                    <!-- Affichez l'icône d'alerte uniquement si la tâche est en retard -->
+                                    <img src="/images/Project/expire.gif" alt="Alerte" onclick="showAlert('{{ tache.description }}')" style="cursor: pointer; margin-left: 290px;" height="40" width="40">
+                                {% endif %}
+                            </div></div>
+                    {% endif %}
+                {% endfor %}
+            </div>
 
-                    </div>
-                {% endif %}
-            {% endfor %}
         </div>
-
-    </div>
-    <div class="action-buttons">
-        <div class="delete-image">
-            <img src="/images/Project/delete.png" alt="Supprimer" onclick="deleteTasks()" style="cursor: pointer;" height="40" width="40">
-        </div>
-        <div class="add-image">
+        <div class="action-buttons">
+            <div class="delete-image">
+                <img src="/images/Project/delete.png" alt="Supprimer" onclick="deleteTasks()" style="cursor: pointer;" height="40" width="40">
+            </div>
             <div class="add-image">
-                <img src="/images/Project/plus.png" alt="Ajouter" style="cursor: pointer;" height="40" width="40" onclick="toggleAddTaskForm(this)" >
+                <div class="add-image">
+                    <img src="/images/Project/plus.png" alt="Ajouter" style="cursor: pointer;" height="40" width="40" onclick="toggleAddTaskForm(this)" >
+                </div>
             </div>
         </div>
     </div>
-
-
-</div>
-<div class="drawer">
-    <div class="navbarr">
-        <ul>
-            {% for project in projectNames %}
-                <li>
-                    <a class="project-link" href="{{ path('home-student-project', {'projectId': project.id}) }}" data-project-id="{{ project.id }}" >
-                        {{ project.nom }}
-                        <img class="img" src="/images/Project/arrowhead.png" height="20px"  width="20px"  >
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
+    <div class="drawer">
+        <div class="navbarr">
+            <ul>
+                {% for project in projectNames %}
+                    <li>
+                        <a class="project-link" href="{{ path('home-student-project', {'projectId': project.id}) }}" data-project-id="{{ project.id }}" >
+                            {{ project.nom }}
+                            <img class="img" src="/images/Project/arrowhead.png" height="20px"  width="20px"  >
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-</div>
-
-
-<div class="open-drawer">
-    <img  class="image" src="/images/Project/menu.png" alt="Drawer Icon" style="margin-top: 80px " width="50px">
-</div>
-<div class="overlay" id="overlay"></div>
-<div class="add-task-form" id="add-task-form">
-    <span class="close-icon" onclick="toggleAddTaskForm(this.parentNode)">x</span>
-    <form id="task-form">
-        <p>Ajouter une nouvelle tâche</p>
-        <input type="text" id="task-description-input" placeholder="Description de la tâche"><br>
-        <input type="date" id="task-deadline-input" placeholder="Date limite"><br>
-        <button type="button" onclick="addTask()">Ajouter</button>
-    </form>
-</div>
-<div class="main-container">
-    <!-- Votre contenu précédent ici -->
-</div>>
-<div class="horizontal-scroll-container">
-    <div class="scroll-content">
-        {% for fichier in fichiers %}
-            <div>
-                <a href="{{ path('download_fichier', {'id': fichier.id}) }}">{{ fichier.nom }}</a>
-            </div>
-        {% endfor %}
+    <div class="open-drawer">
+        <img  class="image" src="/images/Project/menu.png" alt="Drawer Icon" style="margin-top: 80px " width="50px">
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="add-task-form" id="add-task-form">
+        <span class="close-icon" onclick="toggleAddTaskForm(this.parentNode)">x</span>
+        <form id="task-form">
+            <p>Ajouter une nouvelle tâche</p>
+            <input type="text" id="task-description-input" placeholder="Description de la tâche"><br>
+            <input type="date" id="task-deadline-input" placeholder="Date limite"><br>
+            <button type="button" onclick="addTask()">Ajouter</button>
+        </form>
+    </div>
+    <div class="main-container">
+    </div>
+    <div class="horizontal-scroll-container">
+        <div class="scroll-content">
+            {% for fichier in fichiers %}
+                <div class="file-container">
+                    <img src="/images/Project/files.png" height="30px" width="30px">
+                    <a href="{{ path('download_fichier_by_id', {'id': fichier.id}) }}">{{ fichier.nom }}</a>
+                </div>
+            {% endfor %}
+        </div>
     </div>
     <div class="import-button" id="importBtn">
         <button>
             Importer
         </button>
     </div>
-</div>
+    <div id="alert-message" style="display: none; position: absolute;  padding: 10px; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);"></div>
 </div>
 
 <script>
@@ -358,31 +409,31 @@
         });
     });
     const openDrawerButton = document.querySelector('.open-drawer');
-        const drawer = document.querySelector('.drawer');
-        const listContainers = document.querySelectorAll('.list-container');
+    const drawer = document.querySelector('.drawer');
+    const listContainers = document.querySelectorAll('.list-container');
 
-        openDrawerButton.addEventListener('click', function() {
-            drawer.classList.toggle('open');
-            listContainers.forEach(container => {
-                if (drawer.classList.contains('open')) {
-                    container.style.marginLeft = '140px'; // Réduire l'espace entre les conteneurs
-                } else {
-                    container.style.marginLeft = '110px'; // Restaurer l'espace normal entre les conteneurs
-                }
-            });
-        });
-        // Gestion des événements de glisser-déposer pour empêcher le déplacement du contenu
+    openDrawerButton.addEventListener('click', function() {
+        drawer.classList.toggle('open');
         listContainers.forEach(container => {
-            container.addEventListener('dragover', function(ev) {
-                ev.preventDefault(); // Empêcher le comportement par défaut (déplacement du contenu)
-            });
-
-            container.addEventListener('drop', function(ev) {
-                ev.preventDefault(); // Empêcher le comportement par défaut (déplacement du contenu)
-                const data = ev.dataTransfer.getData("text");
-                ev.target.appendChild(document.getElementById(data));
-            });
+            if (drawer.classList.contains('open')) {
+                container.style.marginLeft = '140px'; // Réduire l'espace entre les conteneurs
+            } else {
+                container.style.marginLeft = '110px'; // Restaurer l'espace normal entre les conteneurs
+            }
         });
+    });
+    // Gestion des événements de glisser-déposer pour empêcher le déplacement du contenu
+    listContainers.forEach(container => {
+        container.addEventListener('dragover', function(ev) {
+            ev.preventDefault(); // Empêcher le comportement par défaut (déplacement du contenu)
+        });
+
+        container.addEventListener('drop', function(ev) {
+            ev.preventDefault(); // Empêcher le comportement par défaut (déplacement du contenu)
+            const data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+        });
+    });
     function allowDrop(ev) {
         ev.preventDefault();
     }
@@ -624,7 +675,21 @@
         });
     });
 
-
+    function showAlert(description) {
+        // Créez un élément HTML pour le message d'alerte
+        var alertMessage = document.getElementById("alert-message");
+        alertMessage.innerText = description + " est en retard";
+        // Positionnez la bulle de discussion juste au-dessus de l'image
+        var imgPosition = event.target.getBoundingClientRect();
+        alertMessage.style.top = (imgPosition.top - alertMessage.offsetHeight - 10) + "px"; // Décalez légèrement vers le haut
+        alertMessage.style.left = imgPosition.left + "px";
+        // Affichez le message d'alerte
+        alertMessage.style.display = "block";
+        // Cachez le message d'alerte après quelques secondes (facultatif)
+        setTimeout(function() {
+            alertMessage.style.display = "none";
+        }, 5000); // Le message d'alerte disparaîtra après 5 secondes
+    }
 </script>
 </body>
 </html>
