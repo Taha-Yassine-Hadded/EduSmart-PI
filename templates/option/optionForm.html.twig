@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CoursController!{% endblock %}
+
+{% block body %}
+{% if errorOccurred %}
+    <script>
+        alert('There is already a correct option for this question.');
+    </script>
+{% endif %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    {{ form_start(f) }}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form_widget(f.valeur, {'attr': {'class': 'form-control', 'placeholder': 'Your Name'}}) }}
+                                {{ form_label(f.valeur) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                   <div class="form-floating">
+                     {{ form_widget(f.isCorrect, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_label(f.isCorrect) }}
+                          </div>
+</div>
+
+                        <div class="col-12">
+                            {{ form_widget(f.Submit, {'attr': {'class': 'btn btn-primary w-100 py-3'}}) }}
+                            {{ form_label(f.Submit) }}
+                        </div>
+                    </div>
+                    {{ form_end(f) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

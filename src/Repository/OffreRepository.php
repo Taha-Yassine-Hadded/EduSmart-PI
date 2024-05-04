@@ -20,6 +20,22 @@ class OffreRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Offre::class);
     }
+    public function findByCandidature(Candidature $candidature)
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.candidature= :candidature')
+            ->setParameter('candidature', $candidature)
+            ->getQuery()
+            ->getResult();
+    }
+    public function searchByTitleOrDescription($searchTerm)
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.titre LIKE :search_term OR o.description LIKE :search_term')
+            ->setParameter('search_term', '%'.$searchTerm.'%')
+            ->getQuery()
+            ->getResult();
+    }    
 
 //    /**
 //     * @return Offre[] Returns an array of Offre objects
