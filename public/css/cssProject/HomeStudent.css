@@ -10,7 +10,7 @@
 
 .drawer.open {
     left: 0;
-    top: 117px;
+    top: 60px;
 }
 
 .drawer.open .navbar {
@@ -30,6 +30,8 @@
     list-style-type: none;
     padding: 0;
     font-family: 'Tauri', sans-serif;
+    margin-left: 30px;
+    margin-top:50px ;
 }
 
 .navbarr ul li {
@@ -52,7 +54,7 @@
     font-family: 'Tauri', sans-serif;
 
 }
-.navbarr img {
+.navbarr imga {
     padding-top: 15px;
 }
 
@@ -322,6 +324,7 @@
     border-radius: 3px; /* Bordure arrondie */
     cursor: pointer; /* Curseur pointeur */
     font-family: 'Tauri', sans-serif;
+    margin-left: 10px;
 
 }
 

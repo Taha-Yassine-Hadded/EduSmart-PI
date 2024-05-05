@@ -50,6 +50,8 @@
                 success: function(response) {
                     if (response.exists) {
                         $('#membersUl').append('<li>' + response.email + '</li>');
+                        // Vider le champ de texte après ajout
+                        $('#email').val('');
                     } else {
                         alert("L'email n'existe pas !");
                     }
@@ -63,7 +65,11 @@
 
         $('#finishBtn').click(function() {
             window.location.href = "{{ path('home_teacher') }}";
-        });});
+        });
+    });
+
+
+   
 </script>
 
 
