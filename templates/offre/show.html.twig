@@ -56,7 +56,7 @@
                         <td>
                             <a href="{{ path('accepter', {'id': c.id}) }}" class="btn btn-outline-success rounded-pill me-3">Accepter</a>
                             <a href="{{ path('refuser', {'id': c.id}) }}" class="btn btn-outline-danger rounded-pill me-3">Refuser</a>
-                            <a href="{{ path('download_pdf', {'id': c.id}) }}" class="btn btn-outline-secondary rounded-pill me-3" downloadPdf>Download PDF</a>
+                            <a href="{{ path('candidature_download_cv', {'id': c.id}) }}" class="btn btn-outline-secondary rounded-pill me-3" downloadCv>Download CV</a>
                         </td>
                     </tr>
                 {% endfor %}

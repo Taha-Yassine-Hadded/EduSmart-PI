@@ -94,7 +94,7 @@ public function new(Request $request, UserRepository $repo, EntityManagerInterfa
 }
 
 
-    #[Route('/{id}', name: 'app_candidature_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_candidature_show', methods: ['GET', 'POST'])]
     public function show(Candidature $candidature): Response
     {
         $url = $this->generateUrl('candidature_show', ['id' => $candidature->getId()]);
@@ -135,7 +135,7 @@ public function new(Request $request, UserRepository $repo, EntityManagerInterfa
         ]);
     }  
 
-    #[Route('/{id}', name: 'app_candidature_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_candidature_delete', methods: ['GET', 'POST'])]
     public function delete(Request $request, Candidature $candidature, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$candidature->getId(), $request->request->get('_token'))) {
@@ -171,21 +171,21 @@ public function refuserCandidature(Candidature $candidature, EntityManagerInterf
 
 
 
-    #[Route('/download-pdf/{id}', name: 'download_pdf')]
-public function downloadPdf($id, CandidatureRepository $repo): Response
+#[Route('/download-cv/{id}', name: 'download_cv')]
+public function downloadCv($id, CandidatureRepository $repo): Response
 {
     $candidature = $repo->find($id);
     if (!$candidature) {
-        throw $this->createNotFoundException('Candidature non trouvée');
+        throw $this->createNotFoundException('Candidature not found');
     }
 
-    // Chemin du fichier PDF
-    $pdfPath = $this->getParameter('candidature_directory') . '/' . $candidature->getCv();
+    // Path to the CV file
+    $cvPath = $this->getParameter('candidature_directory') . '/' . $candidature->getCv();
 
-    // Créer la réponse
-    $response = new BinaryFileResponse($pdfPath);
+    // Create the response
+    $response = new BinaryFileResponse($cvPath);
 
-    // Définir les en-têtes pour indiquer qu'il s'agit d'un téléchargement de fichier PDF
+    // Set the headers to indicate that this is a CV file download
     $response->headers->set('Content-Type', 'application/pdf');
     $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
         ResponseHeaderBag::DISPOSITION_ATTACHMENT,
@@ -194,6 +194,8 @@ public function downloadPdf($id, CandidatureRepository $repo): Response
 
     return $response;
 }
+
+
 #[Route('/statistiques', name: 'app_candidature_statistiques', methods: ['GET'])]
 public function statistiques(): Response
 {

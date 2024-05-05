@@ -21,8 +21,14 @@ app_refuser_candidature:
     methods: ['POST']
 
 candidature_download_cv:
-    path: /download-pdf/{id}
-    controller: App\Controller\CandidatureController::downloadPdf
+    path: /download-cv/{id}
+    controller: 'App\Controller\CandidatureController::downloadCv'
+   
+
+
+cours_download_cours:
+    path: '/download-pdf/{id}'
+    controller: 'App\Controller\CoursController::downloadPdf'
 
 search_offres:
     path: /search
