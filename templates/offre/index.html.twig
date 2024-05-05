@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-<h1 class=" text-center font-weight-bold ">OFFRES</h1>
+<h1 class=" text-center font-weight-bold text-color-9F1C00 mt-4 mb-4 ">OFFRES</h1>
 
 <div class="row">
     {% for offre in offres %}
@@ -40,9 +40,10 @@
     {% endfor %}
 
     </div>
-<h2 class="text-center font-weight-bold">STATISTIQUE DES CANDIDATURES</h2>
+    
+<h2 class=" text-center font-weight-bold text-color-9F1C00 mt-4 mb-4 ">STATISTIQUE DES CANDIDATURES</h2>
 <div class="row">
-    {% set colors = ['#6cb2eb', '#28a745', '#dc3545', '#ffc107', '#17a2b8'] %}
+    {% set colors = ['#f1f1f1', '#9F1C00', '#B9B9B9'] %}
     {% for loopIndex, statistique in statistiques %}
         {% set colorIndex = loopIndex % colors|length %}
         <div class="col-md-4 mb-4">
