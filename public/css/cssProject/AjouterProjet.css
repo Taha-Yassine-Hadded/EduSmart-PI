@@ -1,5 +1,6 @@
 body {
     background: whitesmoke;
+    padding: 50px;
 }
 
 html{
@@ -8,6 +9,7 @@ html{
 
 .container {
     align-items: center;
+
 
 }
 

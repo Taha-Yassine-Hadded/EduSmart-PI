@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ma Page</title>
+{% extends 'base.html.twig' %}
+
+{% block title %}To Do{% endblock %}
+{% block body %}
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Tauri&display=swap" rel="stylesheet">
@@ -79,20 +78,7 @@
 
 
         }
-        .add-task-form {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            z-index: 1001; /* Assurez-vous que le formulaire est au-dessus de l'overlay */
-            display: none; /* Par défaut, le formulaire est caché */
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Ajout d'une ombre */
-            width: 350px;
-            height:300px;
-        }
+
 
         .add-task-form p {
             color: #961d1d;
@@ -101,6 +87,7 @@
             margin-bottom:30px; /* Ajout d'un espacement en bas */
             font-size: 30px;
             font-weight: lighter;
+            padding: 20px;
         }
 
         .add-task-form input[type="text"],
@@ -132,9 +119,6 @@
             border-color: #a11919; /* Changement de couleur de la bordure lorsqu'il est en focus */
         }
     </style>
-</head>
-{% include 'navS.html.twig' %}
-<body>
 <img src="/images/Project/bg.jpg" alt="Background Image" class="background-image">
 <div>
     <div class="main-container">
@@ -691,5 +675,5 @@
         }, 5000); // Le message d'alerte disparaîtra après 5 secondes
     }
 </script>
-</body>
-</html>
+{% endblock %}
+

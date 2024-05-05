@@ -163,6 +163,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/ux-turbo" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/webpack-encore-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/teamtnt/tntsearch" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-flasher/flasher" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-flasher/flasher-symfony" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
