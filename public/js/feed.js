@@ -166,11 +166,11 @@ function addParticipant(button,eventId,userId,eventName,eventPhoto,userName) {
             <span class="status online" ><img src="../uploads/${eventPhoto}" width="25" alt=""></span>
           </header>
         <div class="chat-window">
-          <main class="chat-history" id="chat${eventId}">
+          <main class="chat-history mt-1" id="chat${eventId}">
             
           </main>
           <form class="chat-input-form" id="chatForm">
-            <div class="messageBox" >
+            <div class="messageBox mt-1" >
               <div class="fileUploadWrapper">
                 <label for="file">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 337 337">
