@@ -106,16 +106,16 @@ public function show(Events $event): Response
 
     $commentTexts = [];
     foreach ($comments as $comment) {
-    $commentTexts[] = $comment->getCommentText();
+        $commentTexts[] = $comment->getCommentText();
     }
-    
+
     // Concatenate comments into a single string
-    $concatenatedText = implode(' ',$commentTexts);
-    
+    $concatenatedText = implode(' ', $commentTexts);
+
     // Build the prompt
-    $prompt = $concatenatedText."Let's analyze public opinion on a recent event!  Can you take a look at the comments I provide and give me a quick summary of the overall feeling (positive, negative, mixed?) in a sentence or two? Additionally, if there are any negative comments, what suggestions for improvement can you glean from them? List each suggestion on a separate line. If there are no negative comments, simply state 'No suggestions for improvement based on comments.' Finally, let me know if there are 'No comments found' altogether. Remember, a clear and concise response is key!
-    " ;
-    
+    $prompt = $concatenatedText . "Let's analyze public opinion on a recent event!  Can you take a look at the comments I provide and give me a quick summary of the overall feeling (positive, negative, mixed?) in a sentence or two? Additionally, if there are any negative comments, what suggestions for improvement can you glean from them? List each suggestion on a separate line. If there are no negative comments, simply state 'No suggestions for improvement based on comments.' Finally, let me know if there are 'No comments found' altogether. Remember, a clear and concise response is key!
+    ";
+
     // Build the request body
     $data = [
         "model" => "gpt-3.5-turbo-0125",
@@ -126,17 +126,21 @@ public function show(Events $event): Response
             ]
         ]
     ];
-    
+
     $body = json_encode($data);
-    
+
+    // Access environment variables
+    $openaiApiKey = $_ENV['OPENAI_API_KEY'];
+    $openaiApiUrl = $_ENV['OPENAI_API_URL'];
+
     // Prepare the cURL request
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, self::OPENAI_API_URL);
+    curl_setopt($ch, CURLOPT_URL, $openaiApiUrl);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
-        'Authorization: Bearer ' . self::OPENAI_API_KEY
+        'Authorization: Bearer ' . $openaiApiKey
     ]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -144,17 +148,17 @@ public function show(Events $event): Response
     $response = curl_exec($ch);
 
     // Check for errors
-    if($response === false) {
+    if ($response === false) {
         echo 'Curl error: ' . curl_error($ch);
         return new Response('Error occurred');
     }
 
     // Close cURL session
     curl_close($ch);
-    
+
     // Decode the response JSON
     $responseData = json_decode($response, true);
-    echo '<script>console.log('.json_encode($responseData).')</script>';
+    echo '<script>console.log(' . json_encode($responseData) . ')</script>';
     // Extract content from the response
     if (isset($responseData['choices'])) {
         // Extract content from the response
@@ -170,6 +174,7 @@ public function show(Events $event): Response
         'analysis' => $content // Pass the sentiment analysis result to the view
     ]);
 }
+
 
     #[Route('/event/{id}/edit', name: 'event_edit',methods: ['GET', 'POST'])]
     public function edit(Request $request, Events $event): Response
