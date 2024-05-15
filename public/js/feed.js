@@ -269,11 +269,11 @@ function addReaction(eventId,reactionType){
         }
         else{
         if (reactionType === 'like') {
-            img.setAttribute('src', `assets/reactions/like.png`);
+            img.setAttribute('src', `assets/reactions/Like.png`);
            
             color = '#77A7FF';
         } else if (reactionType === 'heart') {
-            img.setAttribute('src', `assets/reactions/heart.png`);
+            img.setAttribute('src', `assets/reactions/Love.png`);
            
             color = '#F35369';
         } else {

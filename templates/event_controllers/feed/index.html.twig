@@ -192,20 +192,20 @@
                         {% endif %}
                     {% endfor %}
                     {% if not hasLiked %}
-                    <div style="display: inline-block;" id="div_reaction_{{ event.getId }}"  onclick="addLikeReaction('{{ event.getId() }}','like')" style="color: #77A7FF;
+                    <div style="display: inline-block;" id="div_reaction_{{ event.getId }}"  onclick="addLikeReaction('{{ event.getId() }}','Like')" style="color: #77A7FF;
                     text-align: center;
                     font-size: 18px;">
-                    <img data-reaction-type="{{ "like"}}" id="mainReaction_{{ event.getId() }}" src="{{ asset('assets/reactions/thumbs-up-stroke-rounded.svg') }}" alt="like" width="25px">
+                    <img data-reaction-type="{{ "Like"}}" id="mainReaction_{{ event.getId() }}" src="{{ asset('assets/reactions/thumbs-up-stroke-rounded.svg') }}" alt="like" width="25px">
                     <p style="display: inline-block;margin-bottom:0; color:#9B9B9B;" id="span_{{ event.getId() }}">like</p>
                   </div>                    
                   {% endif %}
                     <span>
-                        <img onclick="addReaction('{{ event.getId() }}','like')" src="{{ asset('assets/reactions/like.png') }}">
-                        <img onclick="addReaction('{{ event.getId() }}','heart')" src="{{ asset('assets/reactions/heart.png') }}">
-                        <img onclick="addReaction('{{ event.getId() }}','wow')" src="{{ asset('assets/reactions/wow.png') }}">
-                        <img onclick="addReaction('{{ event.getId() }}','laugh')" src="{{ asset('assets/reactions/laugh.png') }}">
-                        <img onclick="addReaction('{{ event.getId() }}','sad')" src="{{ asset('assets/reactions/sad.png') }}">
-                        <img onclick="addReaction('{{ event.getId() }}','angry')" src="{{ asset('assets/reactions/angry.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','Like')" src="{{ asset('assets/reactions/like.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','Love')" src="{{ asset('assets/reactions/love.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','Wow')" src="{{ asset('assets/reactions/wow.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','Haha')" src="{{ asset('assets/reactions/haha.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','Sad')" src="{{ asset('assets/reactions/sad.png') }}">
+                        <img onclick="addReaction('{{ event.getId() }}','Angry')" src="{{ asset('assets/reactions/angry.png') }}">
                     </span>
                 </button>
                 

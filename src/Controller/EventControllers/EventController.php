@@ -69,7 +69,7 @@ class EventController extends AbstractController
             try {
                 copy(
                     $file->getPathname(),
-                    'C:\Users\GAMING\Desktop\pidevSymfony\PiSymfony\public\uploads\\' . $fileName
+                    'C:\xampp\htdocs\img\\' . $fileName
                 );
             } catch (FileException $e) {
                 // Handle file upload error
