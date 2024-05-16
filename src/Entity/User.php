@@ -187,6 +187,12 @@ class User implements UserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: FollowNotification::class)]
     private Collection $followNotifications;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: RememberToken::class)]
+    private Collection $rememberTokens;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: PasswordResetRequest::class)]
+    private Collection $passwordResetRequests;
+
     public function getFollowers(): ?Collection {
         return $this->followers;
     }
@@ -257,6 +263,8 @@ class User implements UserInterface
         $this->following = new ArrayCollection();
         $this->followers = new ArrayCollection();
         $this->followNotifications = new ArrayCollection();
+        $this->rememberTokens = new ArrayCollection();
+        $this->passwordResetRequests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -940,6 +948,66 @@ public function getUserIdentifier(): string
             // set the owning side to null (unless already changed)
             if ($followNotification->getUser() === $this) {
                 $followNotification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RememberToken>
+     */
+    public function getRememberTokens(): Collection
+    {
+        return $this->rememberTokens;
+    }
+
+    public function addRememberToken(RememberToken $rememberToken): static
+    {
+        if (!$this->rememberTokens->contains($rememberToken)) {
+            $this->rememberTokens->add($rememberToken);
+            $rememberToken->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRememberToken(RememberToken $rememberToken): static
+    {
+        if ($this->rememberTokens->removeElement($rememberToken)) {
+            // set the owning side to null (unless already changed)
+            if ($rememberToken->getUser() === $this) {
+                $rememberToken->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PasswordResetRequest>
+     */
+    public function getPasswordResetRequests(): Collection
+    {
+        return $this->passwordResetRequests;
+    }
+
+    public function addPasswordResetRequest(PasswordResetRequest $passwordResetRequest): static
+    {
+        if (!$this->passwordResetRequests->contains($passwordResetRequest)) {
+            $this->passwordResetRequests->add($passwordResetRequest);
+            $passwordResetRequest->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePasswordResetRequest(PasswordResetRequest $passwordResetRequest): static
+    {
+        if ($this->passwordResetRequests->removeElement($passwordResetRequest)) {
+            // set the owning side to null (unless already changed)
+            if ($passwordResetRequest->getUser() === $this) {
+                $passwordResetRequest->setUser(null);
             }
         }
 
