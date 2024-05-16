@@ -69,8 +69,8 @@ public function new(Request $request, UserRepository $repo, EntityManagerInterfa
             $originalFilename = pathinfo($cvFile->getClientOriginalName(), PATHINFO_FILENAME);
             // Ceci est nécessaire pour éviter les collisions de noms de fichiers
             $newFilename = $originalFilename.'-'.uniqid().'.'.$cvFile->guessExtension();
-
-            // Déplacez le fichier dans le répertoire où les CV sont stockés
+            $cvDirectory = $this->getParameter('candidature_directory');
+            echo "Chemin du répertoire des CV : " . $cvDirectory;            // Déplacez le fichier dans le répertoire où les CV sont stockés
             $cvFile->move(
                 $this->getParameter('candidature_directory'),
                 $newFilename
@@ -117,7 +117,7 @@ public function new(Request $request, UserRepository $repo, EntityManagerInterfa
                 $newFilename = $originalFilename.'-'.uniqid().'.'.$cvFile->guessExtension();
 
                 $cvFile->move(
-                    $this->getParameter('cv_directory'),
+                    $this->getParameter('candidature_directory'),
                     $newFilename
                 );
 
@@ -135,7 +135,7 @@ public function new(Request $request, UserRepository $repo, EntityManagerInterfa
         ]);
     }  
 
-    #[Route('/{id}', name: 'app_candidature_delete', methods: ['GET', 'POST'])]
+    #[Route('/delete/{id}', name: 'app_candidature_delete', methods: ['GET', 'POST'])]
     public function delete(Request $request, Candidature $candidature, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$candidature->getId(), $request->request->get('_token'))) {
